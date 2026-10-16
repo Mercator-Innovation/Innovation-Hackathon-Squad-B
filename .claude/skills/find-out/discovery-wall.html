@@ -1,0 +1,175 @@
+<title>Discovery Wall</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a research wall. Header with counts, a person filter, then three columns (found out, open questions, ideas). Add form at the foot. Square corners. */
+:root {
+  --bg: #eef1f0; --paper: #fbfcfb; --line: #c9d1ce;
+  --ink: #142320; --ink-2: #3f4f4b; --muted: #6a7874;
+  --accent: #0f6b5c; --accent-soft: #d6ebe6;
+  --q: #8a4b0f; --q-soft: #f6e6d3; --idea: #1d5fa8; --idea-soft: #dce8f6;
+  --display: "Familjen Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --body: "Newsreader", Georgia, "Times New Roman", serif;
+  --mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #101716; --paper: #172120; --line: #2f3f3c; --ink: #e9f0ee; --ink-2: #bccac6; --muted: #8b9a96;
+  --accent: #5cc7b2; --accent-soft: #173a34; --q: #f0a85e; --q-soft: #3a2614; --idea: #82b6f0; --idea-soft: #17283d; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #101716; --paper: #172120; --line: #2f3f3c; --ink: #e9f0ee; --ink-2: #bccac6; --muted: #8b9a96;
+  --accent: #5cc7b2; --accent-soft: #173a34; --q: #f0a85e; --q-soft: #3a2614; --idea: #82b6f0; --idea-soft: #17283d; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 400 17px/1.55 var(--body); margin: 0; padding: 0 16px 56px; }
+.wrap { max-width: 1240px; margin: 0 auto; }
+h1, h2, h3 { font-family: var(--display); margin: 0; text-wrap: balance; }
+a { color: var(--accent); }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+button, input, select { font: inherit; color: inherit; }
+.label { font: 500 11px/1.3 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+header { display: grid; gap: 14px; padding: 30px 0 20px; border-bottom: 1px solid var(--line); }
+header h1 { font-size: clamp(30px, 5vw, 50px); font-weight: 700; letter-spacing: -.02em; line-height: 1.02; }
+.idea-line { margin: 0; color: var(--ink-2); max-width: 70ch; }
+.strip { display: flex; flex-wrap: wrap; gap: 8px 26px; align-items: baseline; }
+.stat b { font: 600 24px/1 var(--display); font-variant-numeric: tabular-nums; margin-right: 6px; }
+.stat span, #sync { font: 400 13px var(--mono); color: var(--muted); }
+.filter { display: flex; flex-wrap: wrap; gap: 6px; margin: 20px 0 16px; }
+.filter button { border: 1px solid var(--line); background: var(--paper); padding: 6px 13px; font: 600 14px var(--display); cursor: pointer; }
+.filter button[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.notice { padding: 12px 16px; background: var(--paper); border: 1px solid var(--line); color: var(--ink-2); margin-bottom: 16px; font-size: 15px; }
+.cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: start; }
+.col { background: var(--paper); border: 1px solid var(--line); border-top: 4px solid var(--accent); min-width: 0; }
+.col.k-question { border-top-color: var(--q); }
+.col.k-idea { border-top-color: var(--idea); }
+.col h2 { font-size: 20px; padding: 14px 16px 10px; display: flex; justify-content: space-between; gap: 10px; }
+.col h2 .n { font: 500 14px var(--mono); color: var(--muted); }
+.col ul { list-style: none; margin: 0; padding: 0; }
+.item { padding: 12px 16px; border-top: 1px solid var(--line); display: grid; gap: 6px; overflow-wrap: anywhere; }
+.item .meta { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font: 400 12px var(--mono); color: var(--muted); }
+.tag { padding: 1px 7px; background: var(--accent-soft); color: var(--accent); }
+.k-question .tag { background: var(--q-soft); color: var(--q); }
+.k-idea .tag { background: var(--idea-soft); color: var(--idea); }
+.answer { margin: 2px 0 0; padding-left: 10px; border-left: 3px solid var(--line); color: var(--ink-2); font-size: 15.5px; }
+.empty { color: var(--muted); padding: 12px 16px; margin: 0; border-top: 1px solid var(--line); font-size: 15px; }
+.del { margin-left: auto; border: 0; background: none; color: var(--muted); cursor: pointer; font: 400 12px var(--mono); text-decoration: underline; }
+.add { margin-top: 26px; background: var(--paper); border: 1px solid var(--line); padding: 18px; display: grid; gap: 12px; }
+.add h2 { font-size: 20px; }
+.add p { margin: 0; color: var(--ink-2); font-size: 15px; }
+.fields { display: grid; grid-template-columns: 180px 170px minmax(0, 1fr) auto; gap: 10px; align-items: end; }
+.field { display: grid; gap: 4px; min-width: 0; }
+.field label { font: 500 11px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.field input, .field select { border: 1px solid var(--line); background: var(--bg); padding: 8px 10px; min-width: 0; width: 100%; }
+.btn { border: 1px solid var(--ink); background: var(--ink); color: var(--bg); padding: 8px 18px; font: 600 15px var(--display); cursor: pointer; }
+.btn:disabled { opacity: .5; cursor: default; }
+@media (max-width: 900px) { .cols { grid-template-columns: 1fr; } .fields { grid-template-columns: 1fr 1fr; } .fields .grow, .fields .btn { grid-column: 1 / -1; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <p class="label" id="eyebrow">Discovery Wall</p>
+    <h1 id="title">Discovery Wall</h1>
+    <p class="idea-line" id="idea">What the squad finds out, what it's still asking, and ideas for the prototype, in one place. Add to it here, or ask Claude to.</p>
+    <div class="strip" aria-live="polite">
+      <span class="stat"><b id="n-found">0</b><span>found out</span></span>
+      <span class="stat"><b id="n-question">0</b><span>open questions</span></span>
+      <span class="stat"><b id="n-idea">0</b><span>ideas</span></span>
+      <span id="sync">Connecting…</span>
+    </div>
+  </header>
+
+  <div class="filter" role="group" aria-label="Show items from" id="filter"></div>
+  <div class="notice" id="notice" hidden></div>
+
+  <div class="cols" id="cols"></div>
+
+  <form class="add" id="add" autocomplete="off">
+    <h2>Add to the wall</h2>
+    <p>One sentence each. To get Claude or a squad mate to look into something, comment on it and @mention them.</p>
+    <div class="fields">
+      <div class="field"><label for="f-who">Who</label><input id="f-who" required maxlength="60" placeholder="Your name"></div>
+      <div class="field"><label for="f-kind">Kind</label>
+        <select id="f-kind"><option value="found">Found out</option><option value="question">Open question</option><option value="idea">Idea</option></select></div>
+      <div class="field grow"><label for="f-text">What</label><input id="f-text" required maxlength="400" placeholder="e.g. Most helplines list opening hours but not who's free right now"></div>
+      <button class="btn" type="submit" id="f-add">Add</button>
+    </div>
+    <div class="field grow"><label for="f-url">Source link (optional)</label><input id="f-url" type="url" maxlength="500" placeholder="https://"></div>
+  </form>
+</div>
+
+<script>
+// Shared database:
+//   squad/info   { name, challenge, idea }
+//   items/<id>   { person, kind: 'found' | 'question' | 'idea', text, url, answer, createdAt }
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const safeUrl = u => /^https?:\/\//i.test(u || '') ? u : '';
+const KINDS = [['found', 'Found out'], ['question', 'Open questions'], ['idea', 'Ideas']];
+const S = { squad: {}, items: [], db: null, canWrite: false, who: 'all', armed: null };
+
+function render() {
+  $('title').textContent = S.squad.name ? `${S.squad.name} Discovery Wall` : 'Discovery Wall';
+  document.title = $('title').textContent;
+  $('eyebrow').textContent = ['Discovery Wall', S.squad.challenge].filter(Boolean).join(' · ');
+  if (S.squad.idea) $('idea').textContent = `The idea: ${S.squad.idea}`;
+  for (const [k] of KINDS) $('n-' + k).textContent = S.items.filter(i => i.kind === k).length;
+
+  const people = [...new Set(S.items.map(i => i.person).filter(Boolean))].sort();
+  if (S.who !== 'all' && !people.includes(S.who)) S.who = 'all';
+  $('filter').innerHTML = ['all', ...people].map(p => `<button type="button" data-who="${esc(p)}" aria-pressed="${p === S.who}">${p === 'all' ? 'Everyone' : esc(p)}</button>`).join('');
+  $('filter').querySelectorAll('button').forEach(b => b.addEventListener('click', () => { S.who = b.dataset.who; render(); }));
+
+  const shown = S.items.filter(i => S.who === 'all' || i.person === S.who);
+  $('cols').innerHTML = KINDS.map(([k, label]) => {
+    const rows = shown.filter(i => i.kind === k);
+    return `<section class="col k-${k}" aria-label="${label}"><h2>${label}<span class="n">${rows.length}</span></h2>
+      ${rows.length ? `<ul>${rows.map(i => `<li class="item">
+        <span>${esc(i.text)}${safeUrl(i.url) ? ` <a href="${esc(safeUrl(i.url))}" target="_blank" rel="noopener">source</a>` : ''}</span>
+        ${i.answer ? `<p class="answer">${esc(i.answer)}</p>` : ''}
+        <span class="meta"><span class="tag">${esc(i.person || 'Someone')}</span>${k === 'question' && !i.answer ? '<span>not answered yet</span>' : ''}
+          ${S.db && S.canWrite ? `<button class="del" type="button" data-del="${esc(i.id)}">${S.armed === i.id ? 'Sure? Remove' : 'Remove'}</button>` : ''}</span>
+      </li>`).join('')}</ul>` : `<p class="empty">Nothing yet.</p>`}
+    </section>`;
+  }).join('');
+  $('cols').querySelectorAll('[data-del]').forEach(b => b.addEventListener('click', async () => {
+    const id = b.dataset.del;
+    if (S.armed !== id) { S.armed = id; render(); return; }
+    S.armed = null;
+    try { await S.db.doc('items/' + id).delete(); $('sync').textContent = 'Removed'; }
+    catch (e) { $('sync').textContent = `Couldn't remove that (${e.code || 'error'})`; render(); }
+  }));
+}
+
+$('add').addEventListener('submit', async e => {
+  e.preventDefault();
+  const text = $('f-text').value.trim(), person = $('f-who').value.trim();
+  if (!text || !person || !S.db) return;
+  $('f-add').disabled = true;
+  try {
+    await S.db.collection('items').add({ person, kind: $('f-kind').value, text, url: safeUrl($('f-url').value.trim()), answer: '', createdAt: new Date().toISOString() });
+    $('f-text').value = ''; $('f-url').value = '';
+    try { localStorage.setItem('wall-who', person); } catch (err) {}
+    $('sync').textContent = 'Added';
+  } catch (err) { $('sync').textContent = `Couldn't add that (${err.code || 'error'}). Try again.`; }
+  finally { $('f-add').disabled = false; }
+});
+
+async function start() {
+  try { const w = localStorage.getItem('wall-who'); if (w) $('f-who').value = w; } catch (e) {}
+  render();
+  ['f-who', 'f-kind', 'f-text', 'f-url', 'f-add'].forEach(id => $(id).disabled = true);
+  const db = await window.claude?.use?.('db');
+  if (!db) { $('notice').hidden = false; $('notice').textContent = 'This wall needs you to be signed in to claude.ai, with access to this page.'; $('sync').textContent = 'Not connected'; return; }
+  S.db = db;
+  const user = await window.claude.use('user');
+  const can = user ? await user.can('data.write') : null;
+  S.canWrite = can !== false;
+  ['f-who', 'f-kind', 'f-text', 'f-url', 'f-add'].forEach(id => $(id).disabled = can === false);
+  if (can === false) { $('notice').hidden = false; $('notice').textContent = 'You can read this wall. Ask your product owner for edit access to add to it.'; }
+  db.doc('squad/info').onSnapshot(s => { if (s.exists) S.squad = s.data(); render(); }, () => {});
+  db.collection('items').onSnapshot(s => {
+    S.items = s.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => String(a.createdAt).localeCompare(String(b.createdAt)));
+    $('sync').textContent = 'Live'; render();
+  }, err => { $('sync').textContent = `Couldn't load the wall (${err.code || 'error'})`; });
+}
+start();
+</script>

@@ -1,0 +1,33 @@
+# Secrets and local config
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Claude Code local (per-person) settings
+.claude/settings.local.json
+
+# The merge captain's shared-screen copy of main
+.screen/
+
+# OS and editor clutter
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Common build output
+node_modules/
+dist/
+build/
+.next/
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Data safety: keep real data out of git
+*.real.csv
+*.real.xlsx
+private-data/
