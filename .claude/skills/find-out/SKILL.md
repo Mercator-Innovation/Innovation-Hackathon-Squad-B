@@ -36,5 +36,5 @@ People can comment on any item on the wall and @mention a squad mate or Claude. 
 
 1. Publish `discovery-wall.html` (in this skill's folder) as an artifact titled "<squad name> Discovery Wall", with the `db` and `user` capabilities. Don't change the HTML: the page sets its own title from the squad name.
 2. Write `squad/info` in its database: `{ name, challenge, idea }` from `TEAM.md`.
-3. Tell them how to share it: open the page, click **Share**, add each squad member with **edit access**, then **Copy link** and post it in the squad's Teams channel. Shared pages appear in everyone's **Artifacts** list in the left sidebar.
+3. Tell them how to share it: open the page, click **Share**, add each squad member with **edit access**, then **Copy link** and post it in the squad's Teams chat. Shared pages appear in everyone's **Artifacts** list in the left sidebar.
 4. Add the link to `TEAM.md` under Links, and `/share` it.

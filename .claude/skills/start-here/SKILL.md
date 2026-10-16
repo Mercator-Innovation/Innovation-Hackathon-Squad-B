@@ -50,14 +50,14 @@ Use `/share` to commit their learning log on the branch `<firstname>-<lastname>/
 - Tell them: "That's sharing working: your log is in the squad's shared copy."
 - Ask them to type `/` and check that **share**, **challenges** and the other skills appear. If they don't, say plain English works too, and suggest a new chat in the repo folder.
 - Pass on two tips: **Tab then Enter** accepts a suggested prompt, and they can type while you work.
-- Suggest they post "I'm set up" in their squad's Teams channel.
+- Suggest they post "I'm set up" in their squad's Teams chat.
 
 ## 5. The squad lead (before the day)
 
 Check the Squad lead column in `TEAM.md`.
 
-- **If this person is the squad lead:** say that they run the squad's setup. Help them agree the two roles in the Teams channel by Wed 21 Oct (a product owner, often them, and a merge captain, who doesn't need to be a developer: someone happy to drive the shared screen and keep things in order). When they're ready, ask who has each role as clickable options listing the squad's members (up to four names; anyone else goes under Other), then write the roles into `TEAM.md` and share it. Then check who hasn't set up yet: everyone with a learning log in `main` has.
-- **Anyone else:** say in one line who their squad lead is, that the squad lead sorts out roles, and that they can chat about it in the Teams channel. Don't run the squad setup for them.
+- **If this person is the squad lead:** say that they run the squad's setup. Help them agree the two roles in the Teams chat by Wed 21 Oct (a product owner, often them, and a merge captain, who doesn't need to be a developer: someone happy to drive the shared screen and keep things in order). When they're ready, ask who has each role as clickable options listing the squad's members (up to four names; anyone else goes under Other), then write the roles into `TEAM.md` and share it. Then check who hasn't set up yet: everyone with a learning log in `main` has.
+- **Anyone else:** say in one line who their squad lead is, that the squad lead sorts out roles, and that they can talk about it in the Teams chat. Don't run the squad setup for them.
 
 Before the day, they're welcome to read `challenges/` and ask about them. Choosing the challenge, the squad name and the idea, and any building, are for the day.
 

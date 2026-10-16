@@ -4,7 +4,7 @@ Your squad's shared space for the hackathon. Claude reads it every time you star
 
 **When:** Thursday 22 October 2026, 15:00 to 19:00. Building stops at 18:40.
 **What:** pick one of three real Scottish public sector challenges, talk it through, get a first version on the shared screen, then everyone builds.
-**Help:** your squad's Teams channel, a facilitator, or the drop-ins (Mon 19 Oct 16:00 to 16:30, Tue 20 Oct 12:00 to 12:30).
+**Help:** your squad's Teams chat, a facilitator, or the drop-ins (Mon 19 Oct 16:00 to 16:30, Tue 20 Oct 12:00 to 12:30).
 
 ## Set up (before the day, about 20 minutes)
 
@@ -21,18 +21,18 @@ Your squad's shared space for the hackathon. Claude reads it every time you star
    - Type `/`. You should see **start-here** in the list.
    - If you don't, Claude may have made a subfolder after all. Click the folder name above the chat box, choose **Change folder**, and open the folder inside Hackathon that has `README.md` and `TEAM.md` in it.
 8. **Type `/start-here`.** Claude checks your setup, finds you in `TEAM.md`, asks three quick questions (just click your answers) and shares your learning log. That proves everything works.
-9. **Post "I'm set up"** in your squad's Teams channel.
+9. **Post "I'm set up"** in your squad's Teams chat.
 
-Stuck? Bring it to a drop-in, or ask in your Teams channel. That's what they're for.
+Stuck? Bring it to a drop-in, or ask in your Teams chat. That's what they're for.
 
 ## The squad lead's job (before the day)
 
 The organisers have named a **squad lead** in `TEAM.md`. They:
 
-- agree the squad's two roles in the Teams channel by **Wed 21 Oct**: a **product owner** and a **merge captain** (see `TEAM.md`), then tell Claude `add our roles to TEAM.md`
+- agree the squad's two roles in the Teams chat by **Wed 21 Oct**: a **product owner** and a **merge captain** (see `TEAM.md`), then tell Claude `add our roles to TEAM.md`
 - make sure everyone has posted "I'm set up"
 
-Everyone else: chat in the Teams channel, say which role you'd enjoy, and help the squad lead.
+Everyone else: talk in the Teams chat, say which role you'd enjoy, and help the squad lead.
 
 **Fine before the day:** setting up, agreeing roles, reading the challenges in `challenges/` and asking Claude about them.
 **Save for the day:** choosing the challenge, the squad name and the idea, and any building. That way every squad starts from the same point.
@@ -75,7 +75,7 @@ You don't need the slash: plain English works too.
 
 - **Tab then Enter** accepts the prompt Claude suggests in grey.
 - You can **type while Claude is working**.
-- **Shared pages** (like a Discovery Wall) open on the right. Any shared with you are in the **Artifacts** list at the top of the left sidebar. To share one, click **Share**, then **Copy link** and post it in your Teams channel.
+- **Shared pages** (like a Discovery Wall) open on the right. Any shared with you are in the **Artifacts** list at the top of the left sidebar. To share one, click **Share**, then **Copy link** and post it in your Teams chat.
 - Prefer paper or a whiteboard? Go for it. Photograph it into `sketches/` and tell Claude `share my work`.
 - Long chat getting muddled? Start a new chat in the same folder.
 
