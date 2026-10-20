@@ -9,7 +9,7 @@ A traditional hackathon, with Claude in everyone's hands. **Lots of building, li
 | 15:30 | **Talk it through** (20 min) | Together | Who's struggling, when, and what would help them? Anyone can `/find-out` something on the side. Agree the idea in a sentence or two. The product owner records it |
 | 15:50 | **First version** (20 min) | The merge captain drives | The driver describes the idea loosely to Claude (`/first-version`), and it builds a rough, working version. On the shared screen by about 16:10. Meanwhile, everyone else sketches, gathers content or data, or finds things out, keeping it in the chat or `sketches/` until the first version is shared |
 | 16:10 | **Grab and build** (65 min) | Everyone | Look at it together. The product owner says "go". Everyone says what they'll improve, builds it with Claude, and tells Claude `/share` when it works. The merge captain keeps the screen fresh and sorts out who goes first if two people need the same file. Food arrives at around 17:00: eat while you work with your squad |
-| 17:15 | **Look together** (10 min) | Together | On the shared screen. What's working? What matters most next? The product owner decides |
+| 17:15 | **Look together** (10 min) | Together | On the shared screen, as the person you're helping. What's working? What's confusing? What's missing? The product owner records the answers in `TEAM.md` and decides what matters most next |
 | 17:25 | **Grab and build** (75 min) | Everyone | As before. Share small and often |
 | **18:40** | **Hard stop** | Everyone | Share what you have, even unfinished |
 | 18:40 | **Show and tell** (2 min a squad) | Whoever the squad chooses presents | What we built, one thing that didn't work, one surprise from the tooling |

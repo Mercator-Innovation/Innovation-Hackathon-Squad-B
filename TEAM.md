@@ -31,6 +31,15 @@ The **squad lead** runs the squad's setup before the day: agreeing the two roles
 - **Merge captain:** drives the shared screen, gets the first version up, keeps the screen on the latest version, and sorts out the order when two people would change the same files.
 - **Everyone, both roles included:** builds. The squad chooses who presents at show and tell.
 
+## Look together (17:15)
+
+<!-- At the look together, the squad uses the prototype as the person it's helping. The product owner's session writes one short line for each, then what the squad will do next, and shares it. -->
+
+**What's working:** _(at 17:15)_
+**What's confusing:** _(at 17:15)_
+**What's missing:** _(at 17:15)_
+**What we'll do next:** _(the product owner's call)_
+
 ## Links
 
 - Discovery Wall (optional): _(added if the squad makes one)_
