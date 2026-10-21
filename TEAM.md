@@ -24,8 +24,8 @@ The **squad lead** runs the squad's setup before the day: agreeing the two roles
 
 | Role | Who |
 |---|---|
-| Product owner | |
-| Merge captain | |
+| Product owner | Okeli Okonye |
+| Merge captain | Petra Rabely |
 
 - **Product owner:** chairs the squad's conversations, records what the squad decides (the challenge, the idea), makes the call on what matters next and keeps an eye on time.
 - **Merge captain:** drives the shared screen, gets the first version up, keeps the screen on the latest version, and sorts out the order when two people would change the same files.
