@@ -22,7 +22,7 @@ This is a together moment. If several people in the squad run this at once, sugg
    - Things to keep in mind
 3. **Where the squad's mix fits.** Read the professions in `TEAM.md` and give one short line per challenge, for example "your user researcher and service designer know this kind of journey". Never say a squad can't take a challenge because it lacks a profession: everyone can do more than their job title today.
 4. **Invite questions.** "Ask me anything about these before you choose." Answer from the sheets first. If you go beyond them, say where the answer comes from (the CivTech page, or a search) and give the source.
-5. **Hand the choice back.** Ask the squad to talk it over. Two questions help: "Which problem do you care most about?" and "Which of these people would you most like to help?" They can dot-vote on the printed sheets if they prefer.
+5. **Hand the choice back.** Ask the squad to talk it over. Two questions help: "Which problem do you care most about?" and "Which of these people would you most like to help?" It's the squad's decision, not one person's: the product owner only records it.
 
 ## Don't
 

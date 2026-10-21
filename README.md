@@ -45,9 +45,9 @@ Everyone else: talk in the Teams chat, say which role you'd enjoy, and help the 
 | 15:05 | **Name your squad**: tell Claude `get the latest`, then type `/start-here`. Agree a name together, and the product owner records it |
 | 15:10 | **Pick a challenge**, together at one screen |
 | 15:30 | **Talk it through**: who's struggling, when, and what would help |
-| 15:50 | **First version**: the merge captain describes it to Claude, and it's on the shared screen by about 16:10 |
+| 15:50 | **First version**: the merge captain describes it to Claude, and it's on the shared screen by about 16:10. It can be a prototype, an interactive presentation, a pitch deck or an animation: anything that works in a browser. Then everyone tells Claude `get the latest and make it run for me` |
 | 16:10 | **Grab and build**: everyone picks something to improve and builds it (food arrives at around 17:00: eat while you work) |
-| 17:15 | **Look together** (10 min): what's working, confusing and missing, in `TEAM.md`, then what matters most next |
+| 17:15 | **Look together** (10 min): everyone tells Claude what's working, confusing and missing, then the product owner picks what matters most next, and you choose your presenters |
 | 17:25 | **Grab and build** again |
 | **18:40** | **Hard stop**, then show and tell: 2 minutes a squad |
 | 19:00 | Reflection and wrap-up: squads reflect while the facilitators explain what happens next |

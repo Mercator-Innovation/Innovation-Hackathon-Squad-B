@@ -26,8 +26,8 @@ A squad of 2 to 5 people from different professions. **Most aren't developers, a
 
 **Roles** (in `TEAM.md`):
 
-- **Product owner:** chairs the squad's conversations and makes the calls. They decide when the squad moves on, not you.
-- **The presenter:** the squad chooses who presents at show and tell (anyone, or a few people).
+- **Product owner:** chairs the squad's conversations and records what the squad decides; the challenge and the idea are the squad's choice. They make the call on what matters next, and decide when the squad moves on, not you.
+- **The presenters:** the squad chooses who presents at show and tell (anyone, or a few people), at the look together at 17:15.
 - **Merge captain:** drives the shared screen, gets the first version up, keeps the screen current, and sequences people who'd change the same files.
 - **Squad lead:** named by the organisers, runs setup before the day. The product owner unless the squad agrees otherwise.
 - **Everyone builds**, both roles included.
@@ -42,13 +42,13 @@ A squad of 2 to 5 people from different professions. **Most aren't developers, a
 |---|---|---|
 | 15:00 | Welcome | Everyone |
 | 15:05 | **Name the squad** | Everyone: `get the latest`, then `/start-here`. Agree a name together. The product owner records it |
-| 15:10 | **Pick a challenge** | Together at one screen: `/challenges`. The product owner records it |
+| 15:10 | **Pick a challenge** | Together at one screen: `/challenges`. The squad decides; the product owner records it |
 | 15:30 | **Talk it through**: who's struggling, when, and what would help | Together. Anyone can `/find-out` on the side. The product owner records the idea |
-| 15:50 | **First version** on the shared screen by about 16:10 | The merge captain drives `/first-version`; others sketch, find out, gather content |
+| 15:50 | **First version** on the shared screen by about 16:10 | The merge captain drives `/first-version`; others sketch, find out, gather content. Once it's shared, everyone: `get the latest and make it run for me` |
 | 16:10 | **Grab and build**. Food arrives at around 17:00: people eat while they work | Everyone: pick something to improve, build it, `/share` it |
-| 17:15 | **Look together** (10 min) | On the shared screen, as the person you're helping. The product owner records what's working, what's confusing and what's missing in `TEAM.md`, then picks what matters next |
-| 17:25 | **Grab and build** again | Everyone |
-| 18:40 | **Hard stop**, then show and tell (2 minutes a squad) | Whoever the squad chooses presents: `/show-and-tell` |
+| 17:15 | **Look together** (10 min) | On the shared screen, as the person you're helping: what's working, what's confusing, what's missing. Everyone tells their Claude, or the product owner for everyone. Then the product owner picks what matters next, and the squad picks its presenters |
+| 17:25 | **Grab and build** again | Everyone. The presenters start `/show-and-tell` by 18:30 at the latest |
+| 18:40 | **Hard stop**, then show and tell (2 minutes a squad) | The presenters join the Teams call (the link is in the squad's Teams chat) and share their screen |
 | 19:00 | **Reflection and wrap-up**: squads reflect while the facilitators explain what happens next | `/reflect` |
 
 The timings are a guide, and squads can work their own way. Facilitators nudge squads that fall behind, so don't nag about the clock.
@@ -58,7 +58,7 @@ The timings are a guide, and squads can work their own way. Facilitators nudge s
 - **Stay with what the person is doing.** Help them go deeper on it. Don't push them on to the next step of the day: the product owner says when the squad moves on.
 - **One person records each decision.** The challenge, the idea, the squad name and the look together notes go into `TEAM.md` from the product owner's session only. In anyone else's session, don't write them: say the product owner will, then "get the latest".
 - **Together moments** (naming the squad, picking the challenge, talking it through, looking together) happen around one screen. Don't decide for the squad. Say what needs agreeing, offer two or three options if that helps, and record what they decide.
-- **At the look together** (17:15), in the product owner's session: ask the squad, using the prototype as the person it's helping, what's working, what's confusing and what's missing. Write one short line for each under Look together in `TEAM.md`, in the squad's words, plus what the squad will do next, then `/share` it. In anyone else's session, suggest they say it out loud, and `note that` anything they want to keep.
+- **At the look together** (17:15), everyone says what's working, what's confusing and what's missing, using the prototype as the person it's helping. **In anyone else's session:** write their answers as one line in their learning log, under During (`17:15 look together: working …; confusing …; missing …`), and `/share` it. **In the product owner's session:** either take the squad's answers straight from them, or `get the latest` and gather the look together lines from everyone's logs. Write one short line for each under Look together in `TEAM.md`, in the squad's words, plus what the squad will do next and who's presenting at show and tell, then `/share` it.
 - **Overriding you is welcome.** Go with the squad's choice.
 
 ## Building

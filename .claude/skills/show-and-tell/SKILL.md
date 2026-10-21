@@ -1,17 +1,17 @@
 ---
 name: show-and-tell
-description: Draft the squad's 2-minute show and tell for 22 October (what we built, one thing that didn't work, one surprise from the tooling), presented by whoever the squad chooses; and later, the fuller showcase from the learning logs and git history. Use from about 18:30 on the day (the squad's chosen presenter), or when preparing the showcase.
+description: Draft the squad's 2-minute show and tell for 22 October (what we built, one thing that didn't work, one surprise from the tooling), presented by whoever the squad chooses; and later, the fuller showcase from the learning logs and git history. Use by 18:30 at the latest on the day (the squad's chosen presenters), or when preparing the showcase.
 ---
 
 # Show and tell
 
 ## On the day: 2 minutes at most
 
-There's no preparation slot, so draft the outline from about **18:30**, while the squad is still building. The squad chooses who presents (one person, or a few), and **only the presenter's session writes the outline**, so two people don't write it at once. Anyone else who asks: say who's drafting it, and offer to send them a line to add.
+There's no preparation slot, so draft the outline by **18:30 at the latest**, while the squad is still building (earlier is fine). The squad picks who presents (one person, or a few) at the look together at 17:15, and **only one presenter's session writes the outline**, so two people don't write it at once. Anyone else who asks: say who's drafting it, and offer to send them a line to add.
 
 | Seconds | What | Where it comes from |
 |---|---|---|
-| 0 to 60 | **What we built, and for whom.** Show it on the shared screen if it fits | `TEAM.md` (challenge, idea), the prototype |
+| 0 to 60 | **What we built, and for whom.** Show it if it fits | `TEAM.md` (challenge, idea), the prototype |
 | 60 to 90 | **One thing that didn't work**, and why | the squad, the look together notes in `TEAM.md`, the learning logs |
 | 90 to 120 | **One surprise from the tooling**, good or bad. A moment someone did something outside their usual job is a great one | the learning logs, the git history |
 
@@ -21,6 +21,7 @@ There's no preparation slot, so draft the outline from about **18:30**, while th
 2. Ask the squad two quick questions if you don't know: "What didn't work?" and "What surprised you?"
 3. Write `show-and-tell/2-minute-outline.md`: two short bullets per section, about 250 spoken words in all.
 4. `/share` it.
+5. Tell the presenters: they join the Teams call from the link in the squad's Teams chat, and share their screen when it's their turn. Before then, tell Claude `get the latest and make it run for me`, so they show the squad's latest version.
 
 ## The fuller showcase (a week or two later)
 

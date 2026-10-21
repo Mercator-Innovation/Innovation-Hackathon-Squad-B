@@ -5,7 +5,7 @@ description: Turn the squad's loosely described idea into a working first versio
 
 # First version
 
-The goal is **something the squad can look at and react to**, quickly. It will be rough, and that's the point: once it's on screen, everyone can say "I'll improve that".
+The goal is **something the squad can look at and react to**, quickly. It can be a prototype, an interactive presentation, a pitch deck, an animation, or whatever the squad wants it to be: it just has to work in a browser, from `src/`. If the idea doesn't say which, ask the driver. It will be rough, and that's the point: once it's on screen, everyone can say "I'll improve that".
 
 ## 1. Get the idea in their words (2 minutes)
 
@@ -33,6 +33,7 @@ The goal is **something the squad can look at and react to**, quickly. It will b
 1. Show it: serve `src/` and open it in the browser, as **Preview** in `CLAUDE.md` says (http://localhost:8766/), rather than opening the file. Do it yourself, then ask the driver to drag the window to the big screen.
 2. `/share` it, so it's in `main` and everyone can get the latest. Then the merge captain sets up the shared screen properly with `/merge-captain`, so it keeps showing the latest version while they build too.
 3. Say in two lines what it does and what's deliberately rough.
+4. Tell the driver to ask everyone to tell their own Claude `get the latest and make it run for me`, so each person sees the squad's version on their own laptop.
 
 ## 4. Hand it to the squad
 

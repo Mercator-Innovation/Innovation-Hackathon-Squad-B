@@ -27,7 +27,7 @@ The **squad lead** runs the squad's setup before the day: agreeing the two roles
 | Product owner | |
 | Merge captain | |
 
-- **Product owner:** chairs the squad's conversations, makes the calls (the challenge, the idea, what matters next) and keeps an eye on time.
+- **Product owner:** chairs the squad's conversations, records what the squad decides (the challenge, the idea), makes the call on what matters next and keeps an eye on time.
 - **Merge captain:** drives the shared screen, gets the first version up, keeps the screen on the latest version, and sorts out the order when two people would change the same files.
 - **Everyone, both roles included:** builds. The squad chooses who presents at show and tell.
 
@@ -39,6 +39,7 @@ The **squad lead** runs the squad's setup before the day: agreeing the two roles
 **What's confusing:** _(at 17:15)_
 **What's missing:** _(at 17:15)_
 **What we'll do next:** _(the product owner's call)_
+**Presenting at show and tell:** _(chosen at 17:15)_
 
 ## Links
 
