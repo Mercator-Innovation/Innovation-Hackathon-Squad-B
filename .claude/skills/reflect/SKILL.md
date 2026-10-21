@@ -1,6 +1,6 @@
 ---
 name: reflect
-description: Capture learning for one person in their learning log, with clickable multiple-choice questions. During the day, notes a moment in one line. At 19:00, asks four quick end-of-day questions. In the week after, walks through the short reflection. Use when someone says "note that", "log this" or "reflect", at the end of the day, or when Claude spots a moment worth keeping.
+description: Capture learning for one person in their learning log, with clickable multiple-choice questions. During the day, notes a moment in one line. At 19:00, asks four quick end-of-day questions, four about their experience of the hackathon, and one thing to change next time. In the week after, walks through the short reflection. Use when someone says "note that", "log this" or "reflect", at the end of the day, or when Claude spots a moment worth keeping.
 ---
 
 # Reflect
@@ -21,9 +21,14 @@ When something notable happens, offer once, briefly: "Worth noting that?" If yes
 
 It goes in with their next `/share`. Don't interrupt someone in the middle of building: offer it when they pause or share.
 
-## At 19:00: four questions, one call (two minutes)
+## At 19:00: two quick calls and one line (three minutes)
 
-Ask the **At 19:00** set from `learning/questions.md` in one `AskUserQuestion` call. Fill in the front matter and the **At 19:00** section, then `/share`.
+1. Ask the first four **At 19:00** questions from `learning/questions.md` in one `AskUserQuestion` call.
+2. Then say, in one line: "Four quick ones about the hackathon itself. Be honest: it helps us make the next one better." Ask the four **about the hackathon** questions in a second call.
+3. Then ask, in their own words: "One thing we should change next time?" Keep their words exactly, and take "nothing" or a skip as an answer.
+4. Fill in the front matter and the **At 19:00** section, then `/share`.
+
+Most logs were started before these questions were added, so they don't have the hackathon lines yet. Add them as in `_template.md`: `enjoyed`, `pace`, `worked_best` and `again` in the front matter after `ai_use_after`, and the five lines at the end of **At 19:00**.
 
 ## In the week after: the reflection
 

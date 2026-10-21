@@ -13,6 +13,10 @@ worked_on: []
 outside_usual_job:
 got_in_way: []
 ai_use_after:
+enjoyed:
+pace:
+worked_best: []
+again:
 # In the week after
 specialist:
 helped_squad: []
@@ -35,6 +39,11 @@ ai_use_week_after:
 - How much of it was outside my usual job: <answer>
 - What got in the way: <answers>
 - How much I'd use AI tools in my work now: <answer>
+- How much I enjoyed the hackathon: <answer>
+- The pace of the afternoon: <answer>
+- What worked best for me: <answers>
+- Would I take part in another: <answer>
+- One thing to change next time: <in my words>
 
 ## In the week after
 - Did I still need a human specialist: <answer>, for <what>

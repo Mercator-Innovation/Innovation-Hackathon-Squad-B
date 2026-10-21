@@ -12,7 +12,7 @@ Never reword a question or its options, and never change their order. If the cli
 | `hopes` | What are you hoping to get from the hackathon? | One or more | See what Claude can do → `see-claude` · Build something real, fast → `build-fast` · Try work outside my usual job → `other-jobs` · Work with people I don't usually work with → `new-people` |
 | `feeling` | How do you feel about using AI in your work? | One | Excited → `excited` · Curious → `curious` · Unsure → `unsure` · Sceptical → `sceptical` |
 
-## At 19:00 (`/reflect`): four questions, one call
+## At 19:00 (`/reflect`): four questions, then four about the hackathon, then one in words
 
 | Key | Question | Pick | Options → code |
 |---|---|---|---|
@@ -20,6 +20,17 @@ Never reword a question or its options, and never change their order. If the cli
 | `outside_usual_job` | How much of that was outside your usual job? | One | A lot → `a-lot` · A bit → `a-bit` · Not really → `not-really` · None of it → `none` |
 | `got_in_way` | What got in the way? | One or more | Sharing or git → `sharing` · Claude getting things wrong → `claude-wrong` · Working as a squad (clashes, waiting) → `squad` · Not enough time → `time` |
 | `ai_use_after` | How much would you use AI tools in your work now? | One | Same options and codes as `ai_use_before` |
+
+Then, in a second call, **about the hackathon itself**:
+
+| Key | Question | Pick | Options → code |
+|---|---|---|---|
+| `enjoyed` | How much did you enjoy the hackathon? | One | Loved it → `loved` · Enjoyed it → `enjoyed` · It was OK → `ok` · Didn't enjoy it → `didnt` |
+| `pace` | How was the pace of the afternoon? | One | Too rushed → `rushed` · About right → `right` · Too slow → `slow` · It varied a lot → `varied` |
+| `worked_best` | What worked best for you? | One or more | Building with Claude → `building` · Working in a mixed squad → `mixed-squad` · The shared screen and badges → `screen-badges` · The setup before the day → `setup` |
+| `again` | Would you take part in another one? | One | Definitely → `definitely` · Probably → `probably` · Not sure → `not-sure` · No → `no` |
+
+Then, in their own words: **one thing we should change next time** ("nothing" is a fine answer).
 
 ## In the week after (`/reflect`): four questions, one call, then two in words
 
