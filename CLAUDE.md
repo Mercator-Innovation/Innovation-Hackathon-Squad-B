@@ -106,10 +106,10 @@ More in `docs/good-practice.md`.
 
 Before saying a change is done, check it: open the page, or run the tests if there are any. Show what you saw, or say plainly that you couldn't check.
 
-- Preview: open `src/index.html` in the browser (`open src/index.html` on a Mac).
+- Preview: **serve `src/` and open that, not the file.** If `curl -s -o /dev/null http://localhost:8766/` fails, start `nohup python3 -m http.server 8766 --bind 127.0.0.1 --directory src >/dev/null 2>&1 &`, then `open http://localhost:8766/` (Mac). Do this yourself. Repos are in the Documents folder, and a browser on a Mac often can't read the files beside a page there. (No `python3`, or on Windows: open `src/index.html` directly.)
 - Phone width: about 375 pixels.
 - Keyboard: tab through anything interactive.
-- **A blank page** (bare boxes, no words or colours) in Chrome on a Mac: the browser can't read the files beside the page, usually because it isn't allowed into the Documents folder (the console, **Cmd+Option+J**, says `ERR_ACCESS_DENIED`). Fix: System Settings → Privacy & Security → **Files & Folders** → Google Chrome → **Documents Folder**, then quit and reopen Chrome. Or serve it instead: `python3 -m http.server 8000 --directory src`, then open http://localhost:8000.
+- **A blank page** (bare boxes, no words or colours): the browser opened the file but can't read the files beside it. Use the preview server above. If there's no `python3`: System Settings → Privacy & Security → **Files & Folders** → Google Chrome → **Documents Folder**, then quit and reopen Chrome.
 
 ## Learning
 

@@ -30,7 +30,7 @@ The goal is **something the squad can look at and react to**, quickly. It will b
 
 ## 3. Put it on the shared screen
 
-1. Open it: `open src/index.html` (Mac), and drag the window to the big screen. Bare boxes with no words or colours? See **A blank page** in `CLAUDE.md`.
+1. Show it: serve `src/` and open it in the browser, as **Preview** in `CLAUDE.md` says (http://localhost:8766/), rather than opening the file. Do it yourself, then ask the driver to drag the window to the big screen.
 2. `/share` it, so it's in `main` and everyone can get the latest. Then the merge captain sets up the shared screen properly with `/merge-captain`, so it keeps showing the latest version while they build too.
 3. Say in two lines what it does and what's deliberately rough.
 

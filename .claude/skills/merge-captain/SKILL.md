@@ -11,23 +11,28 @@ Suggest they keep **a separate chat** for this (a new chat in the same folder), 
 
 ## Set up the shared screen (once)
 
-The shared screen shows `main` from its own copy, in `.screen/` (git ignores it), so the merge captain can build on their own branch at the same time. Set it up once the first version has been shared (before that, show `src/index.html` from the merge captain's own copy).
+**Do all of this yourself**, without asking the merge captain to run anything: they only drag the window to the big screen. The shared screen shows `main` from its own copy, in `.screen/` (git ignores it), so the merge captain can build on their own branch at the same time. Set it up once the first version has been shared (before that, `/first-version` shows it from the merge captain's own copy).
 
 ```bash
 git fetch origin
-git worktree add --detach .screen origin/main
-open .screen/src/index.html          # on a Mac; drag it to the big screen
+[ -d .screen ] || git worktree add --detach .screen origin/main
+git -C .screen checkout --detach origin/main
 ```
 
-For a remote squad, share that browser window on the Teams call.
-
-**Bare boxes, no words or colours?** The browser opened the page but can't read the files beside it. On a Mac that's usually because Chrome isn't allowed into the Documents folder: the console (**Cmd+Option+J**) says `ERR_ACCESS_DENIED`. Either turn that on (System Settings → Privacy & Security → **Files & Folders** → Google Chrome → **Documents Folder**, then quit and reopen Chrome), or serve the screen instead, and keep it running in the background:
+Then **serve it from a small local web server and open that, never the file itself**. Everyone's repo is in the Documents folder, and a browser on a Mac often isn't allowed to read the files beside a page there, so an opened file shows bare boxes with no words or colours. The server avoids that. Start it only if it isn't already running:
 
 ```bash
-python3 -m http.server 8000 --directory .screen/src     # then open http://localhost:8000
+if ! curl -s -o /dev/null http://localhost:8765/; then
+  nohup python3 -m http.server 8765 --bind 127.0.0.1 --directory .screen/src >/dev/null 2>&1 &
+  sleep 1
+fi
+curl -s -o /dev/null -w '%{http_code}\n' http://localhost:8765/     # 200: the screen is being served
+open http://localhost:8765/                                         # on a Mac
 ```
 
-If the console says `ERR_FILE_NOT_FOUND` instead, the screen's copy is out of date: refresh it (below).
+- Tell the merge captain in one line: "The shared screen is open in your browser. Drag it to the big screen, and make it full screen with **Ctrl+Cmd+F**." For a remote squad, they share that browser window on the Teams call instead.
+- **If it isn't 200** (no `python3`, or the port is taken), try port 8775 the same way. If that fails too, open the file (`open .screen/src/index.html`), and if that shows bare boxes, suggest System Settings → Privacy & Security → **Files & Folders** → Google Chrome → **Documents Folder**, then quitting and reopening Chrome.
+- **On Windows**, opening the file is fine: `start .screen\src\index.html`.
 
 ## Keep it fresh
 
@@ -41,6 +46,7 @@ Each time:
 
 ```bash
 git fetch origin
+curl -s -o /dev/null http://localhost:8765/ || echo "the screen's server has stopped"   # if so, start it again, as above
 git -C .screen log --oneline HEAD..origin/main     # what's new since the screen last updated
 git -C .screen checkout --detach origin/main
 ```
