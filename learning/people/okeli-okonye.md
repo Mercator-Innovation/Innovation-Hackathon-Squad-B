@@ -2,7 +2,7 @@
 # Answers as codes, for counting across squads. The questions and codes are in learning/questions.md.
 name: Okeli Okonye
 profession: Business Analyst
-role: none
+role: product owner
 location: in person
 # At setup
 ai_use_before: 2
