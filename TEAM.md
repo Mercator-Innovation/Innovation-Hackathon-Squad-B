@@ -1,6 +1,6 @@
 # Our squad
 
-<!-- The organisers fill in Members before the day, and mark the squad lead. The squad lead adds Roles by Wed 21 Oct. The product owner adds the squad name, the challenge and the idea on the day. Only the product owner's Claude writes the decisions here; everyone else says "get the latest". -->
+<!-- The organisers fill in Members before the day, and mark the squad lead. The squad lead adds Roles by Wed 21 Oct. On the day, the product owner adds the squad name first (at 15:05, through /start-here), then the challenge and the idea. Only the product owner's Claude writes the decisions here; everyone else says "get the latest". -->
 
 **Repo:** Innovation-Hackathon-Squad-B
 **Squad name:** _chosen on the day_

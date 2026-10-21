@@ -35,13 +35,14 @@ The organisers have named a **squad lead** in `TEAM.md`. They:
 Everyone else: talk in the Teams chat, say which role you'd enjoy, and help the squad lead.
 
 **Fine before the day:** setting up, agreeing roles, reading the challenges in `challenges/` and asking Claude about them.
-**Save for the day:** choosing the challenge, the squad name and the idea, and any building. That way every squad starts from the same point.
+**Save for the day:** choosing the squad name (first thing, at 15:05), the challenge and the idea, and any building. That way every squad starts from the same point.
 
 ## On the day
 
 | Time | What |
 |---|---|
 | 15:00 | Welcome |
+| 15:05 | **Name your squad**: tell Claude `get the latest`, then type `/start-here`. Agree a name together, and the product owner records it |
 | 15:10 | **Pick a challenge**, together at one screen |
 | 15:30 | **Talk it through**: who's struggling, when, and what would help |
 | 15:50 | **First version**: the merge captain describes it to Claude, and it's on the shared screen by about 16:10 |

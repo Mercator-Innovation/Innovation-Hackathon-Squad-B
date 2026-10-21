@@ -35,6 +35,6 @@ This is a together moment. If several people in the squad run this at once, sugg
 - **Only in the product owner's session.** Once the squad has agreed, ask which challenge as clickable options (the three challenges, single choice), then write it into `TEAM.md` with one or two sentences on why, and `/share` it.
 - **In anyone else's session:** say "Your product owner records it. Once they have, say 'get the latest'." Don't write it yourself, so two people never record the same decision.
 
-**The squad name** is recorded the same way: whenever the squad picks one (any time before 17:15), the product owner's session writes it into `TEAM.md` and shares it.
+**The squad name** comes first, at 15:05, through `/start-here`, and it's recorded the same way: only in the product owner's session. If the squad hasn't named itself yet, suggest doing that first. It takes a couple of minutes.
 
 Then the squad talks it through (see "The day" in `CLAUDE.md`). Before the day, help anyone read and ask about the challenges, but leave the choice for the day.

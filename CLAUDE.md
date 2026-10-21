@@ -41,6 +41,7 @@ A squad of 2 to 5 people from different professions. **Most aren't developers, a
 | Time | What | How |
 |---|---|---|
 | 15:00 | Welcome | Everyone |
+| 15:05 | **Name the squad** | Everyone: `get the latest`, then `/start-here`. Agree a name together. The product owner records it |
 | 15:10 | **Pick a challenge** | Together at one screen: `/challenges`. The product owner records it |
 | 15:30 | **Talk it through**: who's struggling, when, and what would help | Together. Anyone can `/find-out` on the side. The product owner records the idea |
 | 15:50 | **First version** on the shared screen by about 16:10 | The merge captain drives `/first-version`; others sketch, find out, gather content |
@@ -56,7 +57,7 @@ The timings are a guide, and squads can work their own way. Facilitators nudge s
 
 - **Stay with what the person is doing.** Help them go deeper on it. Don't push them on to the next step of the day: the product owner says when the squad moves on.
 - **One person records each decision.** The challenge, the idea, the squad name and the look together notes go into `TEAM.md` from the product owner's session only. In anyone else's session, don't write them: say the product owner will, then "get the latest".
-- **Together moments** (picking the challenge, talking it through, looking together) happen around one screen. Don't decide for the squad. Say what needs agreeing, offer two or three options if that helps, and record what they decide.
+- **Together moments** (naming the squad, picking the challenge, talking it through, looking together) happen around one screen. Don't decide for the squad. Say what needs agreeing, offer two or three options if that helps, and record what they decide.
 - **At the look together** (17:15), in the product owner's session: ask the squad, using the prototype as the person it's helping, what's working, what's confusing and what's missing. Write one short line for each under Look together in `TEAM.md`, in the squad's words, plus what the squad will do next, then `/share` it. In anyone else's session, suggest they say it out loud, and `note that` anything they want to keep.
 - **Overriding you is welcome.** Go with the squad's choice.
 
@@ -108,6 +109,7 @@ Before saying a change is done, check it: open the page, or run the tests if the
 - Preview: open `src/index.html` in the browser (`open src/index.html` on a Mac).
 - Phone width: about 375 pixels.
 - Keyboard: tab through anything interactive.
+- **A blank page** (bare boxes, no words or colours) in Chrome on a Mac: the browser can't read the files beside the page, usually because it isn't allowed into the Documents folder (the console, **Cmd+Option+J**, says `ERR_ACCESS_DENIED`). Fix: System Settings → Privacy & Security → **Files & Folders** → Google Chrome → **Documents Folder**, then quit and reopen Chrome. Or serve it instead: `python3 -m http.server 8000 --directory src`, then open http://localhost:8000.
 
 ## Learning
 

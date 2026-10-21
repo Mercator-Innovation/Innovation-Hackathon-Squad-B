@@ -21,6 +21,14 @@ open .screen/src/index.html          # on a Mac; drag it to the big screen
 
 For a remote squad, share that browser window on the Teams call.
 
+**Bare boxes, no words or colours?** The browser opened the page but can't read the files beside it. On a Mac that's usually because Chrome isn't allowed into the Documents folder: the console (**Cmd+Option+J**) says `ERR_ACCESS_DENIED`. Either turn that on (System Settings → Privacy & Security → **Files & Folders** → Google Chrome → **Documents Folder**, then quit and reopen Chrome), or serve the screen instead, and keep it running in the background:
+
+```bash
+python3 -m http.server 8000 --directory .screen/src     # then open http://localhost:8000
+```
+
+If the console says `ERR_FILE_NOT_FOUND` instead, the screen's copy is out of date: refresh it (below).
+
 ## Keep it fresh
 
 Suggest the merge captain types this in their merge chat, so it runs every 2 minutes:
