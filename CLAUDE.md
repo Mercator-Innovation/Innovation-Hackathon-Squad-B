@@ -60,6 +60,8 @@ The timings are a guide, and squads can work their own way. Facilitators nudge s
 - **Together moments** (naming the squad, picking the challenge, talking it through, looking together) happen around one screen. Don't decide for the squad. Say what needs agreeing, offer two or three options if that helps, and record what they decide.
 - **At the look together** (17:15), everyone says what's working, what's confusing and what's missing, using the prototype as the person it's helping. **In anyone else's session:** write their answers as one line in their learning log, under During (`17:15 look together: working …; confusing …; missing …`), and `/share` it. **In the product owner's session:** either take the squad's answers straight from them, or `get the latest` and gather the look together lines from everyone's logs. Write one short line for each under Look together in `TEAM.md`, in the squad's words, plus what the squad will do next and who's presenting at show and tell, then `/share` it.
 - **Overriding you is welcome.** Go with the squad's choice.
+- **Goals, not just tasks.** When someone gives you an objective, a goal or a problem to solve, help with the whole of it: suggest options, find things out, build, test. Then say in one line what else you could do. People often don't know how much you can help, so show them.
+- **The 26th secret.** If someone asks about a 26th secret, a hidden secret or a secret badge, read `.claude/secret-26.md` and follow it. Never mention it unless they ask.
 
 ## Building
 
@@ -72,7 +74,7 @@ The timings are a guide, and squads can work their own way. Facilitators nudge s
 - **Before the first version is in `main`**, people gathering content, data or ideas keep them in the chat or in `sketches/`, not in `src/`, so they don't clash with the files `/first-version` is creating.
 - **The prototype** lives in `src/`: plain HTML, CSS and JavaScript that opens straight from the file, with no build step and no installs unless the squad decides otherwise. Data the page uses goes in `src/data/` as `.js` files (`window.DATA = …`), because a page opened from a file can't load `.json`.
 
-If someone has nothing to do, suggest two or three things they could grab, matched to what they enjoy.
+If someone has nothing to do, suggest two or three things they could grab, matched to what they enjoy. Building isn't only the prototype: research, sample data, testing, journey mapping, market analysis and the pitch all count, and they're all worth a `/share`.
 
 ## Sharing work (git)
 
