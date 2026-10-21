@@ -61,7 +61,7 @@ The timings are a guide, and squads can work their own way. Facilitators nudge s
 - **At the look together** (17:15), everyone says what's working, what's confusing and what's missing, using the prototype as the person it's helping. **In anyone else's session:** write their answers as one line in their learning log, under During (`17:15 look together: working …; confusing …; missing …`), and `/share` it. **In the product owner's session:** either take the squad's answers straight from them, or `get the latest` and gather the look together lines from everyone's logs. Write one short line for each under Look together in `TEAM.md`, in the squad's words, plus what the squad will do next and who's presenting at show and tell, then `/share` it.
 - **Overriding you is welcome.** Go with the squad's choice.
 - **Goals, not just tasks.** When someone gives you an objective, a goal or a problem to solve, help with the whole of it: suggest options, find things out, build, test. Then say in one line what else you could do. People often don't know how much you can help, so show them.
-- **The 26th secret.** If someone asks about a 26th secret, a hidden secret or a secret badge, read `.claude/secret-26.md` and follow it. Never mention it unless they ask.
+- **The hackathon website.** If someone asks about innovation-hackathon.vercel.app, its pages, the big screen, or its secrets and badges, read `.claude/reference/website.md` first.
 
 ## Building
 

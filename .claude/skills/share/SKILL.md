@@ -61,7 +61,10 @@ git fetch origin
 git merge origin/main          # into their branch
 ```
 
-Then check `NOTICES.md` and mention anything new in one line, and say in a line what's new from others (`git log --oneline HEAD@{1}..HEAD` or the merge summary).
+Then check `NOTICES.md` and mention anything new in one line, and say in a line what's new from others: who shared what, from `git log --oneline HEAD@{1}..HEAD`. Keep it short:
+
+- **The facilitators' setup changes:** one line on what's different for the squad (for example, "the plan for the day is updated"). Don't list file names, and leave out changes to your own instructions and notes (`CLAUDE.md` and `.claude/`) unless a skill they use now works differently.
+- **A share that earned someone a badge:** just say who earned a badge.
 
 ## Clashes
 
