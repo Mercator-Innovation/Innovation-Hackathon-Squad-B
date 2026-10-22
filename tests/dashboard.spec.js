@@ -74,25 +74,25 @@ test.describe("Where to act first", () => {
 });
 
 test.describe("Risk by area", () => {
-  test("the map and the area list show every area, with the traffic light in words, not just colour", async ({ page }) => {
+  test("the map and the area table show every area, with the traffic light in words, not just colour", async ({ page }) => {
     await expect(page.locator("#heatmap .map-pin")).toHaveCount(8);
-    await expect(page.locator("#heatmap .area-row")).toHaveCount(8);
+    await expect(page.locator("#heatmap .matrix tbody tr")).toHaveCount(8);
     for (const label of await page.locator("#heatmap .map-pin").evaluateAll(pins => pins.map(p => p.getAttribute("aria-label")))) expect(label).toMatch(/Red|Amber|Green/);
     for (const tag of await page.locator("#heatmap .light-tag").allTextContents()) expect(tag).toMatch(/Red|Amber|Green/);
   });
 
-  test("choosing an area on the map shows only its homes, and marks it in the list", async ({ page }) => {
+  test("choosing an area on the map shows only its homes, and marks it in the table", async ({ page }) => {
     const pin = page.locator("#heatmap .map-pin").first();
     const name = await pin.getAttribute("data-area");
     await pin.click();
     await expect(page.locator(`#heatmap .map-pin[data-area="${name}"]`)).toHaveAttribute("aria-pressed", "true");
-    await expect(page.locator(`#heatmap .area-row[data-row-area="${name}"]`)).toHaveClass(/is-selected/);
+    await expect(page.locator(`#heatmap .matrix tr[data-row-area="${name}"]`)).toHaveClass(/is-selected/);
     const shown = await page.locator("#homes tr td:nth-child(3)").allTextContents();
     expect(shown.length).toBeGreaterThan(0);
     shown.forEach(a => expect(a.trim()).toBe(name));
   });
 
-  test("a part of an area's bar shows exactly those homes", async ({ page }) => {
+  test("a number in the area table shows exactly those homes", async ({ page }) => {
     const cell = page.locator("#heatmap [data-area-band]").first();
     const [area, band] = (await cell.getAttribute("data-area-band")).split("|");
     const n = Number((await cell.textContent()).trim().split(" ")[0]);
