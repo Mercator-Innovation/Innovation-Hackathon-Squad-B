@@ -136,3 +136,13 @@
   .map-pin { transform: translate(-50%, -15px); }
   .pin-name { font-size: 0.68rem; padding: 0 4px; white-space: normal; max-width: 4.4rem; text-align: center; line-height: 1.15; }
 }
+
+/* Visit app tab: the app in a tablet or phone frame */
+.device-frame { margin: 16px auto 0; border: 12px solid var(--riviera); border-radius: 28px; overflow: hidden; background: var(--bg); box-shadow: var(--shadow); max-width: 100%; }
+.device-frame.tablet { width: 820px; height: 1000px; }
+.device-frame.phone { width: 400px; height: 820px; border-radius: 36px; }
+.device-frame iframe { width: 100%; height: 100%; border: 0; display: block; }
+@media (max-width: 600px) { .device-frame.tablet, .device-frame.phone { width: 100%; height: 760px; border-width: 6px; } }
+.view-switch { display: inline-flex; border: 2px solid var(--brand); border-radius: 8px; overflow: hidden; }
+.view-switch button { font: inherit; font-weight: 600; background: var(--surface); color: var(--brand); border: 0; padding: 6px 16px; cursor: pointer; min-height: 40px; }
+.view-switch button[aria-pressed="true"] { background: var(--brand); color: #fff; }

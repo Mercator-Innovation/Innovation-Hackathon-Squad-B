@@ -185,3 +185,39 @@ test.describe("Phone and tablet", () => {
     expect(smallLabels).toEqual([]);
   });
 });
+
+test.describe("The Visit app tab on the staff view", () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto("/");
+    await page.evaluate(() => ["healthier-homes", "healthier-homes-planner", "healthier-homes-visit-app"].forEach(k => localStorage.removeItem(k)));
+  });
+
+  test("shows the visit app in a tablet frame, and switches to a phone", async ({ page }) => {
+    await page.getByRole("link", { name: "Visit app" }).click();
+    await expect(page.locator("#tab-visit-app")).toBeVisible();
+    await expect(page.locator("#tab-overview")).toBeHidden();
+    const app = page.frameLocator("#visit-app-frame");
+    await expect(app.locator("#who option")).not.toHaveCount(1);
+    await expect(page.locator("#device-frame")).toHaveClass(/tablet/);
+    await page.getByRole("button", { name: "Phone" }).click();
+    await expect(page.locator("#device-frame")).toHaveClass(/phone/);
+    await expect(page.getByRole("button", { name: "Phone" })).toHaveAttribute("aria-pressed", "true");
+  });
+
+  test("a visit recorded in the tab shows for staff after leaving it", async ({ page }) => {
+    await page.goto("/#visit-app");
+    const app = page.frameLocator("#visit-app-frame");
+    await expect(app.locator("#who option")).not.toHaveCount(1);
+    await app.locator("#who").selectOption({ index: 1 });
+    await app.locator(".visit-card").first().click();
+    const address = (await app.locator("#visit-title").textContent()).trim();
+    await app.getByLabel("Work needed: plan a repair").check();
+    await app.getByRole("button", { name: "Save visit" }).click();
+    await expect(app.locator(".notice.saved")).toBeVisible();
+
+    await page.getByRole("link", { name: "Risk overview" }).click();
+    await expect(page.locator("#tab-overview")).toBeVisible();
+    const status = await page.evaluate(a => scored().find(h => h.address === a).status, address);
+    expect(status).toBe("Work ordered");
+  });
+});
