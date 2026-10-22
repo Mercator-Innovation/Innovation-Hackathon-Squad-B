@@ -26,12 +26,20 @@
     section h2 { margin: 0 0 6px; font-size: 1.1rem; }
     section p { margin: 0; }
     .tip { padding: 12px 14px; border-radius: 10px; background: #fff7e0; border: 1px solid #f1d58a; }
+    h2.sub { font-size: 1.15rem; margin: 20px 0 2px; }
+    audio { width: 100%; margin: 8px 0 4px; }
   </style>
 </head>
 <body>
 <main>
   <header><img src="../src/logo.svg" alt=""><h1>Show and tell, read aloud</h1></header>
-  <p class="hint">Our 2-minute show and tell, read by your computer. It uses a Scottish voice when there is one.</p>
+  <p class="hint">Our 2-minute show and tell, read in a Scottish voice.</p>
+
+  <h2 class="sub">Listen to the recording</h2>
+  <p class="hint">Recorded in Fiona's Scottish voice. Works in any browser.</p>
+  <audio controls preload="metadata" src="presentation-fiona.m4a">Your browser can't play this recording.</audio>
+
+  <h2 class="sub">Or have your computer read it live</h2>
 
   <div class="controls">
     <label for="voice">Voice <select id="voice"></select></label>
@@ -40,7 +48,7 @@
     <button type="button" id="stop" class="secondary" disabled>Stop</button>
   </div>
   <p id="status" role="status" class="hint"></p>
-  <p id="no-fiona" class="tip" hidden>No Scottish voice on this computer yet. On a Mac: System Settings, Accessibility, Spoken Content, System voice, Manage Voices. Tick <strong>Fiona</strong> under English (Scotland), then reload this page.</p>
+  <p id="no-fiona" class="tip" hidden>No Scottish voice here yet. On a Mac: System Settings, Accessibility, Spoken Content, System voice, Manage Voices, and tick <strong>Fiona</strong> under English (Scotland). Then quit your browser completely (Cmd+Q) and open this page again: browsers only look for new voices when they start. Some browsers never offer Fiona to web pages, so the recording above is the safe choice.</p>
 
   <div id="script"></div>
 </main>
