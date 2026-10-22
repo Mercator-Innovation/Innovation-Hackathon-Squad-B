@@ -10,3 +10,5 @@ Run them: `npm test` (or ask Claude "run the tests"). See a report you can click
 - `data.spec.js`: the made-up data makes sense (no impossible households)
 - `dashboard.spec.js`: the staff dashboard, clicked like staff would, by mouse and keyboard, and at phone width
 - `tenant.spec.js`: the tenant report form, and that staff see the report
+- `planner.spec.js`: the visit planner keeps its promises (no double-booking, working hours and days, the right people, high risk first, nothing forgotten) and booking follow-ups
+- `track.spec.js`: Track your report reads references and shows the right progress
