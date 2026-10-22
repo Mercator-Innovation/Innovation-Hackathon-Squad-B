@@ -831,6 +831,30 @@ window.DATA = {
   ],
   "reports": [
     {
+      "ref": "R-0410",
+      "homeId": "H-1022",
+      "received": "2026-10-18",
+      "problems": [
+        "Condensation"
+      ],
+      "description": "The kitchen window steams up when I'm cooking. It clears during the day. Not sure if it's a problem.",
+      "rooms": "Kitchen",
+      "contactBy": "Email",
+      "status": "New"
+    },
+    {
+      "ref": "R-0411",
+      "homeId": "H-1006",
+      "received": "2026-10-19",
+      "problems": [
+        "Damp"
+      ],
+      "description": "A damp patch has appeared on the ceiling in the hall. It's about the size of a dinner plate and smells musty.",
+      "rooms": "Hall",
+      "contactBy": "Phone, any time",
+      "status": "New"
+    },
+    {
       "ref": "R-0412",
       "homeId": "H-1004",
       "received": "2026-10-20",

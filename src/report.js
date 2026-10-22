@@ -16,6 +16,7 @@ form.addEventListener("submit", e => {
     ref,
     homeId: home ? home.id : null,
     address,
+    name: data.get("name").trim(),
     received: new Date().toISOString().slice(0, 10),
     problems: data.getAll("problem").length ? data.getAll("problem") : ["Not sure"],
     description: data.get("description") || "No description given",
