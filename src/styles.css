@@ -48,9 +48,14 @@ header.site.has-logo { display: flex; align-items: center; gap: 16px; }
 header.site .logo { width: 52px; height: 52px; flex: none; border-radius: 14px; box-shadow: 0 0 0 2px rgba(243, 236, 222, 0.35); }
 @media (max-width: 600px) { header.site .logo { width: 40px; height: 40px; } }
 nav.tabs { display: flex; flex-wrap: wrap; gap: 4px 8px; background: var(--riviera); padding: 0 20px; border-top: 1px solid rgba(255, 255, 255, 0.08); }
-nav.tabs a { color: #e3e9f0; padding: 10px 6px 12px; margin: 0 4px; text-decoration: none; font-weight: 600; border-bottom: 3px solid transparent; }
+nav.tabs a { color: #e3e9f0; padding: 10px 14px 11px; margin-top: 4px; text-decoration: none; font-weight: 600; border-bottom: 3px solid transparent; border-radius: 10px 10px 0 0; }
 nav.tabs a:hover { color: #fff; border-bottom-color: rgba(212, 175, 131, 0.5); }
-nav.tabs a[aria-current="page"] { color: #fff; border-bottom-color: var(--sand); }
+/* The current tab echoes the terracotta logo tile */
+nav.tabs a[aria-current="page"] { color: #fff; background: var(--brand); border-bottom-color: var(--brand); }
+@media (max-width: 600px) {
+  nav.tabs { gap: 4px; padding: 6px 12px 10px; }
+  nav.tabs a { border-radius: 10px; padding: 7px 12px; margin: 0; border-bottom: 0; }
+}
 
 main { max-width: 1160px; margin: 0 auto; padding: 28px 20px 56px; }
 section.panel { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin-bottom: 24px; box-shadow: var(--shadow); }
@@ -401,3 +406,9 @@ blockquote.sms { margin: 6px 0 4px; padding: 10px 14px; background: var(--surfac
 .error-summary { border: 3px solid var(--high); border-radius: 12px; padding: 14px 18px; margin: 0 0 16px; background: var(--surface); }
 .error-summary h2 { font-size: 1.1rem; margin: 0 0 4px; }
 .error-summary a { color: var(--high); font-weight: 700; }
+
+/* A small rounded terracotta marker before each section heading, echoing the logo tile */
+section.panel h2::before, details.panel > summary h2::before {
+  content: ""; display: inline-block; width: 7px; height: 0.95em; margin-right: 10px; vertical-align: -0.1em;
+  border-radius: 3px; background: var(--brand);
+}
