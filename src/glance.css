@@ -190,25 +190,3 @@
 .map-home:hover { transform: translate(-50%, -50%) scale(1.25); }
 .map-zoom-out { position: absolute; z-index: 3; top: 10px; right: 10px; font: inherit; font-size: 0.85rem; font-weight: 600; padding: 7px 14px; border: 0; border-radius: 999px; background: rgba(255, 255, 255, 0.92); color: var(--text); box-shadow: 0 2px 8px rgba(24, 52, 81, 0.18); cursor: pointer; }
 .map-zoom-out:hover { background: #fff; color: var(--brand); }
-
-/* Areas, highest risk first: a ranked list with one stacked bar per area (replaces the grid table) */
-.seg-key { display: flex; gap: 14px; margin: 4px 0 10px; font-size: 0.8rem; color: var(--muted); }
-.seg-key span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
-.seg-key .key-high::before { background: var(--red); } .seg-key .key-medium::before { background: var(--amber-solid); } .seg-key .key-low::before { background: var(--green); }
-.area-list { list-style: none; margin: 0; padding: 6px; background: var(--surface); border-radius: 18px; box-shadow: 0 1px 2px rgba(24, 52, 81, 0.04), 0 8px 28px rgba(24, 52, 81, 0.06); }
-.area-row { padding: 10px 12px; border-radius: 12px; transition: background 0.12s; }
-.area-row + .area-row { margin-top: 2px; }
-.area-row.is-hot, .area-row.is-selected { background: var(--brand-tint); }
-.ar-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px; }
-.ar-name { font: inherit; font-weight: 600; color: var(--text); background: none; border: 0; padding: 0; cursor: pointer; text-align: left; }
-.ar-name:hover, .ar-name[aria-pressed="true"] { color: var(--brand); }
-.ar-head .light-tag { margin: 0; font-size: 0.75rem; font-weight: 500; color: var(--muted); }
-.ar-score { margin-left: auto; font-variant-numeric: tabular-nums; font-weight: 600; color: var(--muted); font-size: 0.9rem; }
-.ar-bar { display: flex; gap: 3px; height: 26px; }
-.seg { font: inherit; font-size: 0.8rem; font-weight: 700; min-width: 26px; border: 0; border-radius: 7px; cursor: pointer; color: #fff; padding: 0 6px; transition: transform 0.1s, filter 0.1s; }
-.seg:hover { filter: brightness(1.08); transform: translateY(-1px); }
-.seg-high { background: var(--red); }
-.seg-medium { background: var(--amber-solid); color: var(--text); }
-.seg-low { background: var(--green); }
-.ar-total { margin: 10px 4px 0; font-size: 0.85rem; color: var(--muted); }
-@media (prefers-reduced-motion: reduce) { .area-row, .seg { transition: none; } .seg:hover { transform: none; } }
