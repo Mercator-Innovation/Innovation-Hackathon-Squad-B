@@ -61,7 +61,8 @@ function renderFilters() {
   document.getElementById("search").placeholder = C.searchPlaceholder;
   // Reports from tenants
   document.getElementById("report-filter-band").innerHTML = options(["High", "Medium", "Low"]) + `<option value="none">${C.filterNotRated}</option>`;
-  document.getElementById("report-filter-status").innerHTML = options(["New", "Picked up", "Closed"]);
+  document.getElementById("report-filter-status").innerHTML = `<option value="">${C.filterAll}</option>` +
+    ["New", "Picked up", "Case processing", "Closed"].map(v => `<option value="${v}">${escapeHtml(C.reportStatusNames[v])}</option>`).join("");
   document.getElementById("report-filter-type").innerHTML = options(["Damp", "Mould", "Condensation", "Cold", "Something else", "Not sure"]);
 }
 
@@ -287,6 +288,19 @@ function formatDate(iso) {
   return new Date(iso + "T00:00").toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
 }
 
+// The report journey: New → Picked up → Case processing → Closed (shown as "Case closed").
+function reportActions(r, home, status) {
+  const caseLink = home ? `#cases/${home.id}` : "";
+  if (status === "New")
+    return `<button type="button" class="primary" data-report-status="Picked up" data-ref="${r.ref}">${C.reportPickUp}</button>`;
+  if (status === "Picked up")
+    return home ? `<a class="button case-button" href="${caseLink}" data-report-status="Case processing" data-ref="${r.ref}" data-next-for="${r.ref}">${C.reportOpenCase}</a>` : "";
+  if (status === "Case processing")
+    return `${home ? `<a href="${caseLink}" data-next-for="${r.ref}">${C.reportViewCase}</a>` : ""}
+      <button type="button" class="small" data-report-status="Closed" data-ref="${r.ref}">${C.reportCloseCase}</button>`;
+  return home ? `<a href="${caseLink}" data-next-for="${r.ref}">${C.reportViewCase}</a>` : "";
+}
+
 function renderReports() {
   const rated = scored();
   const band = document.getElementById("report-filter-band").value;
@@ -317,11 +331,9 @@ function renderReports() {
         <br><small>${r.ref} · ${escapeHtml(r.name || (home && home.tenant) || C.reportNotGiven)}</small>`, "rr-home")}
       ${cell(C.rrRisk, risk ? `<span class="badge ${risk.band}">${risk.band} · ${risk.points}</span>` : `<span class="badge">${C.filterNotRated}</span>`, "rr-risk")}
       ${cell(C.rrType, `${escapeHtml(r.problems.join(", "))}<br><small>${escapeHtml(r.rooms || C.reportNotGiven)}</small>`, "rr-type")}
-      ${cell(C.rrStatus, `${escapeHtml(status)}<br><small>${formatDate(r.received)}</small>`, "rr-status")}
+      ${cell(C.rrStatus, `${escapeHtml(C.reportStatusNames[status] || status)}<br><small>${formatDate(r.received)}</small>`, "rr-status")}
       <div class="rr-actions">
-        ${status === "New" ? `<button type="button" class="primary" data-report-status="Picked up" data-ref="${r.ref}">${C.reportPickUp}</button>`
-          : home ? `<a class="button case-button" href="#cases/${home.id}" data-case-for="${r.ref}">${C.openCase}</a>` : ""}
-        ${status === "Picked up" ? `<button type="button" class="small" data-report-status="Closed" data-ref="${r.ref}">${C.reportClose}</button>` : ""}
+        ${reportActions(r, home, status)}
       </div>
       <p class="rr-comment"><span class="label">${C.reportComments}</span> ${escapeHtml(r.description)}
         ${r.health === "Yes" ? `<span class="rr-health"><span class="label">${C.reportHealth}</span> ${C.reportHealthYes}</span>` : ""}
@@ -378,10 +390,14 @@ document.addEventListener("click", e => {
   const report = e.target.closest("[data-report-status]");
   if (report) {
     const ref = report.dataset.ref;
+    const goTo = report.tagName === "A" && report.getAttribute("href");
+    if (goTo) e.preventDefault();
     state.status[ref] = report.dataset.reportStatus;
     saveState(state); render();
-    // Keep keyboard users in place: focus the button that replaced the one they clicked, or the heading.
-    (document.querySelector(`[data-case-for="${ref}"]`) || document.getElementById("reports-title")).focus();
+    // "Open case" goes on to the case. Otherwise keep keyboard users in place by
+    // focusing the button that replaced the one they clicked, or the heading.
+    if (goTo) location.hash = goTo;
+    else (document.querySelector(`[data-next-for="${ref}"]`) || document.getElementById("reports-title")).focus();
   }
 
   // Sorting: choose a column once to sort by it, again to reverse

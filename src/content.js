@@ -145,6 +145,10 @@ window.CONTENT = {
   reportHealthYes: "Says someone's health is affected. Ask with care.",
   reportPickUp: "Mark as picked up",
   reportClose: "Close report",
+  reportOpenCase: "Open case",
+  reportViewCase: "View the case",
+  reportCloseCase: "Close case",
+  reportStatusNames: { "New": "New", "Picked up": "Picked up", "Case processing": "Case processing", "Closed": "Case closed" },
   visitsTitle: "Visits booked",
   visitsEmpty: "No visits booked yet. Open a home to book one.",
 
