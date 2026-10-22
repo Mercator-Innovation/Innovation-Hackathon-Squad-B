@@ -199,11 +199,13 @@ fieldset.person legend small { font-weight: 400; color: var(--muted); }
 .chip strong { margin-right: 2px; }
 .chip:hover { border-color: var(--brand); }
 .chip[aria-pressed="true"] { background: var(--brand); border-color: var(--brand); color: #fff; }
+.chip[aria-pressed="true"]::before { content: "\2713  "; }
+@media (forced-colors: active) { .chip[aria-pressed="true"] { border: 4px solid Highlight; } }
 .case-filters { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: flex-end; padding: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); }
 .cf-search { flex: 3 1 300px; display: flex; flex-direction: column; font-weight: 600; }
 .cf-search .hint { font-weight: 400; font-size: 0.85rem; }
 .cf-risk { flex: 0 1 auto; margin: 0; }
-.cf-risk .checks.inline { flex-wrap: nowrap; gap: 4px 10px; }
+.cf-risk .checks.inline { flex-wrap: wrap; gap: 4px 10px; }
 .cf-risk .checks.inline label { margin: 6px 0; }
 .cf-field { flex: 1 1 140px; }
 .cf-risk legend, .cf-field { font-weight: 600; font-size: 0.9rem; }
@@ -250,7 +252,7 @@ mark { background: var(--focus); color: var(--text); padding: 0 1px; border-radi
   .case-grid { grid-template-columns: 1fr; grid-template-rows: none; grid-template-areas: "coming" "actions" "history"; }
 }
 @media (max-width: 600px) {
-  .case-chips { flex-wrap: nowrap; overflow-x: auto; padding: 4px 2px 8px; }
+  .case-chips { flex-wrap: nowrap; overflow-x: auto; padding: 8px 8px 10px; margin-left: -8px; margin-right: -8px; }
   .chip { flex: 0 0 auto; }
   .cf-field { flex-basis: 115px; min-width: 0; }
   .cf-field select { width: 100%; min-width: 0; }
@@ -258,7 +260,7 @@ mark { background: var(--focus); color: var(--text); padding: 0 1px; border-radi
 .nowrap { white-space: nowrap; }
 
 /* Links between cases and the calendar */
-.ci-cal { position: relative; z-index: 1; display: block; font-size: 0.85rem; }
+.ci-cal { position: relative; z-index: 1; display: block; font-size: 0.85rem; padding: 6px 0; margin: -4px 0; min-height: 24px; }
 blockquote.latest { margin: 0 0 12px; padding: 8px 12px; border-left: 4px solid var(--brand); background: #e8f1f2; }
 .cal-ev.flash { animation: flash 0.8s ease-in-out 3; z-index: 2; }
 @keyframes flash { 50% { box-shadow: 0 0 0 4px var(--focus), 0 0 0 7px var(--text); } }

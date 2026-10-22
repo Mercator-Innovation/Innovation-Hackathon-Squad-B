@@ -33,10 +33,10 @@
   }
 
   function history(h) {
-    const c = PL.caseOf(h.id);
+    const c = PL.peekCase(h.id);
     const items = c.log.map(l => ({ at: l.at, kind: l.kind, text: l.text, by: l.by }));
     allReports().filter(r => r.homeId === h.id).forEach(r =>
-      items.push({ at: `${r.received}T09:00`, kind: "report", text: `${r.ref}: ${r.problems.join(", ")}. ${r.description}`, by: "" }));
+      items.push({ at: new Date(`${r.received}T09:00`).toISOString(), kind: "report", text: `${r.ref}: ${r.problems.join(", ")}. ${r.description}`, by: "" }));
     if (state.notes[h.id]) items.push({ at: "", kind: "note", text: state.notes[h.id], by: "Note on the home's details" });
     return items.sort((a, b) => b.at.localeCompare(a.at));
   }
@@ -124,7 +124,7 @@
   }
 
   function matches(x, f) {
-    if (f.show === "open" && !x.open) return false;
+    if (f.show === "open" && !x.open && !CLOSED.includes(f.stage)) return false;
     if (!f.risk.includes(x.h.risk.band)) return false;
     if (f.stage === "repair" ? !x.st.startsWith("Repair") || x.st === "Repair done" : f.stage && x.st !== f.stage) return false;
     if (f.area && x.h.area !== f.area) return false;
@@ -143,7 +143,7 @@
   const SORTS = {
     updated: (a, b) => ((b.last || {}).at || "").localeCompare((a.last || {}).at || "") || b.h.risk.points - a.h.risk.points,
     risk: (a, b) => b.h.risk.points - a.h.risk.points || ((b.last || {}).at || "").localeCompare((a.last || {}).at || ""),
-    next: (a, b) => (a.next ? a.next.iso + PL.hhmm(a.next.start) : "~").localeCompare(b.next ? b.next.iso + PL.hhmm(b.next.start) : "~"),
+    next: (a, b) => (!a.next || !b.next) ? (!a.next) - (!b.next) : a.next.iso.localeCompare(b.next.iso) || a.next.start - b.next.start,
     address: (a, b) => street(a.h.address).localeCompare(street(b.h.address)) || number(a.h.address) - number(b.h.address)
   };
 
@@ -179,7 +179,7 @@
       <div class="ci-meta">
         <span class="stage-pill">${st}</span>
         <span><span class="ci-label">${T.labelNext}</span> ${next ? `${PL.TYPE[next.type]}, ${PL.nice(next.date)} ${PL.hhmm(next.start)}
-          <button type="button" class="link ci-cal" data-show-visit="${next.key}" aria-label="See the visit to ${escapeHtml(h.address)} on the calendar">${T.caseOnCalendar}</button>` : T.noneLabel}</span>
+          <button type="button" class="link ci-cal" data-show-visit="${next.key}">${T.caseOnCalendar}<span class="visually-hidden">: visit to ${escapeHtml(h.address)}</span></button>` : T.noneLabel}</span>
         <span><span class="ci-label">${T.labelLast}</span> ${last ? ago(last.at) : T.neverLabel}</span>
       </div>
       ${last ? `<p class="ci-last tl-${last.kind}"><span class="tl-kind">${KIND[last.kind] || ""}</span> ${escapeHtml(last.text.length > 140 ? `${last.text.slice(0, 137)}...` : last.text)}</p>` : ""}
@@ -199,8 +199,9 @@
 
     document.getElementById("case-count").textContent =
       T.casesCount.replace("{shown}", shown.length).replace("{total}", found.length)
-        .replace("{what}", F.show === "open" ? (found.length === 1 ? "open case" : "open cases") : (found.length === 1 ? "home" : "homes"));
-    document.getElementById("case-clear").hidden = sameFilters(F, DEFAULTS) && F.sort === DEFAULTS.sort;
+        .replace("{what}", CLOSED.includes(F.stage) ? (found.length === 1 ? "case" : "cases")
+          : F.show === "open" ? (found.length === 1 ? "open case" : "open cases") : (found.length === 1 ? "home" : "homes"));
+    document.getElementById("case-clear").hidden = sameFilters(F, DEFAULTS) && !F.q.trim() && F.sort === DEFAULTS.sort;
     document.getElementById("cases-rows").innerHTML = shown.map(cardHtml).join("") || `<li class="case-none">${F.show === "open" ? T.casesEmpty : T.casesEmptyAll}</li>`;
     const more = document.getElementById("case-more");
     more.hidden = found.length <= shown.length;
@@ -235,11 +236,11 @@
   }
 
   // ---- One case ----
-  function renderCase(id) {
+  function renderCase(id, focusId) {
     const h = homeById(id);
     const view = document.getElementById("case-view");
     if (!h) { view.innerHTML = `<section class="panel"><p>No home with reference ${escapeHtml(id)}. <a href="#cases">${T.caseBack}</a></p></section>`; return; }
-    const c = PL.caseOf(id);
+    const c = PL.peekCase(id);
     const staff = PL.staff();
     const coming = upcoming(id);
     const items = history(h);
@@ -294,14 +295,15 @@
         <div class="cg-actions">
           <section class="panel" aria-labelledby="note-title">
             <h2 id="note-title">${T.caseNoteTitle}</h2>
-            <form id="note-form">
+            <form id="note-form" novalidate>
               <div class="form-row"><label for="note-type">${T.caseNoteType}</label>
                 <select id="note-type">${NOTE_TYPES.map(t => `<option>${t}</option>`).join("")}</select></div>
               <div class="form-row"><label for="note-who">${T.caseNoteWho}</label>
                 <select id="note-who">${staff.map(st => `<option ${st.name === writer() ? "selected" : ""}>${escapeHtml(st.name)}</option>`).join("")}</select></div>
               <div class="form-row"><label for="note-text">${T.caseNoteText}</label>
                 <span class="hint" id="note-hint">${T.caseNoteHint}</span>
-                <textarea id="note-text" rows="3" required aria-describedby="note-hint"></textarea></div>
+                <span class="error" id="note-text-error" hidden></span>
+                <textarea id="note-text" rows="3" aria-describedby="note-hint" data-hint="note-hint"></textarea></div>
               <button type="submit" class="primary">${T.caseNoteButton}</button>
             </form>
           </section>
@@ -340,7 +342,12 @@
           </section>
         </div>
       </div>`;
+    if (message) announce(message.replace(/<[^>]+>/g, ""));
     message = "";
+    if (focusId) {
+      const target = document.getElementById(focusId);
+      if (target) { target.tabIndex = -1; target.focus(); }
+    }
     if (justBooked) {
       const confirm = document.getElementById("visit-confirm");
       confirm.scrollIntoView({ block: "start" });
@@ -365,13 +372,21 @@
     document.getElementById("note-form").addEventListener("submit", e => {
       e.preventDefault();
       const text = document.getElementById("note-text").value.trim();
-      if (!text) return;
+      const box = document.getElementById("note-text"), error = document.getElementById("note-text-error");
+      if (!text) {
+        error.textContent = T.caseNoteEmpty;
+        error.hidden = false;
+        box.setAttribute("aria-invalid", "true");
+        box.setAttribute("aria-describedby", "note-hint note-text-error");
+        box.focus();
+        return;
+      }
       const by = document.getElementById("note-who").value;
       try { localStorage.setItem(WRITER_KEY, by); } catch {}
       PL.log(id, "note", `${document.getElementById("note-type").value}: ${text}`, by);
-      message = "Note added.";
+      message = T.caseNoteAdded;
       PL.save();
-      renderCase(id);
+      renderCase(id, "history-title");
     });
 
     document.getElementById("find-slot").addEventListener("click", () => {
@@ -416,32 +431,67 @@
   }
 
   // ---- Which view: #cases for the list, #cases/H-1001 for one case ----
+  const PAGE_TITLE = document.title;
+  let lastCase = null;
   function route() {
     const hash = location.hash.slice(1);
     const on = hash === "cases" || hash.startsWith("cases/");
     tab.hidden = !on;
     const link = document.querySelector('[data-tab="cases"]');
     if (on) link.setAttribute("aria-current", "page"); else link.removeAttribute("aria-current");
-    if (!on) return;
+    if (!on) { document.title = PAGE_TITLE; return; }
     const id = hash.split("/")[1];
+    const h = id && homeById(id);
+    document.title = h ? `${h.address}: case - ${PAGE_TITLE}` : `${T.casesPageTitle} - ${PAGE_TITLE}`;
     document.getElementById("cases-list").hidden = !!id;
-    if (id) renderCase(id);
+    if (id) { lastCase = id; renderCase(id); }
     else { document.getElementById("case-view").innerHTML = ""; renderList(); }
   }
-  // Arriving at a case from elsewhere: start at the top, with focus on its name.
+  // Arriving at a case: start at the top, with focus on its name.
+  // Back at the list: focus the case you were on, showing more of the list if needed.
   function arrive() {
     route();
-    if (!location.hash.startsWith("#cases/")) return;
-    window.scrollTo(0, 0);
-    const title = document.getElementById("case-title");
-    if (title) { title.tabIndex = -1; title.focus({ preventScroll: true }); }
+    if (location.hash.startsWith("#cases/")) {
+      window.scrollTo(0, 0);
+      const title = document.getElementById("case-title");
+      if (title) { title.tabIndex = -1; title.focus({ preventScroll: true }); }
+    } else if (location.hash === "#cases" && lastCase) {
+      const find = () => document.querySelector(`#cases-rows a[href="#cases/${lastCase}"]`);
+      while (!find() && !document.getElementById("case-more").hidden) { limit += PAGE; renderList(); }
+      const card = find();
+      if (card) card.focus();
+      lastCase = null;
+    }
+  }
+  // Redraw after a pop-up closes, keeping focus on the same control if it's still there.
+  function redraw() {
+    const a = document.activeElement;
+    const view = document.getElementById("case-view");
+    const sel = a && view.contains(a)
+      ? (a.dataset.visit ? `[data-visit="${a.dataset.visit}"]` : a.dataset.home ? `[data-home="${a.dataset.home}"]` : a.id ? `#${a.id}` : null)
+      : null;
+    route();
+    if (!sel) return;
+    const again = view.querySelector(sel) || document.getElementById("coming-title");
+    if (again) { if (!again.matches("a, button, input, select, textarea")) again.tabIndex = -1; again.focus(); }
+  }
+  // Say what just happened to screen reader users. The region stays on the page, so it is read out.
+  function announce(text) {
+    const live = document.getElementById("case-live");
+    live.textContent = "";
+    setTimeout(() => (live.textContent = text), 50);
   }
 
   window.addEventListener("hashchange", arrive);
   const form = document.getElementById("case-filters");
   form.addEventListener("input", () => { readForm(); applyFilters(); });
   form.addEventListener("submit", e => e.preventDefault());
-  document.getElementById("case-clear").addEventListener("click", () => { F = { ...DEFAULTS }; fillForm(); applyFilters(); });
+  document.getElementById("case-clear").addEventListener("click", () => {
+    F = { ...DEFAULTS };
+    fillForm();
+    applyFilters();
+    document.getElementById("case-search").focus();
+  });
   document.getElementById("case-more").addEventListener("click", () => {
     const first = limit;
     limit += PAGE;
@@ -470,17 +520,18 @@
     const cancel = e.target.closest("[data-cancel]");
     if (!cancel) return;
     const id = location.hash.split("/")[1];
-    const b = PL.caseOf(id).bookings.find(x => x.id === cancel.dataset.cancel);
+    const b = PL.peekCase(id).bookings.find(x => x.id === cancel.dataset.cancel);
     if (!b) return;
+    if (!confirm(T.caseCancelAsk.replace("{what}", PL.TYPE[b.type].toLowerCase()).replace("{when}", `${day(b.date)} at ${b.time}`))) return;
     PL.cancel(id, b.id);
     PL.log(id, "booking", `${PL.TYPE[b.type]} on ${day(b.date)} at ${b.time} cancelled.`, writer());
-    message = "Booking cancelled.";
+    message = T.caseCancelled;
     PL.save();
-    renderCase(id);
+    renderCase(id, "coming-title");
   });
   // A recorded outcome or a status change elsewhere can change the case on screen.
-  document.getElementById("visit-dialog").addEventListener("close", () => setTimeout(route));
-  document.getElementById("detail").addEventListener("close", () => setTimeout(route));
+  document.getElementById("visit-dialog").addEventListener("close", () => setTimeout(redraw));
+  document.getElementById("detail").addEventListener("close", () => setTimeout(redraw));
 
   route();
 })();
