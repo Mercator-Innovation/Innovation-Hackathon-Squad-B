@@ -1,6 +1,6 @@
 // The words in the visit app (visit.html). Change them here without touching the code.
 window.VISIT_TEXT = {
-  title: "My visits",
+  title: "Home visit",
   intro: "For the person visiting the home. Works on a phone or tablet.",
   whoLabel: "I am",
   whoChoose: "Choose your name",

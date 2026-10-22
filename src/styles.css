@@ -466,9 +466,10 @@ nav.tabs a[aria-current="page"] { color: #fff; background: var(--brand); font-we
 /* Sections: no box, just space and a big heading */
 section, h2, h3, [tabindex="-1"] { scroll-margin-top: 76px; } /* clear of the sticky tab bar when the page jumps */
 main { max-width: none; padding: 40px var(--page) 80px; }
-section.panel, details.panel { background: transparent; border: 0; border-radius: 0; box-shadow: none; padding: 0; margin: 0 0 64px; }
+/* A thin, light outline gives each section structure without becoming a heavy box */
+section.panel, details.panel { background: rgba(255, 255, 255, 0.45); border: 1px solid rgba(24, 52, 81, 0.12); border-radius: 22px; box-shadow: none; padding: 32px; margin: 0 0 32px; }
 section.panel > h2, section.panel h2, details.panel > summary h2 { font-size: 1.75rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 6px; }
-details.panel { margin-bottom: 28px; padding-top: 20px; border-top: 1px solid var(--hairline); }
+details.panel { padding-top: 22px; padding-bottom: 22px; }
 .hint { color: var(--muted); }
 section.panel > .hint, .area-head .hint { font-size: 1.02rem; margin-bottom: 20px; }
 h3 { font-weight: 600; }
@@ -511,7 +512,8 @@ button.small:hover, .button.secondary:hover { background: var(--brand-tint-2); c
 .chip { background: var(--surface); box-shadow: inset 0 0 0 1px rgba(24, 52, 81, 0.14); padding: 7px 16px; }
 .chip:hover { box-shadow: inset 0 0 0 1px var(--brand); }
 .chip[aria-pressed="true"] { box-shadow: none; }
-.has-export > .export { top: 4px; right: 0; }
+.has-export > .export { top: 28px; right: 24px; }
+@media (max-width: 600px) { .has-export > .export { top: 18px; right: 10px; } }
 
 /* Cards, notes and badges: soft tints instead of bars */
 .notice, blockquote.latest, blockquote.sms { border-left: 0; border-radius: 12px; }
@@ -531,7 +533,7 @@ dialog::backdrop { background: rgba(24, 52, 81, 0.28); -webkit-backdrop-filter: 
   header.site h1 { font-size: 1.7rem; }
   nav.tabs { padding: 8px 14px; }
   main { padding: 28px 16px 56px; }
-  section.panel, details.panel { margin-bottom: 48px; }
+  section.panel, details.panel { margin-bottom: 24px; padding: 22px 16px; border-radius: 18px; }
   section.panel > h2, section.panel h2 { font-size: 1.45rem; }
   .dialog-body { padding: 22px 18px; }
 }
