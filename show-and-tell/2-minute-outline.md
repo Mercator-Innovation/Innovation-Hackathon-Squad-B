@@ -1,14 +1,14 @@
 # Show and tell: Commitment issues (2 minutes)
 
 **Presenting:** Okeli Okonye (picked at random; the squad can swap)
-**Last updated:** 18:17, after pull request #52
+**Last updated:** 18:22, after pull request #58
 
 Before your turn, tell Claude `get the latest and make it run for me`, so you show the squad's latest version. Join the Teams call from the link in the squad's Teams chat and share your screen when it's your turn.
 
 ## 0:00 to 1:00: What we built, and for whom
 
 - **Who it's for:** staff at Cloch Housing Association. Cold, damp and mould make tenants ill, and Awaab's Law means landlords must act faster. Our prototype helps staff find the tenants most at risk *before* they get ill. All the data is made up.
-- **What it does:** the Risk overview shows where to act first and why each home is flagged. Visits booked plans the visits: highest risk first, then the nearest, on a week calendar with route maps. Cases keeps one record per home. Staff record what they find on a phone or tablet visit app. Tenants can report damp from their phone and track it.
+- **What it does:** the Risk overview shows where to act first and why each home is flagged. Visits booked plans the visits: highest risk first, then the nearest, on a week calendar, with route maps and risk hotspots. Cases keeps one record per home. Staff record what they find in the Home visit app, on a phone or tablet. Tenants can report damp from their phone and track it.
 
 **Click through (about 40 seconds):** Risk overview → Visits booked → Next week → click a visit → Open the case.
 
@@ -52,3 +52,7 @@ Before your turn, tell Claude `get the latest and make it run for me`, so you sh
 | 18:09 | Petra | The current tab and heading markers in terracotta, to match the logo |
 | 18:13 | Helen | A visit app for the person at the door (phone or tablet), a double-booking fix, and 113 tests in all |
 | 18:15 | Petra | A lighter, calmer look: no boxes inside boxes |
+| 18:17 | Petra | A thin, light outline around each section |
+| 18:18 | Helen | The visit app renamed Home visit |
+| 18:20 | Petra | Tab bar: the tenant view and Home visit sit on the right under Additional views |
+| 18:21 | Simon | A more realistic map with risk hotspots, and driving time on each leg of a route |
