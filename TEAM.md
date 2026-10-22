@@ -6,7 +6,7 @@
 **Squad name:** Commitment issues
 **Challenge:** 1. Healthier homes: finding tenants at risk before they get ill
 **Why we chose it:** We want to help tenants before damp and cold make them ill, not after, and new rules like Awaab's Law make that urgent. Joining up data and staff journeys also suits our mix of skills.
-**The idea:** _(one or two sentences, agreed on the day: who it's for, when they need it, and what it does)_
+**The idea:** A risk dashboard for Cloch staff (heat map, filters, why each home was flagged, visit booking) and a phone-friendly form for tenants to report damp, mould or cold. It uses made-up data.
 
 ## Members
 
