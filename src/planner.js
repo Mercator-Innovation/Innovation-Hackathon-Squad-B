@@ -366,6 +366,8 @@
     renderMap();
   }
 
+  let mapMode = "route"; // or "area" for the whole of Inverclyde
+  let showHot = true;
   function renderMap() {
     const box = document.getElementById("where-map");
     if (!picked) { box.innerHTML = `<p class="hint">${T.whereEmpty}</p>`; return; }
@@ -373,9 +375,9 @@
     const route = dayRoute(picked.staff, picked.iso);
     const L = window.LOCATIONS;
     const all = [L.base, ...Object.values(L.homes)];
-    // Zoom to the day's route (and the base), at least a couple of km across, in a 5:3 frame.
+    // Frame the day's route (or the whole area), at least a couple of km across, in a 5:3 frame.
     const k = Math.cos(all.reduce((s, p) => s + p.lat, 0) / all.length * Math.PI / 180);
-    const shown = [L.base, ...route.map(e => e.loc)];
+    const shown = mapMode === "area" ? all : [L.base, ...route.map(e => e.loc)];
     const xs = shown.map(p => p.lng * k), ys = shown.map(p => -p.lat);
     const W = 600, H = 360, pad = 44;
     let spanX = Math.max(Math.max(...xs) - Math.min(...xs), 0.03), spanY = Math.max(Math.max(...ys) - Math.min(...ys), 0.018);
@@ -383,42 +385,51 @@
     const midX = (Math.max(...xs) + Math.min(...xs)) / 2, midY = (Math.max(...ys) + Math.min(...ys)) / 2;
     const scale = Math.min((W - 2 * pad) / spanX, (H - 2 * pad) / spanY);
     const xy = p => [W / 2 + (p.lng * k - midX) * scale, H / 2 + (-p.lat - midY) * scale].map(n => Math.round(n));
-
-    // Town names sit above the middle of their homes.
-    const towns = {};
-    window.DATA.homes.forEach(h => { const p = L.homes[h.id]; if (p) (towns[h.area] = towns[h.area] || []).push(xy(p)); });
-    const townLabels = Object.entries(towns).map(([name, pts]) => {
-      const x = pts.reduce((s, p) => s + p[0], 0) / pts.length, y = Math.min(...pts.map(p => p[1])) - 10;
-      return `<text class="town" x="${Math.round(x)}" y="${Math.round(y)}">${escapeHtml(name)}</text>`;
-    }).join("");
+    const pxPerKm = scale / 111.32;
 
     const [bx, by] = xy(L.base);
     const points = [[bx, by], ...route.map(e => xy(e.loc))];
     const date = new Date(`${picked.iso}T12:00`);
     const travel = route.reduce((s, e) => s + e.travel, 0);
+    // Driving time on each leg, halfway along it.
+    const legs = route.map((e, i) => {
+      const [x1, y1] = points[i], [x2, y2] = points[i + 1];
+      if (Math.hypot(x2 - x1, y2 - y1) < 30) return "";
+      const x = Math.round((x1 + x2) / 2), y = Math.round((y1 + y2) / 2);
+      return `<g class="leg"><rect x="${x - 22}" y="${y - 10}" width="44" height="20" rx="10"/><text x="${x}" y="${y}">${e.travel} min</text></g>`;
+    }).join("");
     const drawn = [];
     box.innerHTML = `
-      <svg class="map c${colour(st)}" viewBox="0 0 ${W} ${H}" role="img" aria-labelledby="map-title">
-        <title id="map-title">Map of ${escapeHtml(st.name)}'s visits on ${nice(date)}</title>
-        ${Object.values(L.homes).map(p => { const [x, y] = xy(p); return `<circle class="home-dot" cx="${x}" cy="${y}" r="3"/>`; }).join("")}
-        ${townLabels}
-        <polyline class="route" points="${points.map(p => p.join(",")).join(" ")}"/>
-        <rect class="base" x="${bx - 7}" y="${by - 7}" width="14" height="14"/><text class="base-label" x="${bx - 11}" y="${by + 5}">Base</text>
-        ${route.map((e, i) => {
-          // Nudge a marker that would sit on top of an earlier one.
-          let [x, y] = xy(e.loc);
-          while (drawn.some(([a, b]) => Math.hypot(a - x, b - y) < 20)) x += 20;
-          drawn.push([x, y]);
-          return `<circle class="stop-dot" cx="${x}" cy="${y}" r="11"/><text class="stop-n" x="${x}" y="${y}">${i + 1}</text>`;
-        }).join("")}
-      </svg>
+      <div>
+        <div class="map-tools" role="group" aria-label="${T.mapOptions}">
+          <button type="button" class="small" data-map-mode="route" aria-pressed="${mapMode === "route"}">${T.mapRoute}</button>
+          <button type="button" class="small" data-map-mode="area" aria-pressed="${mapMode === "area"}">${T.mapArea}</button>
+          <label><input type="checkbox" id="map-hot" ${showHot ? "checked" : ""}> ${T.mapHotspots}</label>
+        </div>
+        <svg class="map c${colour(st)}" viewBox="0 0 ${W} ${H}" role="img" aria-labelledby="map-title">
+          <title id="map-title">Map of ${escapeHtml(st.name)}'s visits on ${nice(date)}${showHot ? ", with risk hotspots" : ""}</title>
+          ${window.MAP.layers(xy, pxPerKm, { hot: showHot })}
+          <polyline class="route" points="${points.map(p => p.join(",")).join(" ")}"/>
+          ${legs}
+          <rect class="base" x="${bx - 7}" y="${by - 7}" width="14" height="14"/><text class="base-label" x="${bx - 11}" y="${by + 5}">Base</text>
+          ${route.map((e, i) => {
+            // Nudge a marker that would sit on top of an earlier one.
+            let [x, y] = xy(e.loc);
+            while (drawn.some(([a, b]) => Math.hypot(a - x, b - y) < 20)) x += 20;
+            drawn.push([x, y]);
+            return `<circle class="stop-dot" cx="${x}" cy="${y}" r="11"/><text class="stop-n" x="${x}" y="${y}">${i + 1}</text>`;
+          }).join("")}
+        </svg>
+        ${showHot ? `<p class="hint map-key"><span class="hot-key" aria-hidden="true"></span>${T.mapHotKey}</p>` : ""}
+      </div>
       <div>
         <h3>${escapeHtml(st.name)}, ${nice(date)}</h3>
         <p class="hint">${route.length} ${route.length === 1 ? "visit" : "visits"} in ${escapeHtml(areasOf(route).join(", "))}. ${travel} minutes of driving.</p>
         <ol class="where-list">${route.map(e => `<li>${hhmm(e.start)} ${TYPE[e.type]}:
           <button type="button" class="link" data-visit="${e.key}">${escapeHtml(e.home.address)}</button>, ${escapeHtml(e.home.area)}
           <span class="badge ${e.home.risk.band}">${e.home.risk.band} ${e.home.risk.points}</span>
-          · <a href="#cases/${e.home.id}" aria-label="Case for ${escapeHtml(e.home.address)}">Case</a></li>`).join("")}</ol>
+          · <a href="#cases/${e.home.id}" aria-label="Case for ${escapeHtml(e.home.address)}">Case</a>
+          <br><small>${e.travel} min drive to get there</small></li>`).join("")}</ol>
         <p class="hint">${T.mapNote}</p>
       </div>`;
   }
@@ -530,6 +541,7 @@
     else if (el.dataset.rule && +el.value > 0) P.settings[el.dataset.rule][el.dataset.key] = +el.value;
     else if (el.id === "risk-weight") P.settings.riskWeight = +el.value;
     else if (el.id === "plan-who") who = el.value;
+    else if (el.id === "map-hot") { showHot = el.checked; renderMap(); document.getElementById("map-hot").focus(); return; }
     else return;
     save();
     renderSchedule();
@@ -541,6 +553,12 @@
     const undo = e.target.closest("[data-undo]");
     const remove = e.target.closest("[data-remove]");
     const week = e.target.closest("#week-prev, #week-next");
+    const mode = e.target.closest("[data-map-mode]");
+    if (mode) {
+      mapMode = mode.dataset.mapMode;
+      renderMap();
+      return document.querySelector(`[data-map-mode="${mapMode}"]`).focus();
+    }
     const pick = e.target.closest("[data-pick]");
     if (visit) return openVisit(visit.dataset.visit);
     if (pick) {
