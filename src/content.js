@@ -22,6 +22,7 @@ window.CONTENT = {
   heatTitle: "Risk by area",
   heatHelp: "Where the risk is, on a map and as a table. Choose an area, or a number, to see those homes.",
   mapWater: "Firth of Clyde",
+  areaHeatNote: "The glow shows where high and medium risk homes are. The number is how many high risk homes. The colour is the area's average risk. Map points are made up, near each town.",
   areaMapNote: "Simplified map, not to scale. The number is how many high risk homes. The colour is the area's average risk.",
   matrixTitle: "Areas, highest risk first",
   matrixHelp: "How many homes in each area are at high, medium and low risk.",

@@ -154,7 +154,46 @@ window.GLANCE = (() => {
 
   const areaLabel = s => `${s.area}: ${s.light.label}. ${s.high} ${C.areaHighOf} ${s.homes} ${C.areaHomes}. ${C.areaAverage} ${s.avg.toFixed(1)}.`;
 
+  function pinHtml(s, left, top) {
+    return `<button type="button" class="map-pin light-${s.light.key}" style="left:${left}%;top:${top}%" data-area="${escapeHtml(s.area)}"
+      aria-pressed="${selectedArea === s.area}" aria-label="${escapeHtml(areaLabel(s))}">
+      <span class="pin-dot" aria-hidden="true">${s.high}</span>
+      <span class="pin-name" aria-hidden="true">${escapeHtml(s.area)}</span>
+    </button>`;
+  }
+
+  // Simon's map (map.js): coast, far shore, main roads and glowing risk hotspots, the same as on Who's where.
+  // A pin for each area sits at the middle of its homes.
+  function heatMapHtml(stats) {
+    const L = window.LOCATIONS.homes;
+    const k = Math.cos(55.93 * Math.PI / 180);
+    const pts = window.DATA.homes.map(h => L[h.id]).filter(Boolean);
+    const xs = pts.map(p => p.lng * k), ys = pts.map(p => -p.lat);
+    const W = 600, H = 480, pad = 56;
+    let spanX = Math.max(...xs) - Math.min(...xs), spanY = Math.max(...ys) - Math.min(...ys);
+    if (spanX / spanY < W / H) spanX = spanY * W / H; else spanY = spanX * H / W;
+    const midX = (Math.max(...xs) + Math.min(...xs)) / 2, midY = (Math.max(...ys) + Math.min(...ys)) / 2;
+    const scale = Math.min((W - 2 * pad) / spanX, (H - 2 * pad) / spanY);
+    const xy = p => [W / 2 + (p.lng * k - midX) * scale, H / 2 + (-p.lat - midY) * scale].map(n => Math.round(n));
+    const centre = area => {
+      const ps = window.DATA.homes.filter(h => h.area === area && L[h.id]).map(h => xy(L[h.id]));
+      return ps.length ? [ps.reduce((t, q) => t + q[0], 0) / ps.length, ps.reduce((t, q) => t + q[1], 0) / ps.length] : [W / 2, H / 2];
+    };
+    return `<figure class="area-map-wrap">
+      <div class="area-map heat" style="aspect-ratio: ${W} / ${H}">
+        <svg class="map" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">${window.MAP.layers(xy, scale / 111.32, { hot: true, towns: false })}</svg>
+        <span class="map-north" aria-hidden="true">N ↑</span>
+        ${stats.map(s => { const [x, y] = centre(s.area); return pinHtml(s, (x / W * 100).toFixed(1), (y / H * 100).toFixed(1)); }).join("")}
+      </div>
+      <figcaption>
+        <span class="map-key">${["red", "amber", "green"].map(k2 => `<span class="light-${k2}"><span class="dot" aria-hidden="true"></span>${C["light" + k2[0].toUpperCase() + k2.slice(1)]}</span>`).join("")}</span>
+        <span class="hint">${C.areaHeatNote}</span>
+      </figcaption>
+    </figure>`;
+  }
+
   function mapHtml(stats) {
+    if (window.MAP && window.LOCATIONS) return heatMapHtml(stats);
     return `<figure class="area-map-wrap">
       <div class="area-map">
         <svg class="map-bg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
@@ -162,14 +201,7 @@ window.GLANCE = (() => {
           <text class="water-label" x="56" y="13">${C.mapWater}</text>
         </svg>
         <span class="map-north" aria-hidden="true">N ↑</span>
-        ${stats.map(s => {
-          const [left, top] = MAP_POS[s.area] || [60, 85];
-          return `<button type="button" class="map-pin light-${s.light.key}" style="left:${left}%;top:${top}%" data-area="${escapeHtml(s.area)}"
-            aria-pressed="${selectedArea === s.area}" aria-label="${escapeHtml(areaLabel(s))}">
-            <span class="pin-dot" aria-hidden="true">${s.high}</span>
-            <span class="pin-name" aria-hidden="true">${escapeHtml(s.area)}</span>
-          </button>`;
-        }).join("")}
+        ${stats.map(s => pinHtml(s, ...(MAP_POS[s.area] || [60, 85]))).join("")}
       </div>
       <figcaption>
         <span class="map-key">${["red", "amber", "green"].map(k => `<span class="light-${k}"><span class="dot" aria-hidden="true"></span>${C["light" + k[0].toUpperCase() + k.slice(1)]}</span>`).join("")}</span>
@@ -243,6 +275,9 @@ window.GLANCE = (() => {
     if (type === "focusout" && document.getElementById("heatmap").contains(e.relatedTarget)) return;
     hotArea(null);
   }));
+
+  // map.js loads after this file, so draw the areas again once everything has loaded
+  window.addEventListener("load", () => { if (window.MAP) render(); });
 
   // A number in the matrix: show exactly those homes, then take you to the list
   function showAreaBand(area, band) {
