@@ -1,7 +1,7 @@
 # Show and tell: Commitment issues (2 minutes)
 
 **Presenting:** Okeli Okonye (picked at random; the squad can swap)
-**Last updated:** 17:59, after pull request #34
+**Last updated:** 18:09, after pull request #43
 
 Before your turn, tell Claude `get the latest and make it run for me`, so you show the squad's latest version. Join the Teams call from the link in the squad's Teams chat and share your screen when it's your turn.
 
@@ -46,3 +46,6 @@ Before your turn, tell Claude `get the latest and make it run for me`, so you sh
 | 17:57 | Petra | Removed the whole-page download icons |
 | 17:58 | Helen | Tests for the visit planner, follow-up bookings and Track your report |
 | 17:58 | Simon | A logo: a home with a heart, on every page (the squad picked it from four) |
+| 18:04 | Petra | A new look: a light, welcoming terracotta palette in place of the green |
+| 18:07 | Petra | More navy: the header, tabs and table headings |
+| 18:07 | Simon | A shorter tagline: "See which homes are most at risk from cold, damp and mould. Help before anyone gets ill." |
