@@ -32,7 +32,7 @@ test("the report shows up for staff, linked to the right home", async ({ page })
   const ref = (await page.locator("#thanks-body").textContent()).match(/R-\d{4}/)[0];
 
   await page.goto("/#reports");
-  const card = page.locator("#reports-list .card", { hasText: ref });
+  const card = page.locator("#reports-list .report-row", { hasText: ref });
   await expect(card).toBeVisible();
   await expect(card).toContainText("2 Kelburn Terrace");
 });

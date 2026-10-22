@@ -861,6 +861,132 @@ window.DATA = {
   ],
   "reports": [
     {
+      "ref": "R-0400",
+      "homeId": "H-1001",
+      "received": "2026-10-08",
+      "problems": [
+        "Mould"
+      ],
+      "description": "Mould round the bathroom window and on the ceiling above the bath. I wipe it every week but it comes back.",
+      "rooms": "Bathroom or toilet",
+      "contactBy": "Phone call, Evening",
+      "status": "Closed"
+    },
+    {
+      "ref": "R-0401",
+      "homeId": "H-1012",
+      "received": "2026-10-09",
+      "problems": [
+        "Condensation"
+      ],
+      "description": "Water runs down the bedroom windows most mornings and the sills are starting to go black.",
+      "rooms": "Bedroom",
+      "contactBy": "Text message, Any time",
+      "status": "Closed"
+    },
+    {
+      "ref": "R-0402",
+      "homeId": "H-1013",
+      "received": "2026-10-10",
+      "problems": [
+        "Cold",
+        "Damp"
+      ],
+      "description": "The heating doesn't keep up. My mum lives with me and has a bad chest, and the back bedroom feels damp all the time.",
+      "rooms": "Bedroom, Living room",
+      "contactBy": "Phone call, Morning",
+      "status": "Picked up",
+      "health": "Yes"
+    },
+    {
+      "ref": "R-0403",
+      "homeId": "H-1009",
+      "received": "2026-10-11",
+      "problems": [
+        "Damp"
+      ],
+      "description": "There's a tide mark on the hall wall near the front door, about knee height. The wallpaper is peeling off.",
+      "rooms": "Hall or stairs",
+      "contactBy": "Letter",
+      "status": "Picked up"
+    },
+    {
+      "ref": "R-0404",
+      "homeId": "H-1025",
+      "received": "2026-10-12",
+      "problems": [
+        "Mould",
+        "Condensation"
+      ],
+      "description": "Black spots on the kitchen ceiling above the cooker. The extractor fan stopped working a while ago.",
+      "rooms": "Kitchen",
+      "contactBy": "Email, Any time",
+      "status": "Case processing"
+    },
+    {
+      "ref": "R-0405",
+      "homeId": "H-1016",
+      "received": "2026-10-13",
+      "problems": [
+        "Something else"
+      ],
+      "description": "A musty smell in the cupboard under the stairs. I can't see anything but clothes in there smell damp.",
+      "rooms": "Somewhere else",
+      "contactBy": "Text message, Afternoon",
+      "status": "New"
+    },
+    {
+      "ref": "R-0406",
+      "homeId": "H-1002",
+      "received": "2026-10-14",
+      "problems": [
+        "Cold"
+      ],
+      "description": "I'm only heating one room to save money. My two-year-old's room is freezing at night.",
+      "rooms": "Bedroom, Living room",
+      "contactBy": "Phone call, Afternoon",
+      "status": "New",
+      "health": "Yes"
+    },
+    {
+      "ref": "R-0407",
+      "homeId": "H-1030",
+      "received": "2026-10-15",
+      "problems": [
+        "Damp",
+        "Mould"
+      ],
+      "description": "Damp in the corner of the living room behind the sofa, and a bit of green mould starting.",
+      "rooms": "Living room",
+      "contactBy": "Email",
+      "status": "New"
+    },
+    {
+      "ref": "R-0408",
+      "homeId": "H-1019",
+      "received": "2026-10-16",
+      "problems": [
+        "Condensation"
+      ],
+      "description": "The bathroom stays wet for hours after a shower. There's no window in there.",
+      "rooms": "Bathroom or toilet",
+      "contactBy": "Text message, Evening",
+      "status": "New"
+    },
+    {
+      "ref": "R-0409",
+      "homeId": "H-1026",
+      "received": "2026-10-17",
+      "problems": [
+        "Cold",
+        "Condensation"
+      ],
+      "description": "The flat gets very cold overnight and the windows are dripping in the morning. Not sure who to tell.",
+      "rooms": "Bedroom, Kitchen",
+      "contactBy": "Letter",
+      "status": "New"
+    },
+    {
       "ref": "R-0410",
       "homeId": "H-1022",
       "received": "2026-10-18",

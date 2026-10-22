@@ -61,7 +61,8 @@ function renderFilters() {
   document.getElementById("search").placeholder = C.searchPlaceholder;
   // Reports from tenants
   document.getElementById("report-filter-band").innerHTML = options(["High", "Medium", "Low"]) + `<option value="none">${C.filterNotRated}</option>`;
-  document.getElementById("report-filter-status").innerHTML = options(["New", "Picked up", "Closed"]);
+  document.getElementById("report-filter-status").innerHTML = `<option value="">${C.filterAll}</option>` +
+    ["New", "Picked up", "Case processing", "Closed"].map(v => `<option value="${v}">${escapeHtml(C.reportStatusNames[v])}</option>`).join("");
   document.getElementById("report-filter-type").innerHTML = options(["Damp", "Mould", "Condensation", "Cold", "Something else", "Not sure"]);
 }
 
@@ -287,44 +288,60 @@ function formatDate(iso) {
   return new Date(iso + "T00:00").toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
 }
 
+// The report journey: New → Picked up → Case processing → Closed (shown as "Case closed").
+function reportActions(r, home, status) {
+  const caseLink = home ? `#cases/${home.id}` : "";
+  if (status === "New")
+    return `<button type="button" class="primary" data-report-status="Picked up" data-ref="${r.ref}">${C.reportPickUp}</button>`;
+  if (status === "Picked up")
+    return home ? `<a class="button case-button" href="${caseLink}" data-report-status="Case processing" data-ref="${r.ref}" data-next-for="${r.ref}">${C.reportOpenCase}</a>` : "";
+  if (status === "Case processing")
+    return `${home ? `<a href="${caseLink}" data-next-for="${r.ref}">${C.reportViewCase}</a>` : ""}
+      <button type="button" class="small" data-report-status="Closed" data-ref="${r.ref}">${C.reportCloseCase}</button>`;
+  return home ? `<a href="${caseLink}" data-next-for="${r.ref}">${C.reportViewCase}</a>` : "";
+}
+
 function renderReports() {
   const rated = scored();
   const band = document.getElementById("report-filter-band").value;
   const statusFilter = document.getElementById("report-filter-status").value;
   const type = document.getElementById("report-filter-type").value;
+  const search = document.getElementById("report-search").value.trim().toLowerCase();
   const list = allReports().slice().reverse().map(r => {
     const home = homes.find(h => h.id === r.homeId);
     const risk = home && rated.find(h => h.id === home.id).risk;
     return { r, home, risk, status: reportStatus(r) };
-  }).filter(({ r, risk, status }) =>
+  }).filter(({ r, home, risk, status }) =>
     (!reportHomeFilter || r.homeId === reportHomeFilter) &&
     (!band || (risk ? risk.band === band : band === "none")) &&
     (!statusFilter || status === statusFilter) &&
-    (!type || r.problems.includes(type))
+    (!type || r.problems.includes(type)) &&
+    (!search || `${r.ref} ${r.name || ""} ${r.address || ""} ${home ? `${home.address} ${home.area} ${home.tenant}` : ""}`.toLowerCase().includes(search))
   );
-  const anyFilter = band || statusFilter || type || reportHomeFilter;
+  const anyFilter = band || statusFilter || type || reportHomeFilter || search;
   const filteredHome = reportHomeFilter && homes.find(h => h.id === reportHomeFilter);
   const chip = document.getElementById("report-home-filter");
   chip.hidden = !filteredHome;
   if (filteredHome) chip.querySelector("span").textContent = fillIn(C.reportsShowingHome, { address: filteredHome.address });
-  document.getElementById("reports-list").innerHTML = list.map(({ r, home, risk, status }) => {
-    return `<div class="card">
-      <div class="report-top">
-        <h3 class="report-head"><span class="badges">${risk ? `<span class="badge ${risk.band}">${risk.band} risk</span>` : `<span class="badge">${C.reportNotRated}</span>`} <span class="badge status">${C.reportStatus} ${escapeHtml(status)} (${formatDate(r.received)})</span></span></h3>
-        <p class="ref">${C.reportRef} ${r.ref}</p>
+  // Laid out like the Cases table: column labels show on wide screens, and above each value on phones.
+  const cell = (label, html, cls) => `<div class="rr-cell ${cls}"><span class="rr-label">${label}</span>${html}</div>`;
+  const rows = list.map(({ r, home, risk, status }) => `
+    <article class="report-row" aria-label="${escapeHtml(`${C.reportRef} ${r.ref}`)}">
+      ${cell(C.rrHome, `${home ? `<button type="button" class="link" data-home="${home.id}">${escapeHtml(home.address)}</button>, ${escapeHtml(home.area)}` : escapeHtml(r.address || "Address not matched")}
+        <br><small>${r.ref} · ${escapeHtml(r.name || (home && home.tenant) || C.reportNotGiven)}</small>`, "rr-home")}
+      ${cell(C.rrRisk, risk ? `<span class="badge ${risk.band}">${risk.band} · ${risk.points}</span>` : `<span class="badge">${C.filterNotRated}</span>`, "rr-risk")}
+      ${cell(C.rrType, `${escapeHtml(r.problems.join(", "))}<br><small>${escapeHtml(r.rooms || C.reportNotGiven)}</small>`, "rr-type")}
+      ${cell(C.rrStatus, `${escapeHtml(C.reportStatusNames[status] || status)}<br><small>${formatDate(r.received)}</small>`, "rr-status")}
+      <div class="rr-actions">
+        ${reportActions(r, home, status)}
       </div>
-      <p><span class="label">${C.reportType}</span> ${escapeHtml(r.problems.join(", "))}</p>
-      <p><span class="label">${C.reportRooms}</span> ${escapeHtml(r.rooms || C.reportNotGiven)}</p>
-      <p><span class="label">${C.reportComments}</span> ${escapeHtml(r.description)}</p>
-      <p><span class="label">${C.reportName}</span> ${escapeHtml(r.name || (home && home.tenant) || C.reportNotGiven)}</p>
-      <p><span class="label">${C.reportArea}</span> ${home ? escapeHtml(home.area) : C.reportNotGiven}</p>
-      <p><span class="label">${C.reportAddress}</span> ${home ? `<button type="button" class="link" data-home="${home.id}">${escapeHtml(home.address)}</button>` : escapeHtml(r.address || "Address not matched")}</p>
-      <p><span class="label">${C.reportContact}</span> ${escapeHtml([r.contact, r.contactBy].filter(Boolean).join(" · ") || C.reportNotGiven)}</p>
-      ${r.health === "Yes" ? `<p><span class="label">${C.reportHealth}</span> ${C.reportHealthYes}</p>` : ""}
-      ${status === "New" ? `<button type="button" class="primary" data-report-status="Picked up" data-ref="${r.ref}">${C.reportPickUp}</button>`
-        : status === "Picked up" ? `<button type="button" class="small" data-report-status="Closed" data-ref="${r.ref}">${C.reportClose}</button>` : ""}
-    </div>`;
-  }).join("") || `<p>${anyFilter ? C.reportsNoMatch : C.reportsEmpty}</p>`;
+      <p class="rr-comment"><span class="label">${C.reportComments}</span> ${escapeHtml(r.description)}
+        ${r.health === "Yes" ? `<span class="rr-health"><span class="label">${C.reportHealth}</span> ${C.reportHealthYes}</span>` : ""}
+        <small class="rr-contact">${C.reportContact} ${escapeHtml([r.contact, r.contactBy].filter(Boolean).join(" · ") || C.reportNotGiven)}</small></p>
+    </article>`).join("");
+  document.getElementById("reports-list").innerHTML = rows
+    ? `<div class="report-cols" aria-hidden="true"><span>${C.rrHome}</span><span>${C.rrRisk}</span><span>${C.rrType}</span><span>${C.rrStatus}</span><span></span></div>${rows}`
+    : `<p>${anyFilter ? C.reportsNoMatch : C.reportsEmpty}</p>`;
 }
 
 // ---- Tabs ----
@@ -359,6 +376,7 @@ document.getElementById("search").addEventListener("input", () => render());
   document.getElementById(id).addEventListener("change", () => render()));
 ["report-filter-band", "report-filter-status", "report-filter-type"].forEach(id =>
   document.getElementById(id).addEventListener("change", renderReports));
+document.getElementById("report-search").addEventListener("input", renderReports);
 document.getElementById("filter-area").addEventListener("change", e => { selectedArea = e.target.value; render(); });
 document.addEventListener("click", e => {
   const area = e.target.closest("[data-area]");
@@ -371,9 +389,15 @@ document.addEventListener("click", e => {
   if (home) openHome(home.dataset.home);
   const report = e.target.closest("[data-report-status]");
   if (report) {
-    state.status[report.dataset.ref] = report.dataset.reportStatus;
+    const ref = report.dataset.ref;
+    const goTo = report.tagName === "A" && report.getAttribute("href");
+    if (goTo) e.preventDefault();
+    state.status[ref] = report.dataset.reportStatus;
     saveState(state); render();
-    document.getElementById("reports-title").focus();
+    // "Open case" goes on to the case. Otherwise keep keyboard users in place by
+    // focusing the button that replaced the one they clicked, or the heading.
+    if (goTo) location.hash = goTo;
+    else (document.querySelector(`[data-next-for="${ref}"]`) || document.getElementById("reports-title")).focus();
   }
 
   // Sorting: choose a column once to sort by it, again to reverse
