@@ -4,8 +4,8 @@
 
 **Repo:** Innovation-Hackathon-Squad-B
 **Squad name:** Commitment issues
-**Challenge:** _chosen on the day_
-**Why we chose it:** _(one or two sentences)_
+**Challenge:** 1. Healthier homes: finding tenants at risk before they get ill
+**Why we chose it:** We want to help tenants before damp and cold make them ill, not after, and new rules like Awaab's Law make that urgent. Joining up data and staff journeys also suits our mix of skills.
 **The idea:** _(one or two sentences, agreed on the day: who it's for, when they need it, and what it does)_
 
 ## Members
