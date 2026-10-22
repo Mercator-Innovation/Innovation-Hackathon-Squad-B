@@ -1,4 +1,4 @@
-// The "Visit app" tab on the staff view: the visit app (visit.html) shown in a tablet or phone frame.
+// The "Home visit" tab on the staff view: the visit app (visit.html) shown in a tablet or phone frame.
 // The app only loads when the tab is opened. (The visit app loads this page out of sight for its plan,
 // so loading it straight away would load pages inside pages.)
 (function () {
