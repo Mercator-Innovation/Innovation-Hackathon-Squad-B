@@ -29,6 +29,7 @@ ai_use_week_after:
 
 ## During
 <!-- Claude adds one line per moment: prompts that worked (word for word), dead ends, surprises, things done outside my usual job, what made working as a squad easier or harder -->
+- 17:05 surprise: three AI reviewers checked the Cases screen and found 27 real problems, including sample data that never reached the shared screen
 
 ## At 19:00
 - What I worked on: <answers>
