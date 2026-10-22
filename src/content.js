@@ -118,7 +118,7 @@ window.CONTENT = {
   visitsEmpty: "No visits booked yet. Open a home to book one.",
 
   // Visit planner (Visits booked tab)
-  planIntro: "Highest risk first. Between homes of similar risk, the nearest comes first, to cut travel. Choose a visit to see why and to record what you found.",
+  planIntro: "Homes at most risk come first. If two homes are at about the same risk, the nearer one comes first, so there's less driving. Choose a visit to see more and to say what you found.",
   planWho: "Show visits for",
   planEmpty: "Nothing to plan. Every home has been visited or booked.",
   weekPrev: "Previous week",
@@ -130,7 +130,7 @@ window.CONTENT = {
   noWork: "No work needed",
   repairDone: "Repair done",
   whereTitle: "Who's where",
-  whereHelp: "The towns each person visits each day, for the week in the calendar. Darker means busier. Choose a day to see the route.",
+  whereHelp: "Where each person goes each day, for the week in the calendar. Darker boxes have more visits. Choose a day to see the route on a map.",
   whereEmpty: "No visits this week.",
   mapNote: "Map points are made up, near each town. Lines are straight, not roads.",
   unplannedTitle: "Not fitted in yet",
