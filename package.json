@@ -1,0 +1,27 @@
+{
+  "name": "healthier-homes-tests",
+  "version": "1.0.0",
+  "description": "Playwright tests for the Healthier homes prototype in src/",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "playwright test",
+    "test:report": "playwright show-report"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mercator-Innovation/Innovation-Hackathon-Squad-B.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Mercator-Innovation/Innovation-Hackathon-Squad-B/issues"
+  },
+  "homepage": "https://github.com/Mercator-Innovation/Innovation-Hackathon-Squad-B#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.64.1"
+  },
+  "private": true
+}
