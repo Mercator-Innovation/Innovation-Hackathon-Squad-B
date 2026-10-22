@@ -21,29 +21,7 @@ function scored() {
 }
 
 // ---- Overview ----
-function renderSummary(list) {
-  const count = band => list.filter(h => h.risk.band === band).length;
-  const newReports = allReports().filter(r => (state.status[r.ref] || r.status) === "New").length;
-  document.getElementById("summary").innerHTML = `
-    <div><strong>${count("High")}</strong> high risk homes</div>
-    <div><strong>${count("Medium")}</strong> medium risk homes</div>
-    <div><strong>${newReports}</strong> new reports from tenants</div>
-    <div><strong>${state.visits.length}</strong> visits booked</div>`;
-}
-
-function renderHeatmap(list) {
-  const areas = [...new Set(homes.map(h => h.area))].sort();
-  document.getElementById("heatmap").innerHTML = areas.map(area => {
-    const inArea = list.filter(h => h.area === area);
-    const high = inArea.filter(h => h.risk.band === "High").length;
-    const avg = inArea.reduce((s, h) => s + h.risk.points, 0) / inArea.length;
-    const level = avg >= 6 ? 3 : avg >= 4.5 ? 2 : avg >= 3 ? 1 : 0;
-    return `<button type="button" class="heat-${level}" data-area="${escapeHtml(area)}" aria-pressed="${selectedArea === area}">
-      <span class="area-name">${escapeHtml(area)}</span>
-      ${high} high risk of ${inArea.length} homes<br>Average score ${avg.toFixed(1)}
-    </button>`;
-  }).join("");
-}
+// The cards, trend chart and risk by area are drawn by glance.js.
 
 function renderFilters() {
   const areas = [...new Set(homes.map(h => h.area))].sort();
@@ -64,6 +42,7 @@ function renderList(list) {
   const shown = list.filter(h =>
     (!selectedArea || h.area === selectedArea) &&
     (!band || h.risk.band === band) &&
+    (!window.listFilter || window.listFilter(h)) &&
     (!search || `${h.address} ${h.tenant} ${h.id}`.toLowerCase().includes(search)));
   document.getElementById("homes").innerHTML = shown.map(h => `
     <tr>
@@ -102,7 +81,17 @@ function openHome(id) {
 
     <h3>${C.whyFlagged}</h3>
     <ul class="reasons">${h.risk.reasons.map(r => `<li>${escapeHtml(r.reason)} (+${r.points})</li>`).join("") || "<li>Nothing flagged</li>"}</ul>
+    <h3>${C.suggestedTitle}</h3>
+    <p class="card suggested">${escapeHtml(C[window.RISK.suggest(h, h.risk)])}</p>
     <p class="notice">${C.humanCheck}</p>
+
+    <h3>${C.householdTitle}</h3>
+    <p>${C.ageBandLabel}: ${escapeHtml(h.household.tenantAgeBand)}</p>
+
+    <h3>${C.repairsTitle}</h3>
+    ${h.repairNotes.length
+      ? `<ul class="repairs">${h.repairNotes.map(r => `<li><strong>${new Date(r.date).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}</strong>: ${escapeHtml(r.note)}</li>`).join("")}</ul>`
+      : `<p>${C.repairsNone}</p>`}
 
     ${reports.length ? `<h3>Reports from this tenant</h3>${reports.map(r => `<div class="card"><strong>${r.ref}</strong>, ${r.received}: ${escapeHtml(r.problems.join(", "))}<br>${escapeHtml(r.description)}</div>`).join("")}` : ""}
 
@@ -195,8 +184,7 @@ function showTab() {
 
 function render() {
   const list = scored();
-  renderSummary(list);
-  renderHeatmap(list);
+  window.GLANCE.render(list);
   renderList(list);
   renderReports();
   renderVisits();

@@ -9,6 +9,7 @@ window.RISK = {
     { reason: "Sensor shows high humidity (over 70%)", points: 2, test: h => h.sensor && h.sensor.humidity > 70 },
     { reason: "Sensor shows a cold home (under 16°C)", points: 2, test: h => h.sensor && h.sensor.temperature < 16 },
     { reason: "Older person in the household", points: 1, test: h => h.household.olderPerson },
+    { reason: "Tenant aged 75 or over", points: 1, test: h => h.household.tenantAgeBand === "75 or over" },
     { reason: "Young child in the household", points: 1, test: h => h.household.youngChild },
     { reason: "Tenant told us about a health condition", points: 2, test: h => h.household.healthConditionShared },
     { reason: "Asked for energy advice", points: 1, test: h => h.askedForEnergyAdvice },
@@ -27,5 +28,17 @@ window.RISK = {
     const points = reasons.reduce((sum, r) => sum + r.points, 0);
     const band = this.bands.find(b => points >= b.min).name;
     return { points, band, reasons };
+  },
+
+  // A suggested next step, picked from the warning signs. The first rule that matches wins.
+  // The words are in content.js (keys starting "action").
+  suggest(home, risk) {
+    const has = text => risk.reasons.some(r => r.reason.startsWith(text));
+    if (has("Open report")) return "actionReport";
+    if (risk.band === "High" && (has("Sensor") || has("Repeat damp"))) return "actionVisitUrgent";
+    if (has("Damp or mould repairs")) return "actionCheckRepair";
+    if (has("Very poor energy") || has("Poor energy")) return risk.band === "Low" ? "actionMonitor" : "actionEnergy";
+    if (has("No contact")) return "actionCheckIn";
+    return "actionMonitor";
   }
 };

@@ -96,6 +96,11 @@ legend { font-weight: 700; margin-bottom: 4px; }
 .checks input { width: 22px; height: 22px; }
 .form-row label { font-weight: 700; }
 
+/* Suggested action and repair history in the home detail */
+.card.suggested { border-left: 6px solid var(--brand); font-weight: 600; }
+.repairs { padding-left: 20px; }
+.repairs li { margin-bottom: 4px; }
+
 /* Visit planner */
 .summary.compact div { padding: 8px 12px; }
 .summary.compact strong { font-size: 1.35rem; }
