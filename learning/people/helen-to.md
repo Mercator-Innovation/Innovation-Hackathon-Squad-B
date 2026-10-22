@@ -39,6 +39,8 @@ ai_use_week_after:
 - 18:03 prompt: "if you are the people for home visit, we want an app, the core task is the visit, so we want an app for the workers visiting the home" then "the app can be on a tablet or phone" → Claude built a visit app joined up with the staff dashboard: what you record on a visit updates the case and plans the repair.
 - 18:07 prompt: "use playwright to test this" → 16 tests for the visit app, all passed first time, then "add this as a tab view on the main desktop site" → a Visit app tab in a tablet or phone frame. I did product, design, build and testing, normally four different jobs.
 - 18:12 squad: sharing small and often meant Petra's new colour palette arrived while I was building, so I could match it straight away.
+- 18:17 I picked the app's name, Home visit, from four options Claude offered, normally a content designer's call: "not sure about the Visit app name - come up with something else".
+- 18:20 squad: Simon had already added my visit app and tests to the show and tell outline from my shares, before I said anything. Small, frequent shares meant the presenter (Okeli) had my work without needing to ask.
 
 ## At 19:00
 - What I worked on: <answers>
