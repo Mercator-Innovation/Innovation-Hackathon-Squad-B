@@ -165,8 +165,9 @@ function renderReports() {
       <p><span class="label">${C.reportType}</span> ${escapeHtml(r.problems.join(", "))}</p>
       <p><span class="label">${C.reportRooms}</span> ${escapeHtml(r.rooms || C.reportNotGiven)}</p>
       <p><span class="label">${C.reportComments}</span> ${escapeHtml(r.description)}</p>
-      <p><span class="label">${C.reportAddress}</span> ${home ? `<button type="button" class="link" data-home="${home.id}">${escapeHtml(home.address)}, ${escapeHtml(home.area)}</button>` : escapeHtml(r.address || "Address not matched")}</p>
       <p><span class="label">${C.reportName}</span> ${escapeHtml(r.name || (home && home.tenant) || C.reportNotGiven)}</p>
+      <p><span class="label">${C.reportArea}</span> ${home ? escapeHtml(home.area) : C.reportNotGiven}</p>
+      <p><span class="label">${C.reportAddress}</span> ${home ? `<button type="button" class="link" data-home="${home.id}">${escapeHtml(home.address)}</button>` : escapeHtml(r.address || "Address not matched")}</p>
       <p><span class="label">${C.reportContact}</span> ${escapeHtml(r.contactBy || C.reportNotGiven)}</p>
       ${status === "New" ? `<button type="button" class="primary" data-close-report="${r.ref}">Mark as picked up</button>` : ""}
     </div>`;

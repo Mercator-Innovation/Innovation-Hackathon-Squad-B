@@ -35,9 +35,9 @@ main { max-width: 1100px; margin: 0 auto; padding: 16px; }
 section.panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 16px; }
 h2 { margin-top: 0; font-size: 1.25rem; }
 .hint { color: var(--muted); margin-top: 0; }
-.report-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.report-top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 4px 12px; }
 .ref { flex-shrink: 0; color: var(--muted); font-size: 0.8rem; margin: 4px 0 0; white-space: nowrap; }
-.report-head { flex: 1; min-width: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; }
+.report-head { flex: 1 1 auto; min-width: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; }
 .label { font-weight: 700; white-space: nowrap; color: var(--muted); }
 
 /* Summary counts */

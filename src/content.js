@@ -32,6 +32,7 @@ window.CONTENT = {
   reportComments: "Comments:",
   reportAddress: "Address:",
   reportName: "Name:",
+  reportArea: "Area:",
   reportContact: "Contact:",
   reportStatus: "Status:",
   reportNotGiven: "not given",
