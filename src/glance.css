@@ -136,3 +136,20 @@
   .map-pin { transform: translate(-50%, -15px); }
   .pin-name { font-size: 0.68rem; padding: 0 4px; white-space: normal; max-width: 4.4rem; text-align: center; line-height: 1.15; }
 }
+
+/* Lighter, calmer look: soft white cards, no heavy coloured bars. A small dot says how urgent. */
+.glance-cards { gap: 16px; }
+.glance-card { border: 0; border-top: 0; border-radius: 18px; padding: 18px 20px; box-shadow: 0 1px 2px rgba(24, 52, 81, 0.04), 0 8px 28px rgba(24, 52, 81, 0.06); gap: 4px; }
+.glance-card:hover { box-shadow: 0 2px 4px rgba(24, 52, 81, 0.06), 0 14px 36px rgba(24, 52, 81, 0.1); border-color: transparent; }
+.glance-card.alert-red { background: #fff5f7; }
+.glance-card.alert-red .g-label::before, .glance-card.alert-amber .g-label::before {
+  content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 7px; vertical-align: 0.1em;
+}
+.glance-card.alert-red .g-label::before { background: var(--red); }
+.glance-card.alert-amber .g-label::before { background: var(--amber-solid); box-shadow: 0 0 0 1px var(--amber); }
+.g-count { font-size: 2.4rem; font-weight: 700; letter-spacing: -0.03em; }
+.g-flag { top: 14px; right: 14px; }
+.area-split { gap: 28px; }
+.area-map { border: 0; }
+.matrix th, .matrix td { padding: 9px 8px; }
+.active-filter { background: var(--brand-tint); }
