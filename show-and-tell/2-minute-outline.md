@@ -1,7 +1,7 @@
 # Show and tell: Commitment issues (2 minutes)
 
 **Presenting:** Okeli Okonye (picked at random; the squad can swap)
-**Last updated:** 17:38, after pull request #22
+**Last updated:** 17:44, after pull request #24
 
 Before your turn, tell Claude `get the latest and make it run for me`, so you show the squad's latest version. Join the Teams call from the link in the squad's Teams chat and share your screen when it's your turn.
 
@@ -20,7 +20,7 @@ Before your turn, tell Claude `get the latest and make it run for me`, so you sh
 ## 1:30 to 2:00: One surprise from the tooling
 
 - A whole visit planner went from an idea to the shared screen in under an hour: a calendar, route maps, and a plan that weighs risk against driving time. One person built it by describing it to Claude.
-- And everyone built, whatever their job. Our QA engineer designed and built the dashboard's top section. Our business analyst built the tenant's Track your report page.
+- And everyone built, whatever their job. Our QA engineer designed and built the dashboard's top section, then wrote 68 automated tests. Our business analyst built the tenant's Track your report page.
 
 ---
 
@@ -40,3 +40,4 @@ Before your turn, tell Claude `get the latest and make it run for me`, so you sh
 | 17:02 to 17:07 | Simon | Cases: filters and cards, calendar links, review fixes |
 | 17:25 | Petra | Risk by area: back to a simple grid |
 | 17:32 | Simon | Clearer words on the visit plan and Cases |
+| 17:43 | Helen | 68 automated tests, and a fix to an impossible household in the data |
