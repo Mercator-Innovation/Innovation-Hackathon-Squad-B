@@ -150,9 +150,10 @@ function renderReports() {
 function renderVisits() {
   document.getElementById("visits-list").innerHTML = team.map(t => {
     const mine = state.visits.filter(v => v.who === t.name);
+    if (!mine.length) return "";
     return `<div class="card"><h3>${escapeHtml(t.name)}, ${escapeHtml(t.role)}</h3>
-      ${mine.length ? `<ul>${mine.map(v => `<li>${escapeHtml(v.when)}: <button type="button" class="link" data-home="${v.homeId}">${escapeHtml(v.address)}</button></li>`).join("")}</ul>` : "<p>No visits yet.</p>"}</div>`;
-  }).join("") + (state.visits.length ? "" : `<p>${C.visitsEmpty}</p>`);
+      <ul>${mine.map(v => `<li>${escapeHtml(v.when)}: <button type="button" class="link" data-home="${v.homeId}">${escapeHtml(v.address)}</button></li>`).join("")}</ul></div>`;
+  }).join("") || `<p>${C.visitsEmpty}</p>`;
 }
 
 // ---- Tabs ----

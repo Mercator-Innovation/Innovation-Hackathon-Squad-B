@@ -50,14 +50,66 @@
       <div id="reports-list"></div>
     </section>
 
-    <section class="panel" id="tab-visits" hidden aria-labelledby="visits-title">
-      <h2 id="visits-title" data-text="visitsTitle"></h2>
-      <div id="visits-list"></div>
-    </section>
+    <div id="tab-visits" hidden>
+      <div class="summary compact" id="plan-summary"></div>
+
+      <section class="panel" aria-labelledby="visits-title">
+        <h2 id="visits-title" data-text="visitsTitle"></h2>
+        <p class="hint" data-text="planIntro"></p>
+        <div class="cal-tools">
+          <button type="button" class="small" id="week-prev" data-text="weekPrev"></button>
+          <strong id="week-label" aria-live="polite"></strong>
+          <button type="button" class="small" id="week-next" data-text="weekNext"></button>
+          <label class="cal-who"><span data-text="planWho"></span> <select id="plan-who"></select></label>
+        </div>
+        <div class="cal-wrap"><div id="calendar" class="calendar"></div></div>
+        <p id="cal-empty" class="hint"></p>
+        <div id="cal-legend" class="cal-legend"></div>
+        <div id="plan-unplanned"></div>
+        <div id="plan-recorded"></div>
+      </section>
+
+      <section class="panel" aria-labelledby="where-title">
+        <h2 id="where-title" data-text="whereTitle"></h2>
+        <p class="hint" data-text="whereHelp"></p>
+        <div class="table-wrap"><table class="where" id="where-grid"></table></div>
+        <div id="where-map" class="where-map"></div>
+      </section>
+
+      <details class="panel">
+        <summary><h2 id="team-title" data-text="teamTitle"></h2></summary>
+        <p class="hint" data-text="teamHelp"></p>
+        <div id="plan-team" class="team"></div>
+        <form id="plan-add" class="add-person">
+          <h3 data-text="addPersonTitle"></h3>
+          <div class="times">
+            <label for="add-name">Name <input id="add-name" autocomplete="off" required></label>
+            <label for="add-role">Role <input id="add-role" autocomplete="off"></label>
+          </div>
+          <button type="submit" class="primary" data-text="addPersonButton"></button>
+        </form>
+      </details>
+
+      <details class="panel">
+        <summary><h2 id="rules-title" data-text="rulesTitle"></h2></summary>
+        <p class="hint" data-text="rulesHelp"></p>
+        <div id="plan-rules"></div>
+        <button type="button" class="link" id="plan-reset" data-text="resetPlanner"></button>
+      </details>
+
+      <details class="panel">
+        <summary><h2 id="hand-title" data-text="handTitle"></h2></summary>
+        <div id="visits-list"></div>
+      </details>
+    </div>
   </main>
 
   <dialog id="detail" aria-labelledby="detail-title">
     <div class="dialog-body" id="detail-body"></div>
+  </dialog>
+
+  <dialog id="visit-dialog" aria-labelledby="visit-title">
+    <div class="dialog-body" id="visit-body"></div>
   </dialog>
 
   <script src="content.js"></script>
@@ -65,5 +117,8 @@
   <script src="data/homes.js"></script>
   <script src="risk.js"></script>
   <script src="app.js"></script>
+  <script src="data/locations.js"></script>
+  <script src="data/rota.js"></script>
+  <script src="planner.js"></script>
 </body>
 </html>
