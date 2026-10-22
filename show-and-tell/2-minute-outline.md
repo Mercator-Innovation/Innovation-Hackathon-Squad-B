@@ -1,7 +1,7 @@
 # Show and tell: Commitment issues (2 minutes)
 
 **Presenting:** Okeli Okonye (picked at random; the squad can swap)
-**Last updated:** 18:30, after pull request #67
+**Last updated:** 18:31, after pull request #68
 
 Want it read out? Open `show-and-tell/speak.html` for a recording in a Scottish voice.
 
@@ -63,3 +63,4 @@ Before your turn, tell Claude `get the latest and make it run for me`, so you sh
 | 18:26 | Petra | Risk by area now uses the new heat map, with her area pins on top |
 | 18:28 | Petra | Risk by area map: zoom in on an area |
 | 18:30 | Helen | Automated accessibility tests (WCAG 2.2 AA), and a calendar fix for voice control |
+| 18:31 | Petra | Risk by area: a ranked list with stacked bars in place of the grid |
