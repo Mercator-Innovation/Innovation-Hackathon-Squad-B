@@ -317,8 +317,6 @@ th[aria-sort] .sort-icon { color: var(--brand); }
 
 /* Downloads */
 .export { display: flex; align-items: center; gap: 2px; }
-.export-label { font-size: 0.85rem; color: var(--muted); margin-right: 4px; }
-.page-export { display: flex; justify-content: flex-end; margin: -6px 0 4px; }
 .has-export { position: relative; }
 .has-export > .export { position: absolute; top: 10px; right: 10px; }
 .has-export > h2:first-of-type, .has-export > .area-head h2 { padding-right: 84px; }
@@ -348,7 +346,7 @@ dl.facts dd .hint { font-size: 0.875rem; }
 /* PDF downloads: print only the chosen section */
 @media print {
   body { background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  nav.tabs, .export, .page-export, .list-meta button, dialog, #clear-filter { display: none !important; }
+  nav.tabs, .export, .list-meta button, dialog, #clear-filter { display: none !important; }
   main { max-width: none; padding: 0; }
   .print-only { display: block; }
   .table-wrap { overflow: visible; }

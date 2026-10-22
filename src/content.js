@@ -93,7 +93,6 @@ window.CONTENT = {
 
   // Downloads (export.js)
   downloadLabel: "Download",
-  downloadPage: "Download page",
   downloadAsPdf: "Download {what} as a PDF",
   downloadAsExcel: "Download {what} as an Excel file",
   downloadPdfTip: "PDF: opens your print window. Choose Save as PDF.",
