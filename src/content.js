@@ -1,0 +1,56 @@
+// The words people see. Change them here without touching the code.
+// Each key matches a data-text="..." in the HTML.
+window.CONTENT = {
+  // Shared
+  prototypeBanner: "Prototype with made-up data. Not a real service.",
+
+  // Staff dashboard (index.html)
+  dashTitle: "Healthier homes",
+  dashIntro: "Find the homes most at risk of cold, damp and mould, and act before people get ill.",
+  navDashboard: "Risk overview",
+  navReports: "Reports from tenants",
+  navVisits: "Visits booked",
+  navTenant: "Tenant view",
+  heatTitle: "Risk by area",
+  heatHelp: "Choose an area to see its homes.",
+  listTitle: "Homes to look at first",
+  filterSearch: "Search by address, tenant or reference",
+  filterArea: "Area",
+  filterBand: "Risk",
+  filterAll: "All",
+  reportsTitle: "Reports from tenants",
+  reportsEmpty: "No new reports.",
+  visitsTitle: "Visits booked",
+  visitsEmpty: "No visits booked yet. Open a home to book one.",
+  whyFlagged: "Why this home is flagged",
+  humanCheck: "This is a guide, not a decision. Use what you know about the household.",
+  caseTitle: "What happens next",
+  statusLabel: "Status",
+  bookTitle: "Book a visit",
+  bookWho: "Who should visit",
+  bookWhen: "When",
+  bookButton: "Book visit",
+  noteLabel: "Note",
+  saveButton: "Save",
+
+  // Tenant form (report.html)
+  reportTitle: "Tell us about damp, mould or cold in your home",
+  reportIntro: "We'll get back to you. You don't need to be sure what the problem is.",
+  qProblem: "What's the problem?",
+  qProblemHint: "Choose all that apply.",
+  qRooms: "Which rooms?",
+  qDescription: "Tell us what's happening",
+  qDescriptionHint: "For example, when it started and whether it's getting worse.",
+  qPhotos: "Photos (optional)",
+  qPhotosHint: "Photos help us understand the problem before we visit.",
+  qHealth: "Is anyone in your home finding it harder because of their health?",
+  qHealthHint: "You don't have to tell us. If you do, we'll only use it to help you sooner.",
+  qName: "Your name",
+  qAddress: "Your address",
+  qContact: "Phone number or email",
+  qContactWhen: "Best way and time to contact you",
+  submitButton: "Send report",
+  thanksTitle: "Thanks, we've got your report",
+  thanksBody: "Your reference is {ref}. Someone from our team will contact you soon.",
+  thanksAgain: "Report something else"
+};

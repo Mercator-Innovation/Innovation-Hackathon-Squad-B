@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Healthier homes: staff view</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="banner" data-text="prototypeBanner"></div>
+  <header class="site">
+    <h1 data-text="dashTitle"></h1>
+    <p data-text="dashIntro"></p>
+  </header>
+  <nav class="tabs" aria-label="Sections">
+    <a href="#overview" data-tab="overview" aria-current="page" data-text="navDashboard"></a>
+    <a href="#reports" data-tab="reports" data-text="navReports"></a>
+    <a href="#visits" data-tab="visits" data-text="navVisits"></a>
+    <a href="report.html" data-text="navTenant"></a>
+  </nav>
+
+  <main>
+    <div id="tab-overview">
+      <div class="summary" id="summary"></div>
+
+      <section class="panel" aria-labelledby="heat-title">
+        <h2 id="heat-title" data-text="heatTitle"></h2>
+        <p class="hint" data-text="heatHelp"></p>
+        <div class="heatmap" id="heatmap"></div>
+      </section>
+
+      <section class="panel" aria-labelledby="list-title">
+        <h2 id="list-title" data-text="listTitle"></h2>
+        <div class="filters">
+          <label><span data-text="filterSearch"></span><input type="search" id="search"></label>
+          <label><span data-text="filterArea"></span><select id="filter-area"></select></label>
+          <label><span data-text="filterBand"></span><select id="filter-band"></select></label>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Risk</th><th>Home</th><th>Area</th><th>Main reasons</th><th>Status</th></tr></thead>
+            <tbody id="homes"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <section class="panel" id="tab-reports" hidden aria-labelledby="reports-title">
+      <h2 id="reports-title" data-text="reportsTitle"></h2>
+      <div id="reports-list"></div>
+    </section>
+
+    <section class="panel" id="tab-visits" hidden aria-labelledby="visits-title">
+      <h2 id="visits-title" data-text="visitsTitle"></h2>
+      <div id="visits-list"></div>
+    </section>
+  </main>
+
+  <dialog id="detail" aria-labelledby="detail-title">
+    <div class="dialog-body" id="detail-body"></div>
+  </dialog>
+
+  <script src="content.js"></script>
+  <script src="shared.js"></script>
+  <script src="data/homes.js"></script>
+  <script src="risk.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
