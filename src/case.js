@@ -7,7 +7,7 @@
   const WRITER_KEY = "healthier-homes-writer";
   const NOTE_TYPES = ["Repair progress", "Contact with tenant", "Assessment finding", "Something else"];
   const BOOK_TYPES = [["assess", "Assessment follow-up"], ["fix", "Repair"], ["check", "Check-in"]];
-  const KIND = { note: "Note", booking: "Booking", outcome: "Visit", report: "Report" };
+  const KIND = { note: "Note", booking: "Booking", outcome: "Visit", report: "Tenant report" };
   const tab = document.getElementById("tab-cases");
   let message = "";
 
@@ -35,34 +35,154 @@
     const c = PL.caseOf(h.id);
     const items = c.log.map(l => ({ at: l.at, kind: l.kind, text: l.text, by: l.by }));
     allReports().filter(r => r.homeId === h.id).forEach(r =>
-      items.push({ at: `${r.received}T09:00`, kind: "report", text: `Report from tenant (${r.ref}): ${r.problems.join(", ")}. ${r.description}`, by: "" }));
+      items.push({ at: `${r.received}T09:00`, kind: "report", text: `${r.ref}: ${r.problems.join(", ")}. ${r.description}`, by: "" }));
     if (state.notes[h.id]) items.push({ at: "", kind: "note", text: state.notes[h.id], by: "Note on the home's details" });
     return items.sort((a, b) => b.at.localeCompare(a.at));
   }
-  const lastUpdate = h => history(h).find(i => i.at);
-  const isOpen = h => {
-    const s = stage(h);
-    return history(h).length > 0 && s !== "Repair done" && s !== "No work needed";
+
+  // ---- The list of cases: chips, filters, cards ----
+  const FILTER_KEY = "healthier-homes-case-filters";
+  const PAGE = 20;
+  const DEFAULTS = { q: "", risk: ["High", "Medium", "Low"], updated: "", stage: "", area: "", show: "open", sort: "updated" };
+  const STAGES = ["Assessment planned", "Assessment booked", "Check-in booked", "Repair needed", "Repair planned", "Repair booked", "Repair done", "No work needed", "Not planned"];
+  const CLOSED = ["Repair done", "No work needed"];
+  let F = (() => { try { return { ...DEFAULTS, ...JSON.parse(sessionStorage.getItem(FILTER_KEY)) }; } catch { return { ...DEFAULTS }; } })();
+  let limit = PAGE;
+
+  const postcode = id => (window.LOCATIONS.homes[id] || {}).postcode || "";
+  const daysSince = isoTime => {
+    const then = new Date(isoTime), today = new Date();
+    then.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
+    return Math.round((today - then) / 864e5);
+  };
+  function ago(isoTime) {
+    const n = daysSince(isoTime);
+    const time = new Date(isoTime).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
+    if (n <= 0) return `Today, ${time}`;
+    if (n === 1) return `Yesterday, ${time}`;
+    if (n < 7) return `${n} days ago`;
+    return new Date(isoTime).toLocaleDateString("en-GB", { day: "numeric", month: "short" });
+  }
+  const street = address => address.replace(/^\d+\s*/, "");
+  const number = address => parseInt(address, 10) || 0;
+
+  // Everything the list needs about one home, worked out once per redraw.
+  function summarise(h) {
+    const hist = history(h);
+    const st = stage(h);
+    return { h, pc: postcode(h.id), st, next: upcoming(h.id)[0], last: hist.find(i => i.at), open: !CLOSED.includes(st) && (hist.length > 0 || st !== "Not planned") };
+  }
+
+  function matches(x, f) {
+    if (f.show === "open" && !x.open) return false;
+    if (!f.risk.includes(x.h.risk.band)) return false;
+    if (f.stage === "repair" ? !x.st.startsWith("Repair") || x.st === "Repair done" : f.stage && x.st !== f.stage) return false;
+    if (f.area && x.h.area !== f.area) return false;
+    if (f.updated) {
+      const age = x.last ? daysSince(x.last.at) : Infinity;
+      if (f.updated === "stale" ? age <= 30 : f.updated === "1" ? age > 0 : age > +f.updated) return false;
+    }
+    const q = f.q.trim().toLowerCase();
+    if (q) {
+      const hay = `${x.h.address} ${x.pc} ${x.pc.replace(/\s/g, "")} ${x.h.tenant} ${x.h.id} ${x.h.area}`.toLowerCase();
+      if (!hay.includes(q) && !hay.includes(q.replace(/\s/g, ""))) return false;
+    }
+    return true;
+  }
+
+  const SORTS = {
+    updated: (a, b) => ((b.last || {}).at || "").localeCompare((a.last || {}).at || "") || b.h.risk.points - a.h.risk.points,
+    risk: (a, b) => b.h.risk.points - a.h.risk.points || ((b.last || {}).at || "").localeCompare((a.last || {}).at || ""),
+    next: (a, b) => (a.next ? a.next.iso + PL.hhmm(a.next.start) : "~").localeCompare(b.next ? b.next.iso + PL.hhmm(b.next.start) : "~"),
+    address: (a, b) => street(a.h.address).localeCompare(street(b.h.address)) || number(a.h.address) - number(b.h.address)
   };
 
-  // ---- The list of cases ----
+  // Quick filters across the top. Each one sets the filters to a preset.
+  const CHIPS = [
+    { label: T.chipOpen, preset: {} },
+    { label: T.chipHigh, preset: { risk: ["High"] } },
+    { label: T.chipToday, preset: { updated: "1", show: "all" } },
+    { label: T.chipRepair, preset: { stage: "repair" } },
+    { label: T.chipStale, preset: { updated: "stale" } }
+  ];
+  // Chips keep whatever is in Search, so the search isn't counted when matching a chip.
+  const sameFilters = (a, b) => ["updated", "stage", "area", "show"].every(k => a[k] === b[k]) && a.risk.join() === b.risk.join();
+
+  // Highlight what was searched for, without breaking the escaping.
+  function hl(text) {
+    const s = String(text), q = F.q.trim();
+    if (!q) return escapeHtml(s);
+    const chars = [...q.replace(/\s+/g, "")].map(c => c.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+    if (!chars.length) return escapeHtml(s);
+    const re = new RegExp(`(${chars.join("\\s?")})`, "ig");
+    return s.split(re).map((part, i) => (i % 2 ? `<mark>${escapeHtml(part)}</mark>` : escapeHtml(part))).join("");
+  }
+
+  function cardHtml(x) {
+    const { h, pc, st, next, last } = x;
+    return `<li class="case-item risk-${h.risk.band}">
+      <div class="ci-top">
+        <h3 class="ci-addr"><a href="#cases/${h.id}">${hl(h.address)}</a></h3>
+        <span class="badge ${h.risk.band}">${h.risk.band} · ${h.risk.points}</span>
+      </div>
+      <p class="ci-sub"><span class="nowrap">${hl(pc)}</span> · ${hl(h.area)} · ${hl(h.tenant)} · <span class="nowrap">${hl(h.id)}</span></p>
+      <div class="ci-meta">
+        <span class="stage-pill">${st}</span>
+        <span><span class="ci-label">${T.labelNext}</span> ${next ? `${PL.TYPE[next.type]}, ${PL.nice(next.date)} ${PL.hhmm(next.start)}
+          <button type="button" class="link ci-cal" data-show-visit="${next.key}" aria-label="See the visit to ${escapeHtml(h.address)} on the calendar">${T.caseOnCalendar}</button>` : T.noneLabel}</span>
+        <span><span class="ci-label">${T.labelLast}</span> ${last ? ago(last.at) : T.neverLabel}</span>
+      </div>
+      ${last ? `<p class="ci-last tl-${last.kind}"><span class="tl-kind">${KIND[last.kind] || ""}</span> ${escapeHtml(last.text.length > 140 ? `${last.text.slice(0, 137)}...` : last.text)}</p>` : ""}
+    </li>`;
+  }
+
   function renderList() {
-    const search = document.getElementById("case-search").value.trim().toLowerCase();
-    const show = document.getElementById("case-show").value;
-    const rows = scored()
-      .filter(h => (show === "all" || isOpen(h)) && (!search || `${h.address} ${h.tenant} ${h.id}`.toLowerCase().includes(search)))
-      .sort((a, b) => ((lastUpdate(b) || {}).at || "").localeCompare((lastUpdate(a) || {}).at || "") || b.risk.points - a.risk.points);
-    document.getElementById("cases-rows").innerHTML = rows.map(h => {
-      const next = upcoming(h.id)[0];
-      const last = lastUpdate(h);
-      return `<tr>
-        <td><a href="#cases/${h.id}">${escapeHtml(h.address)}</a>, ${escapeHtml(h.area)}<br><small>${h.id} · ${escapeHtml(h.tenant)}</small></td>
-        <td><span class="badge ${h.risk.band}">${h.risk.band} · ${h.risk.points}</span></td>
-        <td>${stage(h)}</td>
-        <td>${next ? `${PL.TYPE[next.type]}, ${PL.nice(next.date)} ${PL.hhmm(next.start)}` : "None"}</td>
-        <td>${last ? when(last.at) : "None"}</td>
-      </tr>`;
-    }).join("") || `<tr><td colspan="5">${T.casesEmpty}</td></tr>`;
+    const all = scored().map(summarise);
+    const found = all.filter(x => matches(x, F)).sort(SORTS[F.sort] || SORTS.updated);
+    const shown = found.slice(0, limit);
+
+    document.getElementById("case-chips").innerHTML = CHIPS.map((c, i) => {
+      const preset = { ...DEFAULTS, ...c.preset };
+      const n = all.filter(x => matches(x, { ...preset, q: F.q })).length;
+      return `<button type="button" class="chip" data-chip="${i}" aria-pressed="${sameFilters(F, preset)}"><strong>${n}</strong> ${c.label}</button>`;
+    }).join("");
+
+    document.getElementById("case-count").textContent =
+      T.casesCount.replace("{shown}", shown.length).replace("{total}", found.length)
+        .replace("{what}", F.show === "open" ? (found.length === 1 ? "open case" : "open cases") : (found.length === 1 ? "home" : "homes"));
+    document.getElementById("case-clear").hidden = sameFilters(F, DEFAULTS) && F.sort === DEFAULTS.sort;
+    document.getElementById("cases-rows").innerHTML = shown.map(cardHtml).join("") || `<li class="case-none">${F.show === "open" ? T.casesEmpty : T.casesEmptyAll}</li>`;
+    const more = document.getElementById("case-more");
+    more.hidden = found.length <= shown.length;
+    more.textContent = T.casesMore.replace("{n}", Math.min(PAGE, found.length - shown.length));
+  }
+
+  // Put the saved filters into the form, and read the form back.
+  function fillForm() {
+    document.getElementById("case-stage").innerHTML = `<option value="">${T.anyLabel}</option><option value="repair">${T.chipRepair}</option>` +
+      STAGES.map(s => `<option>${s}</option>`).join("");
+    document.getElementById("case-area").innerHTML = `<option value="">${T.anyLabel}</option>` +
+      [...new Set(scored().map(h => h.area))].sort().map(a => `<option>${escapeHtml(a)}</option>`).join("");
+    document.getElementById("case-search").value = F.q;
+    document.querySelectorAll('#case-filters [name="risk"]').forEach(c => (c.checked = F.risk.includes(c.value)));
+    ["updated", "stage", "area", "show", "sort"].forEach(k => (document.getElementById(`case-${k}`).value = F[k]));
+  }
+  function readForm() {
+    F = {
+      q: document.getElementById("case-search").value,
+      risk: [...document.querySelectorAll('#case-filters [name="risk"]:checked')].map(c => c.value),
+      updated: document.getElementById("case-updated").value,
+      stage: document.getElementById("case-stage").value,
+      area: document.getElementById("case-area").value,
+      show: document.getElementById("case-show").value,
+      sort: document.getElementById("case-sort").value
+    };
+  }
+  function applyFilters() {
+    try { sessionStorage.setItem(FILTER_KEY, JSON.stringify(F)); } catch {}
+    limit = PAGE;
+    renderList();
   }
 
   // ---- One case ----
@@ -77,38 +197,50 @@
     const staffOptions = staff.map(st => `<option value="${st.id}">${escapeHtml(st.name)} (${escapeHtml(st.role)})</option>`).join("");
     const tomorrow = PL.iso(new Date(Date.now() + 864e5));
 
+    const last = items.find(i => i.at);
+    const next = coming[0];
     view.innerHTML = `
-      <p><a href="#cases">← ${T.caseBack}</a></p>
-      <section class="panel" aria-labelledby="case-title">
-        <h2 id="case-title">${escapeHtml(h.address)}, ${escapeHtml(h.area)}</h2>
-        <p><span class="badge ${h.risk.band}">${h.risk.band} risk · ${h.risk.points} points</span> <strong>${stage(h)}</strong></p>
-        <p>${escapeHtml(h.tenant)} · ${h.household.people} ${h.household.people === 1 ? "person" : "people"} · ${h.propertyType}, built ${h.built} · EPC ${h.epc}
-          · <button type="button" class="link" data-home="${h.id}">${T.openHome}</button></p>
+      <p class="back-link"><a href="#cases">← ${T.caseBack}</a></p>
+      <section class="panel case-head risk-${h.risk.band}" aria-labelledby="case-title">
+        <div class="ch-top">
+          <div>
+            <h2 id="case-title">${escapeHtml(h.address)}</h2>
+            <p class="ci-sub">${escapeHtml(postcode(h.id))} · ${escapeHtml(h.area)} · ${h.id}</p>
+          </div>
+          <div class="ch-badges"><span class="badge ${h.risk.band}">${h.risk.band} risk · ${h.risk.points} points</span> <span class="stage-pill">${stage(h)}</span></div>
+        </div>
+        <dl class="ch-facts">
+          <div><dt>Tenant</dt><dd>${escapeHtml(h.tenant)}</dd></div>
+          <div><dt>Household</dt><dd>${h.household.people} ${h.household.people === 1 ? "person" : "people"}</dd></div>
+          <div><dt>Home</dt><dd>${escapeHtml(h.propertyType)}, built ${h.built}, EPC ${h.epc}</dd></div>
+          <div><dt>${T.labelNext}</dt><dd>${next ? `${PL.TYPE[next.type]}, ${PL.nice(next.date)} ${PL.hhmm(next.start)}` : T.noneLabel}</dd></div>
+          <div><dt>${T.labelLast}</dt><dd>${last ? ago(last.at) : T.neverLabel}</dd></div>
+        </dl>
+        <p><button type="button" class="link" data-home="${h.id}">${T.openHome}</button></p>
         ${message ? `<p class="notice" role="status">${message}</p>` : ""}
       </section>
 
       <div class="case-grid">
-        <div>
-          <section class="panel" aria-labelledby="coming-title">
+          <section class="panel cg-coming" aria-labelledby="coming-title">
             <h2 id="coming-title">${T.caseComingUp}</h2>
             ${coming.length ? `<ul class="timeline">${coming.map(e => `<li>
               <span class="tl-when">${PL.nice(e.date)}, ${PL.hhmm(e.start)}</span>
               <span><strong>${PL.TYPE[e.type]}</strong>${e.fixed ? " (booked)" : " (planned)"} with ${escapeHtml(e.staff.name)}
                 <br><button type="button" class="link" data-visit="${e.key}">Details and outcome</button>
+                · <button type="button" class="link" data-show-visit="${e.key}">${T.caseOnCalendar}</button>
                 ${e.fixed ? ` · <button type="button" class="link" data-cancel="${e.booking}">Cancel booking</button>` : ""}</span>
             </li>`).join("")}</ul>` : `<p>${T.caseNothingComingUp}</p>`}
           </section>
 
-          <section class="panel" aria-labelledby="history-title">
+          <section class="panel cg-history" aria-labelledby="history-title">
             <h2 id="history-title">${T.caseHistory}</h2>
             ${items.length ? `<ul class="timeline">${items.map(i => `<li class="tl-${i.kind}">
               <span class="tl-when">${i.at ? when(i.at) : "Earlier"}</span>
               <span><span class="tl-kind">${KIND[i.kind] || ""}</span> ${escapeHtml(i.text)}${i.by ? `<br><small>${escapeHtml(i.by)}</small>` : ""}</span>
             </li>`).join("")}</ul>` : `<p>${T.caseHistoryEmpty}</p>`}
           </section>
-        </div>
 
-        <div>
+        <div class="cg-actions">
           <section class="panel" aria-labelledby="note-title">
             <h2 id="note-title">${T.caseNoteTitle}</h2>
             <form id="note-form">
@@ -183,11 +315,11 @@
       const note = document.getElementById("book-note").value.trim();
       if (!staffId || !date || !time) return;
       const st = staff.find(s => s.id === staffId);
-      PL.book(id, { type, staffId, date, time, note });
+      const bookingId = PL.book(id, { type, staffId, date, time, note });
       PL.log(id, "booking", `${PL.TYPE[type]} booked with ${st.name}, ${day(date)} at ${time}${note ? `: ${note}` : ""}.`, writer());
       if (type === "assess" && ["Not started", "Contacted"].includes(h.status)) state.status[id] = "Visit booked";
       PL.showWeekOf(date);
-      message = `${T.caseBooked} <a href="#visits">${T.caseSeeCalendar}</a>`;
+      message = `${T.caseBooked} <button type="button" class="link" data-show-visit="b-${bookingId}">${T.caseOnCalendar}</button>`;
       PL.save();
       renderCase(id);
     });
@@ -206,11 +338,39 @@
     if (id) renderCase(id);
     else { document.getElementById("case-view").innerHTML = ""; renderList(); }
   }
+  // Arriving at a case from elsewhere: start at the top, with focus on its name.
+  function arrive() {
+    route();
+    if (!location.hash.startsWith("#cases/")) return;
+    window.scrollTo(0, 0);
+    const title = document.getElementById("case-title");
+    if (title) { title.tabIndex = -1; title.focus({ preventScroll: true }); }
+  }
 
-  window.addEventListener("hashchange", route);
-  document.getElementById("case-search").addEventListener("input", renderList);
-  document.getElementById("case-show").addEventListener("change", renderList);
+  window.addEventListener("hashchange", arrive);
+  const form = document.getElementById("case-filters");
+  form.addEventListener("input", () => { readForm(); applyFilters(); });
+  form.addEventListener("submit", e => e.preventDefault());
+  document.getElementById("case-clear").addEventListener("click", () => { F = { ...DEFAULTS }; fillForm(); applyFilters(); });
+  document.getElementById("case-more").addEventListener("click", () => {
+    const first = limit;
+    limit += PAGE;
+    renderList();
+    const next = document.querySelectorAll("#cases-rows .ci-addr a")[first];
+    if (next) next.focus();
+  });
+  document.getElementById("case-chips").addEventListener("click", e => {
+    const chip = e.target.closest("[data-chip]");
+    if (!chip) return;
+    F = { ...DEFAULTS, ...CHIPS[+chip.dataset.chip].preset, q: F.q, sort: F.sort };
+    fillForm();
+    applyFilters();
+    document.querySelector(`[data-chip="${chip.dataset.chip}"]`).focus();
+  });
+  fillForm();
   tab.addEventListener("click", e => {
+    const show = e.target.closest("[data-show-visit]");
+    if (show) return PL.showVisit(show.dataset.showVisit);
     const cancel = e.target.closest("[data-cancel]");
     if (!cancel) return;
     const id = location.hash.split("/")[1];

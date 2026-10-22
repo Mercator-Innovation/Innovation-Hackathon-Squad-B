@@ -130,17 +130,50 @@
       <section class="panel" id="cases-list" aria-labelledby="cases-title">
         <h2 id="cases-title" data-text="casesTitle"></h2>
         <p class="hint" data-text="casesHelp"></p>
-        <div class="filters">
-          <label><span data-text="casesSearch"></span><input type="search" id="case-search"></label>
-          <label><span data-text="casesShow"></span><select id="case-show">
-            <option value="open">Open cases</option><option value="all">All homes</option></select></label>
+        <div class="case-chips" id="case-chips"></div>
+
+        <form class="case-filters" id="case-filters" role="search" aria-labelledby="filters-title">
+          <h3 id="filters-title" class="visually-hidden" data-text="casesFilterTitle"></h3>
+          <div class="cf-search">
+            <label for="case-search" data-text="casesSearch"></label>
+            <span class="hint" id="case-search-hint" data-text="casesSearchHint"></span>
+            <input type="search" id="case-search" autocomplete="off" aria-describedby="case-search-hint">
+          </div>
+          <label class="cf-field"><span data-text="casesSort"></span>
+            <select id="case-sort">
+              <option value="updated" data-text="sortUpdated"></option>
+              <option value="risk" data-text="sortRisk"></option>
+              <option value="next" data-text="sortNext"></option>
+              <option value="address" data-text="sortAddress"></option>
+            </select></label>
+          <fieldset class="cf-risk">
+            <legend data-text="casesRisk"></legend>
+            <div class="checks inline">
+              <label><input type="checkbox" name="risk" value="High" checked> High</label>
+              <label><input type="checkbox" name="risk" value="Medium" checked> Medium</label>
+              <label><input type="checkbox" name="risk" value="Low" checked> Low</label>
+            </div>
+          </fieldset>
+          <label class="cf-field"><span data-text="casesUpdated"></span>
+            <select id="case-updated">
+              <option value="" data-text="optAnyTime"></option>
+              <option value="1" data-text="optToday"></option>
+              <option value="7" data-text="optWeek"></option>
+              <option value="30" data-text="optMonth"></option>
+              <option value="stale" data-text="optStale"></option>
+            </select></label>
+          <label class="cf-field"><span data-text="casesStage"></span><select id="case-stage"></select></label>
+          <label class="cf-field"><span data-text="casesArea"></span><select id="case-area"></select></label>
+          <label class="cf-field"><span data-text="casesShow"></span>
+            <select id="case-show"><option value="open" data-text="optOpen"></option><option value="all" data-text="optAll"></option></select></label>
+        </form>
+
+        <div class="cf-results">
+          <p id="case-count" role="status"></p>
+          <button type="button" class="link" id="case-clear" data-text="casesClear"></button>
         </div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Home</th><th>Risk</th><th>Where it's at</th><th>Next visit</th><th>Last update</th></tr></thead>
-            <tbody id="cases-rows"></tbody>
-          </table>
-        </div>
+        <ul class="case-list" id="cases-rows"></ul>
+        <p class="case-more"><button type="button" class="small" id="case-more" hidden></button></p>
       </section>
       <div id="case-view"></div>
     </div>
@@ -163,6 +196,7 @@
   <script src="app.js"></script>
   <script src="data/locations.js"></script>
   <script src="data/rota.js"></script>
+  <script src="data/cases.js"></script>
   <script src="planner.js"></script>
   <script src="case.js"></script>
 </body>
