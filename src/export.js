@@ -1,4 +1,4 @@
-// Downloads for the Risk overview: each section, or the whole page, as a PDF or an Excel file.
+// Downloads for the Risk overview: each section as a PDF or an Excel file.
 // PDF uses the browser's print window (choose "Save as PDF").
 // Excel files are built here, with no add-ons: one sheet per section, plus "About this download".
 // Uses scored(), shownHomes(), filterDescription() and sortDescription() from app.js, so it loads after it.
@@ -7,8 +7,7 @@ window.EXPORT = (() => {
   const SECTIONS = {
     glance: { id: "sec-glance", title: () => C.glanceTitle, sheets: () => [glanceSheet(), trendSheet()] },
     areas: { id: "sec-areas", title: () => C.heatTitle, sheets: () => [areasSheet()] },
-    homes: { id: "sec-homes", title: () => C.listTitle, sheets: () => [homesSheet()] },
-    page: { id: "tab-overview", title: () => C.navDashboard, sheets: () => [glanceSheet(), trendSheet(), areasSheet(), homesSheet()] }
+    homes: { id: "sec-homes", title: () => C.listTitle, sheets: () => [homesSheet()] }
   };
 
   const today = () => new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
@@ -53,7 +52,8 @@ window.EXPORT = (() => {
     const reported = new Set(allReports().map(r => r.homeId));
     shownHomes().forEach(h => rows.push([
       h.id, h.address, h.area, h.risk.band, h.risk.points,
-      h.risk.reasons.map(r => r.reason).join("; "), h.status,
+      // Health and household reasons stay in the system, not in a file that can be passed around
+      [...new Set(h.risk.reasons.map(r => r.sensitive ? C.downloadSensitive : r.reason))].join("; "), h.status,
       reported.has(h.id) ? "Yes" : "No", h.monthsSinceLastContact
     ]));
     return { name: C.listTitle, rows };
@@ -198,22 +198,25 @@ window.EXPORT = (() => {
     return new Blob([...parts, ...central, new Uint8Array(end.buffer)]);
   }
 
-  // ---- The download buttons ----
-  function buttons(section, label) {
-    return `<span class="export-label">${label}</span>
-      <button type="button" class="small" data-export="${section}" data-format="pdf">${C.downloadPdf}<span class="visually-hidden">: ${escapeHtml(SECTIONS[section].title())}</span></button>
-      <button type="button" class="small" data-export="${section}" data-format="excel">${C.downloadExcel}<span class="visually-hidden">: ${escapeHtml(SECTIONS[section].title())}</span></button>`;
+  // ---- The download buttons: small icons on the right, with a tooltip and a full name for screen readers ----
+  // A page with the format written on it, so the two are easy to tell apart
+  const fileIcon = label => `<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" focusable="false"><path d="M5.5 1.8h9l4.7 4.7v15.7H5.5z M14.5 1.8v4.7h4.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><rect x="2.5" y="11.2" width="15.5" height="7.6" rx="1.6" fill="currentColor"/><text x="10.25" y="17.1" text-anchor="middle" font-size="6.2" font-weight="800" fill="#fff" font-family="system-ui, sans-serif" letter-spacing="0.2">${label}</text></svg>`;
+  const ICONS = { pdf: fileIcon("PDF"), excel: fileIcon("XLS") };
+
+  function buttons(section) {
+    const what = SECTIONS[section].title();
+    return ["pdf", "excel"].map(format => `<button type="button" class="icon-button" data-export="${section}" data-format="${format}"
+        title="${escapeHtml(format === "pdf" ? C.downloadPdfTip : C.downloadExcelTip)}">${ICONS[format]}<span class="visually-hidden">${escapeHtml(fillIn(format === "pdf" ? C.downloadAsPdf : C.downloadAsExcel, { what }))}</span></button>`).join("");
   }
 
   function addButtons() {
-    const page = document.getElementById("page-export");
-    page.innerHTML = `<div class="export">${buttons("page", C.downloadPage)}</div><p class="hint">${C.downloadHint} ${C.downloadPrivacy}</p>`;
     ["glance", "areas", "homes"].forEach(section => {
       const sec = document.getElementById(SECTIONS[section].id);
       const tools = document.createElement("div");
       tools.className = "export";
-      tools.innerHTML = buttons(section, C.downloadLabel);
-      // After the heading (and after the Grid / Map switch in Risk by area)
+      tools.innerHTML = buttons(section);
+      sec.classList.add("has-export");
+      // Straight after the heading, so screen readers meet them in order. CSS puts them top right.
       const anchor = sec.querySelector(".area-head") || sec.querySelector("h2");
       anchor.insertAdjacentElement("afterend", tools);
     });

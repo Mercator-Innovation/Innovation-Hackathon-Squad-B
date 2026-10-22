@@ -14,14 +14,39 @@
 
   // ---- Saved planner data (team, rules, visit outcomes, cases) ----
   // cases[homeId] = { log: [{ at, kind, text, by }], bookings: [{ id, type, staffId, date, time, note, done }] }
+  // The made-up case history in data/cases.js, with real dates counted back from today.
+  function seedCases() {
+    const cases = {};
+    Object.entries(window.CASE_SEED || {}).forEach(([id, entries]) => {
+      cases[id] = { bookings: [], log: entries.map(e => {
+        const d = new Date();
+        d.setDate(d.getDate() - e.daysAgo);
+        const [hh, mm] = e.time.split(":").map(Number);
+        d.setHours(hh, mm, 0, 0);
+        return { at: d.toISOString(), kind: e.kind, text: e.text, by: e.by };
+      }) };
+    });
+    return cases;
+  }
   function seed() {
     const copy = JSON.parse(JSON.stringify(window.ROTA));
-    return { staff: copy.staff.map((s, i) => ({ id: `s${i}`, ...s })), settings: copy.settings, outcomes: {}, cases: {} };
+    return { staff: copy.staff.map((s, i) => ({ id: `s${i}`, ...s })), settings: copy.settings, outcomes: {}, cases: seedCases(), seeded: true };
   }
   function load() {
     try {
       const saved = JSON.parse(localStorage.getItem(KEY));
-      if (saved && saved.staff) return { ...seed(), ...saved };
+      if (saved && saved.staff) {
+        const cases = { ...(saved.cases || {}) };
+        if (!saved.seeded) {
+          // Add the sample history to anything already saved, skipping entries that are already there.
+          Object.entries(seedCases()).forEach(([id, s]) => {
+            const c = cases[id] || { log: [], bookings: [] };
+            const have = new Set(c.log.map(l => l.text));
+            cases[id] = { ...c, log: [...s.log.filter(l => !have.has(l.text)), ...c.log] };
+          });
+        }
+        return { ...seed(), ...saved, cases, seeded: true };
+      }
     } catch {}
     return seed();
   }
@@ -389,16 +414,26 @@
       </svg>
       <div>
         <h3>${escapeHtml(st.name)}, ${nice(date)}</h3>
-        <p class="hint">${route.length} ${route.length === 1 ? "visit" : "visits"} in ${escapeHtml(areasOf(route).join(", "))}. ${travel} min travel.</p>
+        <p class="hint">${route.length} ${route.length === 1 ? "visit" : "visits"} in ${escapeHtml(areasOf(route).join(", "))}. ${travel} minutes of driving.</p>
         <ol class="where-list">${route.map(e => `<li>${hhmm(e.start)} ${TYPE[e.type]}:
           <button type="button" class="link" data-visit="${e.key}">${escapeHtml(e.home.address)}</button>, ${escapeHtml(e.home.area)}
-          <span class="badge ${e.home.risk.band}">${e.home.risk.band} ${e.home.risk.points}</span></li>`).join("")}</ol>
+          <span class="badge ${e.home.risk.band}">${e.home.risk.band} ${e.home.risk.points}</span>
+          · <a href="#cases/${e.home.id}" aria-label="Case for ${escapeHtml(e.home.address)}">Case</a></li>`).join("")}</ol>
         <p class="hint">${T.mapNote}</p>
       </div>`;
   }
 
   // ---- One visit's details ----
   const visitDialog = document.getElementById("visit-dialog");
+  // The latest update on the home's case, so whoever visits knows what's been happening.
+  function caseSummary(id) {
+    const log = ((P.cases[id] || {}).log || []).slice().sort((a, b) => b.at.localeCompare(a.at));
+    if (!log.length) return `<p>${T.visitNoCase}</p>`;
+    const latest = log[0];
+    const when = new Date(latest.at).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+    return `<p>${log.length} ${log.length === 1 ? "update" : "updates"}. Latest, ${when}${latest.by ? ` by ${escapeHtml(latest.by)}` : ""}:</p>
+      <blockquote class="latest">${escapeHtml(latest.text)}</blockquote>`;
+  }
   function openVisit(key) {
     const e = events.find(x => x.key === key);
     if (!e) return;
@@ -408,22 +443,37 @@
     const actions = e.done ? `<p>${T.visitDone}</p>`
       : e.type === "assess" ? button("work", T.workNeeded) + button("none", T.noWork)
       : e.type === "fix" ? button("fixed", T.repairDone) : button("checked", T.checkDone);
+    const postcode = (window.LOCATIONS.homes[h.id] || {}).postcode || "";
+    const status = e.done ? "Done" : e.fixed ? "Booked" : "Planned";
+    const timing = e.fixed || e.done ? "" : e.late
+      ? `<span class="vd-pill late-pill">${lateText(e.late)}</span>`
+      : `<span class="vd-pill ok-pill">On time</span>`;
     document.getElementById("visit-body").innerHTML = `
-      <button type="button" class="link dialog-close" data-close-visit>Close</button>
-      <h2 id="visit-title">${TYPE[e.type]}: ${escapeHtml(h.address)}, ${escapeHtml(h.area)}</h2>
-      <p><span class="badge ${h.risk.band}">${h.risk.band} risk · ${h.risk.points} points</span></p>
-      <dl class="facts">
-        <dt>When</dt><dd>${nice(e.date)}, ${hhmm(e.start)} to ${hhmm(e.end)}</dd>
-        <dt>Who</dt><dd>${escapeHtml(e.staff.name)}, ${escapeHtml(e.staff.role)}</dd>
-        <dt>Travel</dt><dd>${e.travel} minutes from the last stop</dd>
-        ${e.fixed ? `<dt>Booked</dt><dd>${T.visitBooked}</dd>` : `<dt>Target</dt><dd>By ${dueDate(lastDays, e.due)}${e.late ? `: <strong class="late">${lateText(e.late)}</strong>` : ", on time"}</dd>`}
-      </dl>
-      <h3>${T.whyFlagged}</h3>
-      <ul class="reasons">${h.risk.reasons.map(r => `<li>${escapeHtml(r.reason)}</li>`).join("") || "<li>Nothing flagged</li>"}</ul>
-      <h3>${T.visitOutcome}</h3>
-      <div class="actions">${actions}</div>
-      <p><a class="button" href="#cases/${h.id}" data-close-visit>${T.openCase}</a>
-        <button type="button" class="link" data-home="${h.id}">${T.openHome}</button></p>`;
+      <header class="vd-head c${colour(e.staff)}">
+        <div class="vd-kicker">${TYPE[e.type]} · ${status}</div>
+        <button type="button" class="vd-close" data-close-visit aria-label="Close">×</button>
+        <h2 id="visit-title">${escapeHtml(h.address)}</h2>
+        <p class="vd-where">${escapeHtml(postcode)} · ${escapeHtml(h.area)} · ${escapeHtml(h.tenant)}, ${h.household.people} ${h.household.people === 1 ? "person" : "people"}</p>
+        <p class="vd-pills"><span class="badge ${h.risk.band}">${h.risk.band} risk · ${h.risk.points} points</span> ${timing}</p>
+      </header>
+      <div class="vd-body">
+        <dl class="vd-facts">
+          <div><dt>When</dt><dd>${nice(e.date)}<br>${hhmm(e.start)} to ${hhmm(e.end)}</dd></div>
+          <div><dt>Who</dt><dd><span class="swatch c${colour(e.staff)}" aria-hidden="true"></span>${escapeHtml(e.staff.name)}<br><small>${escapeHtml(e.staff.role)}</small></dd></div>
+          <div><dt>Driving</dt><dd>${e.travel} minutes<br><small>from the last visit</small></dd></div>
+          <div><dt>${e.fixed ? "Booked" : "Target"}</dt><dd>${e.fixed ? `Follow-up<br><small>${T.visitBookedShort}</small>` : `By ${dueDate(lastDays, e.due)}`}</dd></div>
+        </dl>
+        <h3>${T.whyFlagged}</h3>
+        <ul class="vd-reasons">${h.risk.reasons.map(r => `<li>${escapeHtml(r.reason)} <small>+${r.points}</small></li>`).join("") || "<li>Nothing flagged</li>"}</ul>
+        <h3>${T.visitOnCase}</h3>
+        ${caseSummary(h.id)}
+      </div>
+      <footer class="vd-foot">
+        <h3>${T.visitOutcome}</h3>
+        <div class="actions">${actions}</div>
+        <p class="vd-links"><a class="button secondary" href="#cases/${h.id}" data-close-visit>${T.openCase}</a>
+          <button type="button" class="link" data-home="${h.id}">${T.openHome}</button></p>
+      </footer>`;
     visitDialog.showModal();
   }
 
@@ -543,8 +593,8 @@
 
   // ---- Recording what happened at a visit ----
   const OUTCOME_TEXT = {
-    work: "Assessment: work needed. A repair will be planned.",
-    none: "Assessment: no work needed.",
+    work: "Visit done. Work is needed, so a repair will be planned.",
+    none: "Visit done. No work is needed.",
     fixed: "Repair done.",
     checked: "Check-in done."
   };
@@ -563,6 +613,19 @@
 
   // Statuses changed in a home's details can change the plan.
   document.getElementById("detail").addEventListener("close", renderSchedule);
+
+  // After jumping here from a case, bring the visit into view and highlight it.
+  let focusKey = null;
+  function focusVisit() {
+    const el = focusKey && document.querySelector(`.cal-ev[data-visit="${focusKey}"]`);
+    focusKey = null;
+    if (!el) return;
+    el.scrollIntoView({ block: "center" });
+    el.focus();
+    el.classList.add("flash");
+    setTimeout(() => el.classList.remove("flash"), 2500);
+  }
+  window.addEventListener("hashchange", () => { if (location.hash === "#visits") setTimeout(focusVisit); });
 
   // Whenever the dashboard redraws, redraw the plan too, and fill the dashboard's visits count.
   const appRender = render;
@@ -603,9 +666,20 @@
     events: () => events,
     outcome: id => P.outcomes[id],
     caseOf, log, record, firstFree,
-    book(id, booking) { caseOf(id).bookings.push({ id: Date.now().toString(36), ...booking }); },
+    // Read a case without creating an empty one.
+    peekCase: id => P.cases[id] || { log: [], bookings: [] },
+    book(id, booking) { const b = { id: Date.now().toString(36), ...booking }; caseOf(id).bookings.push(b); return b.id; },
     cancel(id, bookingId) { const c = caseOf(id); c.bookings = c.bookings.filter(b => b.id !== bookingId); },
     showWeekOf(date) { weekStart = monday(new Date(`${date}T12:00`)); },
+    showVisit(key) {
+      const e = events.find(x => x.key === key);
+      if (!e) return;
+      weekStart = monday(e.date);
+      if (who && who !== e.staff.id) who = "";
+      focusKey = key;
+      renderSchedule();
+      if (location.hash === "#visits") focusVisit(); else location.hash = "#visits";
+    },
     save() { save(); saveState(state); render(); }
   };
 

@@ -31,3 +31,7 @@ venv/
 *.real.csv
 *.real.xlsx
 private-data/
+
+# Playwright test output
+playwright-report/
+test-results/

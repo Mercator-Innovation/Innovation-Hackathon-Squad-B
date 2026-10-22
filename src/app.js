@@ -16,12 +16,30 @@ function fillIn(text, values) {
 function allReports() {
   return [...window.DATA.reports, ...state.reports];
 }
+const reportStatus = r => state.status[r.ref] || r.status;
 function openReportHomeIds() {
-  return allReports().filter(r => (state.status[r.ref] || r.status) !== "Closed").map(r => r.homeId);
+  return allReports().filter(r => reportStatus(r) !== "Closed").map(r => r.homeId);
+}
+
+// A report closes itself once a visit after it finds nothing to fix, or the repair is done.
+// That takes off its points and stops the Awaab's Law clock. Undo the visit outcome and it opens again.
+function syncReportStatuses() {
+  const PL = window.PLANNER;
+  if (!PL) return;
+  state.autoClosed = state.autoClosed || {};
+  let changed = false;
+  allReports().forEach(r => {
+    const o = r.homeId && PL.outcome(r.homeId);
+    const resolved = !!o && (o.fixed || o.result === "none") && (o.fixed || o.date) >= r.received;
+    if (resolved && reportStatus(r) !== "Closed") { state.status[r.ref] = "Closed"; state.autoClosed[r.ref] = true; changed = true; }
+    if (!resolved && state.autoClosed[r.ref]) { delete state.status[r.ref]; delete state.autoClosed[r.ref]; changed = true; }
+  });
+  if (changed) saveState(state);
 }
 
 function scored() {
-  const ctx = { openReports: openReportHomeIds() };
+  // A Yes to the health question on the report form counts, as well as what our records say
+  const ctx = { openReports: openReportHomeIds(), healthShared: allReports().filter(r => r.health === "Yes").map(r => r.homeId) };
   return homes
     .map(h => ({ ...h, risk: window.RISK.score(h, ctx), status: state.status[h.id] || h.status }))
     .sort((a, b) => b.risk.points - a.risk.points);
@@ -140,7 +158,9 @@ function renderList(list) {
       <td><span class="badge ${h.risk.band}">${h.risk.band} · ${h.risk.points}</span></td>
       <td><button type="button" class="link" data-home="${h.id}">${escapeHtml(h.address)}</button><br><small>${h.id}</small></td>
       <td>${escapeHtml(h.area)}</td>
-      <td>${mainReasons(h, f.reason).map(r => escapeHtml(r.reason)).join("<br>") || "None"}</td>
+      <td>${mainReasons(h, f.reason).map(r => r.sensitive
+        ? `<span class="screen-only">${escapeHtml(r.reason)}</span><span class="print-only-inline">${C.downloadSensitive}</span>`
+        : escapeHtml(r.reason)).join("<br>") || "None"}</td>
       <td>${escapeHtml(h.status)}</td>
     </tr>`).join("") || `<tr><td colspan="5">No homes match.</td></tr>`;
 }
@@ -156,15 +176,15 @@ function maskPhone(phone) {
 function phoneHtml(h) {
   const { masked, last4 } = maskPhone(h.phone);
   return `<span class="phone" data-full="${escapeHtml(h.phone)}" data-masked="${escapeHtml(masked)}" data-last4="${last4}"><span class="phone-number" aria-hidden="true">${escapeHtml(masked)}</span><span class="visually-hidden phone-sr">${C.phoneEnding} ${last4}</span></span>
-    <button type="button" class="small" data-toggle-phone aria-pressed="false">${C.showNumber}</button>`;
+    <button type="button" class="small" data-toggle-phone>${C.showNumber}</button>`;
 }
 
 function togglePhone(button) {
   const phone = button.previousElementSibling;
-  const show = button.getAttribute("aria-pressed") !== "true";
+  const show = button.dataset.shown !== "true";
   phone.querySelector(".phone-number").textContent = show ? phone.dataset.full : phone.dataset.masked;
   phone.querySelector(".phone-sr").textContent = show ? phone.dataset.full : `${C.phoneEnding} ${phone.dataset.last4}`;
-  button.setAttribute("aria-pressed", show);
+  button.dataset.shown = show;
   button.textContent = show ? C.hideNumber : C.showNumber;
 }
 
@@ -192,6 +212,12 @@ function openHome(id) {
         : `<span class="badge contact">${C.contactNotReported}</span>`}
     </p>
 
+    <h3>${C.whyFlagged}</h3>
+    <ul class="reasons">${h.risk.reasons.map(r => `<li>${escapeHtml(r.reason)} (+${r.points})</li>`).join("") || "<li>Nothing flagged</li>"}</ul>
+    <h3>${C.suggestedTitle}</h3>
+    <p class="card suggested">${escapeHtml(C[window.RISK.suggest(h, h.risk)])}</p>
+    <p class="notice">${C.humanCheck}</p>
+
     <h3>${C.aboutHomeTitle}</h3>
     <dl class="facts">
       <dt>${C.factTenant}</dt>
@@ -211,11 +237,6 @@ function openHome(id) {
     </dl>
     <p class="hint">${C.factsSource}</p>
 
-    <h3>${C.whyFlagged}</h3>
-    <ul class="reasons">${h.risk.reasons.map(r => `<li>${escapeHtml(r.reason)} (+${r.points})</li>`).join("") || "<li>Nothing flagged</li>"}</ul>
-    <h3>${C.suggestedTitle}</h3>
-    <p class="card suggested">${escapeHtml(C[window.RISK.suggest(h, h.risk)])}</p>
-    <p class="notice">${C.humanCheck}</p>
 
     <h3>${C.repairsTitle}</h3>
     ${h.repairNotes.length
@@ -240,7 +261,10 @@ function openHome(id) {
   document.getElementById("save-case").onclick = () => {
     state.status[id] = document.getElementById("status").value;
     state.notes[id] = document.getElementById("note").value;
-    saveState(state); render(); dialog.close();
+    saveState(state); dialog.close(); render();
+    // Back to the same home in the list, so keyboard users don't lose their place
+    const again = document.querySelector(`#homes [data-home="${id}"]`);
+    if (again) again.focus();
   };
   document.getElementById("open-case").onclick = () => dialog.close();
   if (!dialog.open) dialog.showModal();
@@ -272,7 +296,7 @@ function renderReports() {
   const list = allReports().slice().reverse().map(r => {
     const home = homes.find(h => h.id === r.homeId);
     const risk = home && rated.find(h => h.id === home.id).risk;
-    return { r, home, risk, status: state.status[r.ref] || r.status };
+    return { r, home, risk, status: reportStatus(r) };
   }).filter(({ r, home, risk, status }) =>
     (!reportHomeFilter || r.homeId === reportHomeFilter) &&
     (!band || (risk ? risk.band === band : band === "none")) &&
@@ -295,24 +319,17 @@ function renderReports() {
       ${cell(C.rrType, `${escapeHtml(r.problems.join(", "))}<br><small>${escapeHtml(r.rooms || C.reportNotGiven)}</small>`, "rr-type")}
       ${cell(C.rrStatus, `${escapeHtml(status)}<br><small>${formatDate(r.received)}</small>`, "rr-status")}
       <div class="rr-actions">
-        ${status === "New" ? `<button type="button" class="primary" data-close-report="${r.ref}">Mark as picked up</button>`
+        ${status === "New" ? `<button type="button" class="primary" data-report-status="Picked up" data-ref="${r.ref}">${C.reportPickUp}</button>`
           : home ? `<a class="button case-button" href="#cases/${home.id}" data-case-for="${r.ref}">${C.openCase}</a>` : ""}
+        ${status === "Picked up" ? `<button type="button" class="small" data-report-status="Closed" data-ref="${r.ref}">${C.reportClose}</button>` : ""}
       </div>
       <p class="rr-comment"><span class="label">${C.reportComments}</span> ${escapeHtml(r.description)}
-        <small class="rr-contact">${C.reportContact} ${escapeHtml(r.contactBy || C.reportNotGiven)}</small></p>
+        ${r.health === "Yes" ? `<span class="rr-health"><span class="label">${C.reportHealth}</span> ${C.reportHealthYes}</span>` : ""}
+        <small class="rr-contact">${C.reportContact} ${escapeHtml([r.contact, r.contactBy].filter(Boolean).join(" · ") || C.reportNotGiven)}</small></p>
     </article>`).join("");
   document.getElementById("reports-list").innerHTML = rows
     ? `<div class="report-cols" aria-hidden="true"><span>${C.rrHome}</span><span>${C.rrRisk}</span><span>${C.rrType}</span><span>${C.rrStatus}</span><span></span></div>${rows}`
     : `<p>${anyFilter ? C.reportsNoMatch : C.reportsEmpty}</p>`;
-}
-
-function renderVisits() {
-  document.getElementById("visits-list").innerHTML = team.map(t => {
-    const mine = state.visits.filter(v => v.who === t.name);
-    if (!mine.length) return "";
-    return `<div class="card"><h3>${escapeHtml(t.name)}, ${escapeHtml(t.role)}</h3>
-      <ul>${mine.map(v => `<li>${escapeHtml(v.when)}: <button type="button" class="link" data-home="${v.homeId}">${escapeHtml(v.address)}</button></li>`).join("")}</ul></div>`;
-  }).join("") || `<p>${C.visitsEmpty}</p>`;
 }
 
 // ---- Tabs ----
@@ -326,6 +343,7 @@ function showTab() {
 }
 
 function render() {
+  syncReportStatuses();
   const list = scored();
   window.GLANCE.render(list);
   renderList(list);
@@ -339,9 +357,11 @@ render();
 showTab();
 
 window.addEventListener("hashchange", showTab);
-document.getElementById("search").addEventListener("input", render);
+// A report sent from the tenant view in another tab shows up straight away, and isn't lost on the next save
+window.addEventListener("storage", e => { if (e.key === STORE_KEY) { state = loadState(); render(); } });
+document.getElementById("search").addEventListener("input", () => render());
 ["filter-band", "filter-reason", "filter-status"].forEach(id =>
-  document.getElementById(id).addEventListener("change", render));
+  document.getElementById(id).addEventListener("change", () => render()));
 ["report-filter-band", "report-filter-status", "report-filter-type"].forEach(id =>
   document.getElementById(id).addEventListener("change", renderReports));
 document.getElementById("report-search").addEventListener("input", renderReports);
@@ -355,13 +375,13 @@ document.addEventListener("click", e => {
   }
   const home = e.target.closest("[data-home]");
   if (home) openHome(home.dataset.home);
-  const report = e.target.closest("[data-close-report]");
+  const report = e.target.closest("[data-report-status]");
   if (report) {
-    const ref = report.dataset.closeReport;
-    state.status[ref] = "Picked up"; saveState(state); render();
-    // Keep keyboard users in place: move focus to the button that replaced the one they clicked.
-    const next = document.querySelector(`[data-case-for="${ref}"]`);
-    if (next) next.focus();
+    const ref = report.dataset.ref;
+    state.status[ref] = report.dataset.reportStatus;
+    saveState(state); render();
+    // Keep keyboard users in place: focus the button that replaced the one they clicked, or the heading.
+    (document.querySelector(`[data-case-for="${ref}"]`) || document.getElementById("reports-title")).focus();
   }
 
   // Sorting: choose a column once to sort by it, again to reverse

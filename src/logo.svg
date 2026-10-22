@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Healthier homes">
+<!-- Healthier homes logo: a home with a heart, for the people inside. Made for this prototype. -->
+  <rect width="64" height="64" rx="14" fill="#a9501c"/>
+  <g fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M43.5 21 V14.5"/><path d="M10.5 31 L32 12 L53.5 31"/><path d="M17 28 V50.5 Q17 53 19.5 53 H44.5 Q47 53 47 50.5 V28"/>
+  </g>
+  <path d="M32 47.5 C31 47.5 20 40.6 20 33.4 C20 29.8 22.8 27 26.1 27 C28.7 27 30.7 28.5 32 30.6 C33.3 28.5 35.3 27 37.9 27 C41.2 27 44 29.8 44 33.4 C44 40.6 33 47.5 32 47.5 Z" fill="#ffffff" transform="translate(32 37.5) scale(0.78) translate(-32 -37.5)"/>
+</svg>
