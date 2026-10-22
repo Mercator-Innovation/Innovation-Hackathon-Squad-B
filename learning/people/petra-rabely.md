@@ -29,6 +29,7 @@ ai_use_week_after:
 
 ## During
 <!-- Claude adds one line per moment: prompts that worked (word for word), dead ends, surprises, things done outside my usual job, what made working as a squad easier or harder -->
+- 17:32 prompt: "okay - so, we do want some kind of map. but, the one we had didnt quite work. what if we create something like having a two column view and not a tab to switch between the two. So, instead, seeing both at the same time next to each other and have one like a list using a risk rating model/matrix. adding the PDF in again, I want you to really scan everything and imagine youre the best service, product, interaction and content designer, but youre also an amazing developer, BA etc. I want you to improve everything" (with our whiteboard sketch attached) → a map and an area risk table side by side, plus a five-expert review (service and content, interaction and accessibility, BA, developer, product) that found 50 issues; Claude fixed the biggest ones: reports now close after a visit, sensitive reasons stay out of texts and downloads, and the tenant form keeps contact details.
 
 ## At 19:00
 - What I worked on: <answers>
