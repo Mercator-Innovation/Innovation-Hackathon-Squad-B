@@ -143,4 +143,12 @@ test.describe("Booking a follow-up on a case", () => {
     await book(page, "H-1003", { ...first, time: "10:15" }); // the first check-in runs 10:00 to 10:30
     await expect(page.locator("#book-time-error"), "the form should warn that this person is already booked").toBeVisible();
   });
+
+  test("booking someone straight after another booked visit is allowed", async ({ page }) => {
+    const v = await firstVisit(page);
+    const first = { staff: v.staff, iso: v.iso, time: "10:00" };
+    await book(page, "H-1002", first);
+    await book(page, "H-1003", { ...first, time: "10:30" }); // starts as the first check-in ends
+    await expect(page.locator("#book-time-error")).toBeHidden();
+  });
 });

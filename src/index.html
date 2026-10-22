@@ -23,6 +23,7 @@
     <a href="#visits" data-tab="visits" data-text="navVisits"></a>
     <a href="#cases" data-tab="cases" data-text="navCases"></a>
     <a href="report.html" data-text="navTenant"></a>
+    <a href="#visit-app" data-tab="visit-app" data-text="navVisitApp"></a>
   </nav>
 
   <main>
@@ -141,6 +142,24 @@
       </details>
     </div>
 
+    <div id="tab-visit-app" hidden>
+      <section class="panel" aria-labelledby="visit-app-title">
+        <div class="area-head">
+          <div>
+            <h2 id="visit-app-title" data-text="visitAppTitle"></h2>
+            <p class="hint"><span data-text="visitAppHelp"></span> <a href="visit.html" target="_blank" rel="noopener" data-text="visitAppOpen"></a></p>
+          </div>
+          <div class="view-switch" role="group" aria-label="Preview size">
+            <button type="button" data-device="tablet" aria-pressed="true" data-text="visitAppTablet"></button>
+            <button type="button" data-device="phone" aria-pressed="false" data-text="visitAppPhone"></button>
+          </div>
+        </div>
+        <div class="device-frame tablet" id="device-frame">
+          <iframe id="visit-app-frame" title="Visit app" loading="lazy"></iframe>
+        </div>
+      </section>
+    </div>
+
     <div id="tab-cases" hidden>
       <section class="panel" id="cases-list" aria-labelledby="cases-title">
         <h2 id="cases-title" data-text="casesTitle"></h2>
@@ -216,5 +235,6 @@
   <script src="data/cases.js"></script>
   <script src="planner.js"></script>
   <script src="case.js"></script>
+  <script src="visit-tab.js"></script>
 </body>
 </html>
