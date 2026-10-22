@@ -35,6 +35,10 @@ main { max-width: 1100px; margin: 0 auto; padding: 16px; }
 section.panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 16px; }
 h2 { margin-top: 0; font-size: 1.25rem; }
 .hint { color: var(--muted); margin-top: 0; }
+.report-top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 4px 12px; }
+.ref { flex-shrink: 0; color: var(--muted); font-size: 0.8rem; margin: 4px 0 0; white-space: nowrap; }
+.report-head { flex: 1 1 auto; min-width: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; }
+.label { font-weight: 700; white-space: nowrap; color: var(--muted); }
 
 /* Summary counts */
 .summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 16px; }
@@ -64,10 +68,12 @@ th { font-size: 0.9rem; }
 .badge.High { background: var(--high-bg); color: var(--high); }
 .badge.Medium { background: var(--medium-bg); color: var(--medium); }
 .badge.Low { background: var(--low-bg); color: var(--low); }
+.badge.status { background: var(--surface); color: var(--text); border: 1px solid var(--muted); font-weight: 400; }
+.badges { display: inline-flex; flex-wrap: wrap; gap: 6px; }
 
 button.primary, .button { font: inherit; background: var(--brand); color: #fff; border: 0; border-radius: 4px; padding: 10px 16px; cursor: pointer; font-weight: 600; text-decoration: none; display: inline-block; }
 button.primary:hover, .button:hover { background: var(--brand-dark); }
-button.link { font: inherit; background: none; border: 0; color: var(--brand); text-decoration: underline; cursor: pointer; padding: 0; }
+button.link { font: inherit; text-align: left; background: none; border: 0; color: var(--brand); text-decoration: underline; cursor: pointer; padding: 0; }
 
 /* Home detail */
 dialog { border: 0; border-radius: var(--radius); padding: 0; width: min(640px, 100vw - 32px); max-height: 90vh; }
