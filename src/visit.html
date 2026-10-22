@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My visits: Healthier homes</title>
+  <link rel="icon" href="logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="visit.css">
+</head>
+<body class="visit-app">
+  <div class="banner">Prototype with made-up data. Not a real service.</div>
+  <header class="site visit-head">
+    <h1 id="app-title"></h1>
+    <div class="visit-pickers">
+      <label><span id="who-label"></span> <select id="who"></select></label>
+      <label><span id="day-label"></span> <select id="day"></select></label>
+    </div>
+  </header>
+
+  <main class="visit-main">
+    <section class="visit-list" id="list-pane" aria-labelledby="list-title">
+      <h2 id="list-title" class="visually-hidden">Visits</h2>
+      <p id="list-status" role="status"></p>
+      <ol id="visit-list" class="visit-cards"></ol>
+    </section>
+    <section class="visit-detail" id="detail-pane" tabindex="-1" aria-live="polite"></section>
+  </main>
+
+  <!-- The plan comes from the staff view, so both always agree. It loads out of sight. -->
+  <iframe id="engine" src="index.html#visits" title="Visit plan" hidden></iframe>
+
+  <script src="visit-content.js"></script>
+  <script src="visit.js"></script>
+</body>
+</html>

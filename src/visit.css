@@ -1,0 +1,54 @@
+/* The visit app (visit.html): phone first, list and visit side by side on a tablet */
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+.visit-head h1 { margin: 0 0 8px; }
+.visit-pickers { display: flex; flex-wrap: wrap; gap: 8px 16px; }
+.visit-pickers label { display: flex; flex-direction: column; font-weight: 600; font-size: 0.9rem; }
+.visit-pickers select { min-width: 200px; }
+
+.visit-main { padding: 12px; }
+.visit-cards { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+.visit-card {
+  width: 100%; font: inherit; color: var(--text); text-align: left; cursor: pointer;
+  display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center;
+  background: var(--surface); border: 1px solid var(--border); border-left: 6px solid var(--brand);
+  border-radius: var(--radius); padding: 12px; min-height: 64px;
+}
+.visit-card[aria-current="true"] { outline: 3px solid var(--text); }
+.visit-card.is-done { border-left-color: var(--low); background: #f2f7f2; }
+.vc-time { font-size: 1.2rem; font-weight: 700; }
+.vc-main { display: flex; flex-direction: column; }
+.vc-main span { color: var(--muted); font-size: 0.9rem; }
+.vc-done { color: var(--low); font-weight: 700; }
+
+.visit-detail { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
+.visit-detail:focus { outline: none; }
+.visit-detail h2 { margin-bottom: 4px; }
+.visit-sub { margin-top: 0; color: var(--muted); }
+.visit-tenant { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; background: var(--bg); padding: 12px; border-radius: var(--radius); }
+.button.call { white-space: nowrap; }
+.private { background: var(--text); color: #fff; font-size: 0.75rem; font-weight: 700; padding: 1px 6px; border-radius: 4px; }
+.visit-detail details { margin: 8px 0; border: 1px solid var(--border); border-radius: var(--radius); padding: 8px 12px; }
+.visit-detail summary { font-weight: 700; cursor: pointer; min-height: 32px; display: flex; align-items: center; }
+.visit-detail .checks label { min-height: 44px; }
+.visit-detail .checks input { width: 24px; height: 24px; }
+.readings { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+.readings label { display: flex; flex-direction: column; font-weight: 700; }
+.consent { display: flex; align-items: center; gap: 8px; font-weight: 600; margin: 8px 0 16px; min-height: 44px; }
+.consent input { width: 24px; height: 24px; }
+.error { color: var(--high); font-weight: 700; display: block; }
+button.big { width: 100%; padding: 14px; font-size: 1.1rem; }
+.notice.saved { border-left-color: var(--low); background: #eaf4ea; }
+.back { margin-bottom: 8px; min-height: 44px; }
+
+/* Phone: one thing at a time */
+@media (max-width: 767px) {
+  body.detail-open .visit-list { display: none; }
+  body:not(.detail-open) .visit-detail { display: none; }
+}
+/* Tablet and up: the list and the visit side by side */
+@media (min-width: 768px) {
+  .visit-main { display: grid; grid-template-columns: minmax(260px, 1fr) 2fr; gap: 16px; align-items: start; }
+  .visit-list { position: sticky; top: 12px; }
+  .back { display: none; }
+}
