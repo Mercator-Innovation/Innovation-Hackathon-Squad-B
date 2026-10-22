@@ -93,7 +93,11 @@ window.CONTENT = {
 
   // Downloads (export.js)
   downloadLabel: "Download",
-  downloadPage: "Download the whole risk overview",
+  downloadPage: "Download page",
+  downloadAsPdf: "Download {what} as a PDF",
+  downloadAsExcel: "Download {what} as an Excel file",
+  downloadPdfTip: "PDF: opens your print window. Choose Save as PDF.",
+  downloadExcelTip: "Excel. Leaves out names, phone numbers and health or household details.",
   downloadPdf: "PDF",
   downloadExcel: "Excel",
   downloadHint: "PDF opens your print window. Choose Save as PDF.",

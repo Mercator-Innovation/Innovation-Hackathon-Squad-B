@@ -313,10 +313,14 @@ th[aria-sort] { background: #e8f1f2; }
 th[aria-sort] .sort-icon { color: var(--brand); }
 
 /* Downloads */
-.export { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0 0 12px; }
-.export-label { font-weight: 600; font-size: 0.9rem; margin-right: 2px; }
-.page-export { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 16px; margin-bottom: 12px; }
-.page-export .export, .page-export .hint { margin: 0; }
+.export { display: flex; align-items: center; gap: 2px; }
+.export-label { font-size: 0.85rem; color: var(--muted); margin-right: 4px; }
+.page-export { display: flex; justify-content: flex-end; margin: -6px 0 4px; }
+.has-export { position: relative; }
+.has-export > .export { position: absolute; top: 10px; right: 10px; }
+.has-export > h2:first-of-type, .has-export > .area-head h2 { padding-right: 84px; }
+.icon-button { display: inline-grid; place-items: center; width: 36px; height: 36px; padding: 0; border: 0; border-radius: 6px; background: transparent; color: var(--muted); cursor: pointer; }
+.icon-button:hover { background: #e8f1f2; color: var(--brand); }
 .print-only { display: none; }
 
 /* Home details card */
