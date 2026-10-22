@@ -807,7 +807,7 @@ window.DATA = {
         "temperature": 19.2
       },
       "household": {
-        "people": 1,
+        "people": 2,
         "olderPerson": true,
         "youngChild": true,
         "healthConditionShared": false,
