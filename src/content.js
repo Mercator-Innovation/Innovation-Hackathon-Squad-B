@@ -20,7 +20,7 @@ window.CONTENT = {
   visitAppTablet: "Tablet",
   visitAppPhone: "Phone",
   heatTitle: "Risk by area",
-  heatHelp: "Where the risk is, on a map and as a table. Choose an area, or a number, to see those homes.",
+  heatHelp: "Where the risk is, on a map and as a list. Choose an area, or part of a bar, to see those homes.",
   mapWater: "Firth of Clyde",
   areaHeatNote: "The glow shows where high and medium risk homes are. The number is how many high risk homes. The colour is the area's average risk. Choose an area to zoom in and see each home. Map points are made up, near each town.",
   mapZoomOut: "Show all areas",
