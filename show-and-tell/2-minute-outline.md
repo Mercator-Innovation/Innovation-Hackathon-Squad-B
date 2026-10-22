@@ -1,7 +1,7 @@
 # Show and tell: Commitment issues (2 minutes)
 
 **Presenting:** Okeli Okonye (picked at random; the squad can swap)
-**Last updated:** 18:15, after pull request #49
+**Last updated:** 18:17, after pull request #52
 
 Before your turn, tell Claude `get the latest and make it run for me`, so you show the squad's latest version. Join the Teams call from the link in the squad's Teams chat and share your screen when it's your turn.
 
@@ -20,7 +20,7 @@ Before your turn, tell Claude `get the latest and make it run for me`, so you sh
 ## 1:30 to 2:00: One surprise from the tooling
 
 - A whole visit planner went from an idea to the shared screen in under an hour: a calendar, route maps, and a plan that weighs risk against driving time. One person built it by describing it to Claude.
-- And everyone built, whatever their job. Our QA engineer designed and built the dashboard's top section, then wrote 68 automated tests that caught a real mistake in our data. Our business analyst built the tenant's Track your report page.
+- And everyone built, whatever their job. Our QA engineer designed, built and tested a whole visit app: four jobs in one. Her tests caught real bugs too. Our business analyst built the tenant's Track your report page.
 
 ---
 
@@ -51,3 +51,4 @@ Before your turn, tell Claude `get the latest and make it run for me`, so you sh
 | 18:07 | Simon | A shorter tagline: "See which homes are most at risk from cold, damp and mould. Help before anyone gets ill." |
 | 18:09 | Petra | The current tab and heading markers in terracotta, to match the logo |
 | 18:13 | Helen | A visit app for the person at the door (phone or tablet), a double-booking fix, and 113 tests in all |
+| 18:15 | Petra | A lighter, calmer look: no boxes inside boxes |
