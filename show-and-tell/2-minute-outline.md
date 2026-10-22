@@ -1,7 +1,7 @@
 # Show and tell: Commitment issues (2 minutes)
 
 **Presenting:** Okeli Okonye (picked at random; the squad can swap)
-**Last updated:** 18:35, after pull request #71
+**Last updated:** 18:36, after pull request #73
 
 Want it read out? Open `show-and-tell/speak.html` for a recording in a Scottish voice.
 
@@ -67,3 +67,5 @@ Before your turn, tell Claude `get the latest and make it run for me`, so you sh
 | 18:30 | Helen | Automated accessibility tests (WCAG 2.2 AA), and a calendar fix for voice control |
 | 18:31 | Petra | Risk by area: a ranked list with stacked bars in place of the grid |
 | 18:32 | Petra | Rolled that back: the Risk by area table is back |
+| 18:34 | Petra | Dropdowns: the arrow set in from the edge |
+| 18:35 | Simon | The presentation reworded around the features, with a new Fiona recording |
