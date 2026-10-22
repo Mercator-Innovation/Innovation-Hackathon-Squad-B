@@ -341,7 +341,7 @@ dl.facts dd .hint { font-size: 0.875rem; }
 /* PDF downloads: print only the chosen section */
 @media print {
   body { background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  nav.tabs, .export, .page-export, .list-meta button, dialog, .view-switch, #clear-filter { display: none !important; }
+  nav.tabs, .export, .page-export, .list-meta button, dialog, #clear-filter { display: none !important; }
   main { max-width: none; padding: 0; }
   .print-only { display: block; }
   .table-wrap { overflow: visible; }

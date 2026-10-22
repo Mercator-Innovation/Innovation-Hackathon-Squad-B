@@ -1,8 +1,7 @@
-// "Where to act first": clickable summary cards, the trend chart, and risk by area (grid or map).
+// "Where to act first": clickable summary cards, the trend chart, and risk by area.
 // app.js calls GLANCE.render(list) every time the dashboard redraws.
 window.GLANCE = (() => {
   const C = window.CONTENT;
-  let areaView = "grid";
 
   // ---- Helpers ----
   // Working days from a to b (positive if b is later). Weekends don't count.
@@ -131,13 +130,7 @@ window.GLANCE = (() => {
       `${sentence(C.trendSummaryHigh, high)} ${sentence(C.trendSummaryMedium, med)}`;
   }
 
-  // ---- Risk by area: grid or map ----
-  // Rough positions on a simplified map of Inverclyde (percent across, percent down). Not to scale.
-  const MAP_POS = {
-    "Gourock": [16, 28], "Greenock West": [33, 46], "Greenock Central": [50, 28], "Greenock East": [68, 50],
-    "Port Glasgow": [86, 26], "Kilmacolm": [84, 76], "Inverkip": [30, 68], "Wemyss Bay": [13, 87]
-  };
-
+  // ---- Risk by area ----
   function areaStats(list) {
     const areas = [...new Set(list.map(h => h.area))].sort();
     return areas.map(area => {
@@ -148,37 +141,12 @@ window.GLANCE = (() => {
   }
 
   function renderAreas(list) {
-    const stats = areaStats(list);
-    document.querySelectorAll("[data-area-view]").forEach(b => b.setAttribute("aria-pressed", b.dataset.areaView === areaView));
-    const box = document.getElementById("heatmap");
-    box.className = areaView === "map" ? "" : "heatmap";
-    if (areaView === "grid") {
-      box.innerHTML = stats.map(s => `
-        <button type="button" class="light-${s.light.key}" data-area="${escapeHtml(s.area)}" aria-pressed="${selectedArea === s.area}">
-          <span class="light-tag"><span class="dot" aria-hidden="true"></span>${s.light.label}</span>
-          <span class="area-name">${escapeHtml(s.area)}</span>
-          ${s.high} ${C.areaHighOf} ${s.homes} ${C.areaHomes}<br>${C.areaAverage} ${s.avg.toFixed(1)}
-        </button>`).join("");
-    } else {
-      box.innerHTML = `<div class="area-map">
-        <svg class="map-bg" viewBox="0 0 100 60" preserveAspectRatio="none" aria-hidden="true">
-          <path class="water" d="M0,0 H100 V12 C88,16 75,14 62,18 C50,22 40,18 30,22 C22,25 14,30 10,40 C8,48 6,55 4,60 H0 Z" />
-          <text class="water-label" x="40" y="8">${C.mapWater}</text>
-        </svg>
-        ${stats.map(s => {
-          const [left, top] = MAP_POS[s.area] || [50, 50];
-          return `<button type="button" class="map-pin light-${s.light.key}" style="left:${left}%;top:${top}%" data-area="${escapeHtml(s.area)}" aria-pressed="${selectedArea === s.area}"
-            aria-label="${escapeHtml(s.area)}: ${s.light.label}, ${s.high} ${C.areaHighOf} ${s.homes} ${C.areaHomes}">
-            <span class="pin-dot" aria-hidden="true">${s.high}</span>
-            <span class="pin-name" aria-hidden="true">${escapeHtml(s.area)}</span>
-          </button>`;
-        }).join("")}
-        </div>
-        <p class="map-key">
-          ${["red", "amber", "green"].map(k => `<span class="light-${k}"><span class="dot" aria-hidden="true"></span>${C["light" + k[0].toUpperCase() + k.slice(1)]}</span>`).join("")}
-        </p>
-        <p class="map-note">${C.mapNote}</p>`;
-    }
+    document.getElementById("heatmap").innerHTML = areaStats(list).map(s => `
+      <button type="button" class="light-${s.light.key}" data-area="${escapeHtml(s.area)}" aria-pressed="${selectedArea === s.area}">
+        <span class="light-tag"><span class="dot" aria-hidden="true"></span>${s.light.label}</span>
+        <span class="area-name">${escapeHtml(s.area)}</span>
+        ${s.high} ${C.areaHighOf} ${s.homes} ${C.areaHomes}<br>${C.areaAverage} ${s.avg.toFixed(1)}
+      </button>`).join("");
   }
 
   // ---- Clicking a card ----
@@ -210,8 +178,6 @@ window.GLANCE = (() => {
       if (TABS[card.dataset.glance]) location.hash = TABS[card.dataset.glance];
       else applyFilter(card.dataset.glance);
     }
-    const view = e.target.closest("[data-area-view]");
-    if (view) { areaView = view.dataset.areaView; render(); }
     if (e.target.closest("#clear-filter")) applyFilter(null);
   });
   // Changing the Risk filter by hand replaces a card's filter.
