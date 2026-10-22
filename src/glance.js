@@ -222,34 +222,30 @@ window.GLANCE = (() => {
     </figure>`;
   }
 
-  // Each area against High, Medium and Low. Every number opens those homes in the list.
+  // Each area as a row with one stacked bar: high, medium and low risk homes, sized by how many.
+  // Every part of the bar opens exactly those homes in the list.
   function matrixHtml(stats) {
-    const max = Math.max(1, ...stats.flatMap(s => [s.high, s.medium, s.low]));
-    const shade = n => n === 0 ? 0 : Math.min(3, Math.ceil((n / max) * 3));
-    const cell = (s, band) => {
+    const most = Math.max(1, ...stats.map(s => s.homes));
+    const seg = (s, band) => {
       const n = s[band.toLowerCase()];
-      return `<td class="m-${band.toLowerCase()} shade-${shade(n)}">${n
-        ? `<button type="button" class="m-num" data-area-band="${escapeHtml(s.area)}|${band}">${n}<span class="visually-hidden"> ${band.toLowerCase()} risk ${n === 1 ? "home" : "homes"} in ${escapeHtml(s.area)}</span></button>`
-        : `<span class="m-zero">0</span>`}</td>`;
+      return n ? `<button type="button" class="seg seg-${band.toLowerCase()}" style="flex: ${n}" data-area-band="${escapeHtml(s.area)}|${band}">${n}<span class="visually-hidden"> ${band.toLowerCase()} risk ${n === 1 ? "home" : "homes"} in ${escapeHtml(s.area)}</span></button>` : "";
     };
     const total = band => stats.reduce((sum, s) => sum + s[band.toLowerCase()], 0);
     return `<div class="area-matrix">
       <h3 id="matrix-title">${C.matrixTitle}</h3>
       <p class="hint">${C.matrixHelp}</p>
-      <div class="table-wrap">
-        <table class="matrix" aria-labelledby="matrix-title">
-          <thead><tr><th scope="col">${C.colArea}</th>${BANDS.map(b => `<th scope="col" class="num">${b}</th>`).join("")}<th scope="col" class="num col-avg">${C.matrixAverage}</th></tr></thead>
-          <tbody>${stats.map(s => `<tr data-row-area="${escapeHtml(s.area)}" class="${selectedArea === s.area ? "is-selected" : ""}">
-            <th scope="row">
-              <button type="button" class="link m-area" data-area="${escapeHtml(s.area)}" aria-pressed="${selectedArea === s.area}">${escapeHtml(s.area)}</button>
-              <span class="light-tag light-${s.light.key}"><span class="dot" aria-hidden="true"></span>${s.light.label}</span>
-            </th>
-            ${BANDS.map(b => cell(s, b)).join("")}
-            <td class="num col-avg">${s.avg.toFixed(1)}</td>
-          </tr>`).join("")}</tbody>
-          <tfoot><tr><th scope="row">${C.matrixTotal}</th>${BANDS.map(b => `<td class="num">${total(b)}</td>`).join("")}<td class="col-avg"></td></tr></tfoot>
-        </table>
-      </div>
+      <p class="seg-key" aria-hidden="true">${BANDS.map(b => `<span class="key-${b.toLowerCase()}">${b}</span>`).join("")}</p>
+      <ol class="area-list" aria-labelledby="matrix-title">${stats.map(s => `
+        <li class="area-row ${selectedArea === s.area ? "is-selected" : ""}" data-row-area="${escapeHtml(s.area)}">
+          <div class="ar-head">
+            <button type="button" class="ar-name" data-area="${escapeHtml(s.area)}" aria-pressed="${selectedArea === s.area}">${escapeHtml(s.area)}</button>
+            <span class="light-tag light-${s.light.key}"><span class="dot" aria-hidden="true"></span>${s.light.label}</span>
+            <span class="ar-score" title="${C.matrixAverage}">${s.avg.toFixed(1)}<span class="visually-hidden"> ${C.matrixAverage.toLowerCase()}</span></span>
+          </div>
+          <div class="ar-bar" style="width: ${Math.max(28, (s.homes / most) * 100)}%">${BANDS.map(b => seg(s, b)).join("")}</div>
+        </li>`).join("")}
+      </ol>
+      <p class="ar-total">${C.matrixTotal}: <strong>${total("High")}</strong> high · <strong>${total("Medium")}</strong> medium · <strong>${total("Low")}</strong> low</p>
       <details class="rating-how">
         <summary>${C.ratingHowTitle}</summary>
         <p>${C.ratingHowIntro}</p>
@@ -274,7 +270,7 @@ window.GLANCE = (() => {
   function hotArea(area) {
     document.querySelectorAll("#heatmap .is-hot").forEach(el => el.classList.remove("is-hot"));
     if (!area) return;
-    document.querySelectorAll(`#heatmap [data-area="${CSS.escape(area)}"].map-pin, #heatmap tr[data-row-area="${CSS.escape(area)}"]`)
+    document.querySelectorAll(`#heatmap [data-area="${CSS.escape(area)}"].map-pin, #heatmap [data-row-area="${CSS.escape(area)}"]`)
       .forEach(el => el.classList.add("is-hot"));
   }
   ["mouseover", "focusin"].forEach(type => document.addEventListener(type, e => {
