@@ -131,17 +131,27 @@ function openHome(id) {
 }
 
 // ---- Reports and visits ----
+// "2026-10-21" → "21 Oct 2026"
+function formatDate(iso) {
+  return new Date(iso + "T00:00").toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+}
+
 function renderReports() {
   const list = allReports().slice().reverse();
+  const rated = scored();
   document.getElementById("reports-list").innerHTML = list.map(r => {
     const home = homes.find(h => h.id === r.homeId);
+    const risk = home && rated.find(h => h.id === home.id).risk;
     const status = state.status[r.ref] || r.status;
     return `<div class="card">
-      <h3>${r.ref}: ${escapeHtml(r.problems.join(", "))}</h3>
-      <p>${home ? `<button type="button" class="link" data-home="${home.id}">${escapeHtml(home.address)}, ${escapeHtml(home.area)}</button>` : escapeHtml(r.address || "Address not matched")}
-        · received ${r.received} · ${escapeHtml(status)}</p>
-      <p>${escapeHtml(r.description)}</p>
-      <p><small>Rooms: ${escapeHtml(r.rooms || "not given")} · Contact: ${escapeHtml(r.contactBy || "not given")}</small></p>
+      <div class="report-top">
+        <h3 class="report-head">${risk ? `<span class="badge ${risk.band}">${risk.band} risk</span>` : `<span class="badge">${C.reportNotRated}</span>`} <span><span class="label">${C.reportType}</span> ${escapeHtml(r.problems.join(", "))}</span> <span class="received">${C.reportReceived} ${formatDate(r.received)}</span></h3>
+        <p class="ref">${C.reportRef} ${r.ref}</p>
+      </div>
+      <p><span class="label">${C.reportRooms}</span> ${escapeHtml(r.rooms || C.reportNotGiven)}</p>
+      <p><span class="label">${C.reportComments}</span> ${escapeHtml(r.description)}</p>
+      <p><span class="label">${C.reportAddress}</span> ${home ? `<button type="button" class="link" data-home="${home.id}">${escapeHtml(home.address)}, ${escapeHtml(home.area)}</button>` : escapeHtml(r.address || "Address not matched")}</p>
+      <p><small>${C.reportContact} ${escapeHtml(r.contactBy || C.reportNotGiven)} · ${C.reportStatus} ${escapeHtml(status)}</small></p>
       ${status === "New" ? `<button type="button" class="primary" data-close-report="${r.ref}">Mark as picked up</button>` : ""}
     </div>`;
   }).join("") || `<p>${C.reportsEmpty}</p>`;
