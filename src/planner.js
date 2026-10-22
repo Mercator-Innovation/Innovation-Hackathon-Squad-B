@@ -246,14 +246,16 @@
     const h = e.home, c = colour(e.staff);
     const place = `left:calc(${(e.lane / e.lanes) * 100}% + 2px);width:calc(${100 / e.lanes}% - 4px)`;
     const top = (e.start - from) * PX;
-    const label = `${e.fixed ? "Booked " : ""}${TYPE[e.type]} at ${h.address}, ${nice(e.date)} ${hhmm(e.start)} to ${hhmm(e.end)}, ${e.staff.name}, ${h.risk.band} risk${e.done ? ", done" : ""}${e.late ? `, ${lateText(e.late)}` : ""}`;
+    // Extra details for screen readers, after the words on screen (voice control users say what they see)
+    const more = `, ${nice(e.date)}, until ${hhmm(e.end)}, ${e.staff.name}, ${h.risk.band} risk${e.fixed ? ", booked" : ""}${e.done ? ", done" : ""}${e.late ? `, ${lateText(e.late)}` : ""}`;
     return `${e.travel ? `<div class="cal-travel c${c}" style="top:${top - e.travel * PX}px;height:${e.travel * PX}px;${place}" title="${e.travel} min travel" aria-hidden="true"></div>` : ""}
-      <button type="button" class="cal-ev c${c} ${e.type}${e.late ? " is-late" : ""}${e.fixed ? " booked" : ""}${e.done ? " done" : ""}${e.end - e.start < 45 ? " short" : ""}" data-visit="${e.key}" aria-label="${escapeHtml(label)}"
+      <button type="button" class="cal-ev c${c} ${e.type}${e.late ? " is-late" : ""}${e.fixed ? " booked" : ""}${e.done ? " done" : ""}${e.end - e.start < 45 ? " short" : ""}" data-visit="${e.key}"
         style="top:${top}px;height:${Math.max(e.end - e.start, 30) * PX}px;${place}">
         ${e.end - e.start < 45 ? `<span class="ev-where">${hhmm(e.start)} ${TYPE[e.type]} · ${escapeHtml(h.address)}</span>` : `
         <span class="ev-time">${hhmm(e.start)} ${TYPE[e.type]}${e.done ? " · done" : e.fixed ? " · booked" : ""}${e.late ? " · late" : ""}</span>
         <span class="ev-where">${escapeHtml(h.address)}</span>
         <span class="ev-meta"><span class="badge ${h.risk.band}">${h.risk.band} ${h.risk.points}</span>${who ? "" : ` <span class="ev-who">${initials(e.staff.name)}</span>`}</span>`}
+        <span class="visually-hidden">${escapeHtml(more)}</span>
       </button>`;
   }
 
