@@ -10,12 +10,13 @@
   const ROAD_FACTOR = 1.3; // roads are longer than a straight line
   const SPEED_KMH = 30;    // average speed around town
   const STOP_MINUTES = 5;  // parking and finding the door
-  const TYPE = { assess: "Assessment", fix: "Repair" };
+  const TYPE = { assess: "Assessment", fix: "Repair", check: "Check-in" };
 
-  // ---- Saved planner data (team, rules, visit outcomes) ----
+  // ---- Saved planner data (team, rules, visit outcomes, cases) ----
+  // cases[homeId] = { log: [{ at, kind, text, by }], bookings: [{ id, type, staffId, date, time, note, done }] }
   function seed() {
     const copy = JSON.parse(JSON.stringify(window.ROTA));
-    return { staff: copy.staff.map((s, i) => ({ id: `s${i}`, ...s })), settings: copy.settings, outcomes: {} };
+    return { staff: copy.staff.map((s, i) => ({ id: `s${i}`, ...s })), settings: copy.settings, outcomes: {}, cases: {} };
   }
   function load() {
     try {
@@ -29,6 +30,14 @@
   }
   let P = load();
   let who = "";
+
+  const caseOf = id => (P.cases[id] = P.cases[id] || { log: [], bookings: [] });
+  function log(id, kind, text, by) {
+    caseOf(id).log.push({ at: new Date().toISOString(), kind, text, by: by || "" });
+  }
+  const minutesFor = type => P.settings.minutes[type] || 30;
+  // Follow-ups booked on a case: fixed appointments the planner works around.
+  const bookings = () => Object.entries(P.cases).flatMap(([homeId, c]) => c.bookings.map(b => ({ ...b, homeId })));
 
   // ---- Time, dates and distance ----
   const toMin = hhmm => { const [h, m] = String(hhmm).split(":").map(Number); return h * 60 + (m || 0); };
@@ -69,20 +78,22 @@
   function jobs(days) {
     const s = P.settings;
     const out = [];
+    const first = iso(days[0]);
+    const booked = (id, type) => bookings().some(b => b.homeId === id && b.type === type && !b.done && b.date >= first);
     scored().forEach(home => {
       const loc = window.LOCATIONS.homes[home.id];
       if (!loc) return;
       const band = home.risk.band;
       const done = P.outcomes[home.id];
       if (done) {
-        if (done.result === "work" && !done.fixed) {
+        if (done.result === "work" && !done.fixed && !booked(home.id, "fix")) {
           const i = dayIndex(days, done.date);
           out.push({ type: "fix", home, loc, earliest: i + 1, due: i + s.fixTargets[band] });
         }
         return;
       }
-      if (home.status === "Work ordered") out.push({ type: "fix", home, loc, earliest: 0, due: s.fixTargets[band] - 1 });
-      else if (home.status === "Not started" || home.status === "Contacted") out.push({ type: "assess", home, loc, earliest: 0, due: s.targets[band] - 1 });
+      if (home.status === "Work ordered") { if (!booked(home.id, "fix")) out.push({ type: "fix", home, loc, earliest: 0, due: s.fixTargets[band] - 1 }); }
+      else if (["Not started", "Contacted", "Visit booked"].includes(home.status) && !booked(home.id, "assess")) out.push({ type: "assess", home, loc, earliest: 0, due: s.targets[band] - 1 });
     });
     return out;
   }
@@ -90,7 +101,7 @@
   // Once a day's visits are chosen, their order doesn't change any deadline,
   // so visit them in the order with the least driving, then redo the times.
   function shortestOrder(r, base) {
-    if (r.stops.length < 2 || r.stops.length > 7) return;
+    if (r.stops.length < 2 || r.stops.length > 7 || r.stops.some(s => s.fixed)) return;
     const drive = order => order.reduce((sum, s, i) => sum + travelMinutes(i ? order[i - 1].loc : base, s.loc), 0);
     let best = r.stops, bestDrive = drive(r.stops);
     const permute = (done, left) => {
@@ -113,15 +124,27 @@
   // Day by day, keep giving the best next visit to whoever can fit it in.
   // Best = risk (scaled by riskWeight) minus minutes of travel from where that person is now.
   // A visit that would miss its target if it waited another day jumps the queue.
+  // Booked follow-ups are fixed: other visits only go in the gaps around them.
   function plan() {
     const days = workingDays(HORIZON);
     const todo = jobs(days);
     const base = window.LOCATIONS.base;
+    const homesById = Object.fromEntries(scored().map(h => [h.id, h]));
+    const fixed = bookings().filter(b => homesById[b.homeId] && window.LOCATIONS.homes[b.homeId] && P.staff.some(st => st.id === b.staffId));
+    const lastFixed = fixed.reduce((last, b) => (b.date > last ? b.date : last), "");
     const planned = [];
-    for (let i = 0; i < days.length && todo.length; i++) {
-      const routes = P.staff
-        .filter(st => st.days.includes(days[i].getDay()) && st.does.length && toMin(st.end) > toMin(st.start))
-        .map(st => ({ staff: st, at: base, time: toMin(st.start), end: toMin(st.end), stops: [], travel: 0 }));
+    for (let i = 0; i < days.length && (todo.length || iso(days[i]) <= lastFixed); i++) {
+      const day = iso(days[i]);
+      const routes = P.staff.map(st => {
+        const mine = fixed.filter(b => b.staffId === st.id && b.date === day).map(b => {
+          const start = toMin(b.time);
+          return { type: b.type, home: homesById[b.homeId], loc: window.LOCATIONS.homes[b.homeId], start, end: start + minutesFor(b.type),
+            fixed: true, done: b.done, booking: b.id, key: `b-${b.id}`, due: i, late: 0 };
+        }).sort((a, b) => a.start - b.start);
+        const works = st.days.includes(days[i].getDay()) && st.does.length && toMin(st.end) > toMin(st.start);
+        if (!works && !mine.length) return null;
+        return { staff: st, at: base, time: works ? toMin(st.start) : 0, end: works ? toMin(st.end) : 0, stops: [], travel: 0, fixed: mine };
+      }).filter(Boolean);
       for (;;) {
         let best = null;
         for (const r of routes) {
@@ -130,12 +153,24 @@
             const travel = travelMinutes(r.at, j.loc);
             const length = P.settings.minutes[j.type];
             if (r.time + travel + length > r.end) continue;
+            if (r.fixed.length && r.time + travel + length + travelMinutes(j.loc, r.fixed[0].loc) > r.fixed[0].start) continue;
             const risk = j.home.risk.points + BAND_BONUS[j.home.risk.band];
             const score = (i >= j.due ? 1000 : 0) + P.settings.riskWeight * 5 * risk - travel;
             if (!best || score > best.score || (score === best.score && r.time < best.r.time)) best = { r, j, travel, length, score };
           }
         }
-        if (!best) break;
+        if (!best) {
+          // Nothing fits before someone's next fixed appointment: move them past it.
+          const r = routes.find(x => x.fixed.length);
+          if (!r) break;
+          const f = r.fixed.shift();
+          const travel = travelMinutes(r.at, f.loc);
+          r.travel += travel;
+          r.stops.push({ ...f, travel });
+          r.time = Math.max(r.time, f.end);
+          r.at = f.loc;
+          continue;
+        }
         const { r, j, travel, length } = best;
         r.time += travel;
         r.travel += travel;
@@ -186,13 +221,14 @@
     const h = e.home, c = colour(e.staff);
     const place = `left:calc(${(e.lane / e.lanes) * 100}% + 2px);width:calc(${100 / e.lanes}% - 4px)`;
     const top = (e.start - from) * PX;
-    const label = `${TYPE[e.type]} at ${h.address}, ${nice(e.date)} ${hhmm(e.start)} to ${hhmm(e.end)}, ${e.staff.name}, ${h.risk.band} risk${e.late ? `, ${lateText(e.late)}` : ""}`;
+    const label = `${e.fixed ? "Booked " : ""}${TYPE[e.type]} at ${h.address}, ${nice(e.date)} ${hhmm(e.start)} to ${hhmm(e.end)}, ${e.staff.name}, ${h.risk.band} risk${e.done ? ", done" : ""}${e.late ? `, ${lateText(e.late)}` : ""}`;
     return `${e.travel ? `<div class="cal-travel c${c}" style="top:${top - e.travel * PX}px;height:${e.travel * PX}px;${place}" title="${e.travel} min travel" aria-hidden="true"></div>` : ""}
-      <button type="button" class="cal-ev c${c} ${e.type}${e.late ? " is-late" : ""}" data-visit="${e.key}" aria-label="${escapeHtml(label)}"
-        style="top:${top}px;height:${(e.end - e.start) * PX}px;${place}">
-        <span class="ev-time">${hhmm(e.start)} ${TYPE[e.type]}${e.late ? " · late" : ""}</span>
+      <button type="button" class="cal-ev c${c} ${e.type}${e.late ? " is-late" : ""}${e.fixed ? " booked" : ""}${e.done ? " done" : ""}${e.end - e.start < 45 ? " short" : ""}" data-visit="${e.key}" aria-label="${escapeHtml(label)}"
+        style="top:${top}px;height:${Math.max(e.end - e.start, 30) * PX}px;${place}">
+        ${e.end - e.start < 45 ? `<span class="ev-where">${hhmm(e.start)} ${TYPE[e.type]} · ${escapeHtml(h.address)}</span>` : `
+        <span class="ev-time">${hhmm(e.start)} ${TYPE[e.type]}${e.done ? " · done" : e.fixed ? " · booked" : ""}${e.late ? " · late" : ""}</span>
         <span class="ev-where">${escapeHtml(h.address)}</span>
-        <span class="ev-meta"><span class="badge ${h.risk.band}">${h.risk.band} ${h.risk.points}</span>${who ? "" : ` <span class="ev-who">${initials(e.staff.name)}</span>`}</span>
+        <span class="ev-meta"><span class="badge ${h.risk.band}">${h.risk.band} ${h.risk.points}</span>${who ? "" : ` <span class="ev-who">${initials(e.staff.name)}</span>`}</span>`}
       </button>`;
   }
 
@@ -230,7 +266,7 @@
     const { days, planned, unplanned } = plan();
     lastDays = days;
     events = planned.flatMap(d => d.routes.flatMap(r => r.stops.map(s =>
-      ({ ...s, staff: r.staff, date: d.date, iso: iso(d.date), key: `${s.type}-${s.home.id}` }))));
+      ({ ...s, staff: r.staff, date: d.date, iso: iso(d.date), key: s.key || `${s.type}-${s.home.id}` }))));
     const high = events.filter(s => s.type === "assess" && s.home.risk.band === "High");
     const travel = events.reduce((sum, s) => sum + s.travel, 0);
 
@@ -251,6 +287,7 @@
     document.getElementById("week-prev").disabled = weekStart <= first;
     document.getElementById("week-next").disabled = weekStart >= last;
     renderCalendar();
+    fillVisitsCount();
 
     document.getElementById("plan-unplanned").innerHTML = unplanned.length
       ? `<h3>${T.unplannedTitle}</h3><p class="hint">${T.unplannedHelp}</p><ul>${unplanned.map(j =>
@@ -367,7 +404,10 @@
     if (!e) return;
     const h = e.home;
     const button = (outcome, label) =>
-      `<button type="button" class="primary" data-outcome="${outcome}" data-id="${h.id}" data-date="${e.iso}">${label}</button>`;
+      `<button type="button" class="primary" data-outcome="${outcome}" data-id="${h.id}" data-date="${e.iso}" data-by="${escapeHtml(e.staff.name)}" data-booking="${e.booking || ""}">${label}</button>`;
+    const actions = e.done ? `<p>${T.visitDone}</p>`
+      : e.type === "assess" ? button("work", T.workNeeded) + button("none", T.noWork)
+      : e.type === "fix" ? button("fixed", T.repairDone) : button("checked", T.checkDone);
     document.getElementById("visit-body").innerHTML = `
       <button type="button" class="link dialog-close" data-close-visit>Close</button>
       <h2 id="visit-title">${TYPE[e.type]}: ${escapeHtml(h.address)}, ${escapeHtml(h.area)}</h2>
@@ -376,13 +416,14 @@
         <dt>When</dt><dd>${nice(e.date)}, ${hhmm(e.start)} to ${hhmm(e.end)}</dd>
         <dt>Who</dt><dd>${escapeHtml(e.staff.name)}, ${escapeHtml(e.staff.role)}</dd>
         <dt>Travel</dt><dd>${e.travel} minutes from the last stop</dd>
-        <dt>Target</dt><dd>By ${dueDate(lastDays, e.due)}${e.late ? `: <strong class="late">${lateText(e.late)}</strong>` : ", on time"}</dd>
+        ${e.fixed ? `<dt>Booked</dt><dd>${T.visitBooked}</dd>` : `<dt>Target</dt><dd>By ${dueDate(lastDays, e.due)}${e.late ? `: <strong class="late">${lateText(e.late)}</strong>` : ", on time"}</dd>`}
       </dl>
       <h3>${T.whyFlagged}</h3>
       <ul class="reasons">${h.risk.reasons.map(r => `<li>${escapeHtml(r.reason)}</li>`).join("") || "<li>Nothing flagged</li>"}</ul>
       <h3>${T.visitOutcome}</h3>
-      <div class="actions">${e.type === "assess" ? button("work", T.workNeeded) + button("none", T.noWork) : button("fixed", T.repairDone)}</div>
-      <p><button type="button" class="link" data-home="${h.id}">${T.openHome}</button></p>`;
+      <div class="actions">${actions}</div>
+      <p><a class="button" href="#cases/${h.id}" data-close-visit>${T.openCase}</a>
+        <button type="button" class="link" data-home="${h.id}">${T.openHome}</button></p>`;
     visitDialog.showModal();
   }
 
@@ -465,25 +506,19 @@
     }
     if (out) {
       visitDialog.close();
-      const id = out.dataset.id;
-      if (out.dataset.outcome === "fixed") {
-        P.outcomes[id] = { ...(P.outcomes[id] || { result: "work" }), fixed: out.dataset.date };
-        state.status[id] = "Fixed";
-      } else {
-        P.outcomes[id] = { result: out.dataset.outcome, date: out.dataset.date };
-        if (out.dataset.outcome === "work") state.status[id] = "Work ordered";
-      }
+      record(out.dataset.id, out.dataset.outcome, out.dataset.date, out.dataset.by, out.dataset.booking);
     } else if (undo) {
       const id = undo.dataset.undo;
       delete P.outcomes[id];
       if (state.status[id] === "Work ordered" || state.status[id] === "Fixed") delete state.status[id];
+      log(id, "outcome", "Recorded outcome undone.");
     } else if (remove) {
       P.staff = P.staff.filter(st => st.id !== remove.dataset.remove);
       if (who === remove.dataset.remove) who = "";
       renderTeam();
     } else if (e.target.id === "plan-reset") {
-      Object.keys(P.outcomes).forEach(id => {
-        if (state.status[id] === "Work ordered" || state.status[id] === "Fixed") delete state.status[id];
+      [...Object.keys(P.outcomes), ...Object.keys(P.cases)].forEach(id => {
+        if (["Work ordered", "Fixed", "Visit booked"].includes(state.status[id])) delete state.status[id];
       });
       P = seed();
       who = "";
@@ -492,7 +527,6 @@
     save();
     saveState(state);
     render();
-    renderSchedule();
   });
 
   document.getElementById("plan-add").addEventListener("submit", e => {
@@ -507,8 +541,73 @@
     renderSchedule();
   });
 
+  // ---- Recording what happened at a visit ----
+  const OUTCOME_TEXT = {
+    work: "Assessment: work needed. A repair will be planned.",
+    none: "Assessment: no work needed.",
+    fixed: "Repair done.",
+    checked: "Check-in done."
+  };
+  function record(id, outcome, date, by, bookingId) {
+    if (outcome === "fixed") {
+      P.outcomes[id] = { ...(P.outcomes[id] || { result: "work" }), fixed: date };
+      state.status[id] = "Fixed";
+    } else if (outcome === "work" || outcome === "none") {
+      P.outcomes[id] = { result: outcome, date };
+      if (outcome === "work") state.status[id] = "Work ordered";
+    }
+    const booking = bookingId && caseOf(id).bookings.find(b => b.id === bookingId);
+    if (booking) booking.done = date;
+    log(id, "outcome", OUTCOME_TEXT[outcome], by);
+  }
+
   // Statuses changed in a home's details can change the plan.
   document.getElementById("detail").addEventListener("close", renderSchedule);
+
+  // Whenever the dashboard redraws, redraw the plan too, and fill the dashboard's visits count.
+  const appRender = render;
+  render = function () {
+    appRender();
+    renderSchedule();
+  };
+  // The "Visits" card on the Risk overview (glance.js) counts the next 5 working days of the plan.
+  function fillVisitsCount() {
+    const el = document.querySelector('[data-glance="visits"] .g-count');
+    if (el) el.textContent = events.filter(e => !e.done && lastDays.slice(0, 5).some(d => iso(d) === e.iso)).length;
+  }
+
+  // The first gap in someone's plan that a visit of this type fits into, with time to travel.
+  function firstFree(staffId, type) {
+    const st = P.staff.find(x => x.id === staffId);
+    if (!st) return null;
+    const need = minutesFor(type) + 30;
+    for (const d of lastDays.slice(0, 40)) {
+      if (!st.days.includes(d.getDay())) continue;
+      const busy = events.filter(e => e.staff.id === st.id && e.iso === iso(d)).sort((a, b) => a.start - b.start);
+      let cursor = toMin(st.start);
+      for (const e of [...busy, { start: toMin(st.end), travel: 0, end: toMin(st.end) }]) {
+        if (e.start - e.travel - cursor >= need) {
+          const at = Math.ceil((cursor + 15) / 15) * 15;
+          return { date: iso(d), time: hhmm(at) };
+        }
+        cursor = Math.max(cursor, e.end);
+      }
+    }
+    return null;
+  }
+
+  // For the case page (case.js).
+  window.PLANNER = {
+    TYPE, nice, hhmm, iso,
+    staff: () => P.staff,
+    events: () => events,
+    outcome: id => P.outcomes[id],
+    caseOf, log, record, firstFree,
+    book(id, booking) { caseOf(id).bookings.push({ id: Date.now().toString(36), ...booking }); },
+    cancel(id, bookingId) { const c = caseOf(id); c.bookings = c.bookings.filter(b => b.id !== bookingId); },
+    showWeekOf(date) { weekStart = monday(new Date(`${date}T12:00`)); },
+    save() { save(); saveState(state); render(); }
+  };
 
   renderAll();
 })();

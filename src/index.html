@@ -17,6 +17,7 @@
     <a href="#overview" data-tab="overview" aria-current="page" data-text="navDashboard"></a>
     <a href="#reports" data-tab="reports" data-text="navReports"></a>
     <a href="#visits" data-tab="visits" data-text="navVisits"></a>
+    <a href="#cases" data-tab="cases" data-text="navCases"></a>
     <a href="report.html" data-text="navTenant"></a>
   </nav>
 
@@ -123,11 +124,25 @@
         <div id="plan-rules"></div>
         <button type="button" class="link" id="plan-reset" data-text="resetPlanner"></button>
       </details>
+    </div>
 
-      <details class="panel">
-        <summary><h2 id="hand-title" data-text="handTitle"></h2></summary>
-        <div id="visits-list"></div>
-      </details>
+    <div id="tab-cases" hidden>
+      <section class="panel" id="cases-list" aria-labelledby="cases-title">
+        <h2 id="cases-title" data-text="casesTitle"></h2>
+        <p class="hint" data-text="casesHelp"></p>
+        <div class="filters">
+          <label><span data-text="casesSearch"></span><input type="search" id="case-search"></label>
+          <label><span data-text="casesShow"></span><select id="case-show">
+            <option value="open">Open cases</option><option value="all">All homes</option></select></label>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Home</th><th>Risk</th><th>Where it's at</th><th>Next visit</th><th>Last update</th></tr></thead>
+            <tbody id="cases-rows"></tbody>
+          </table>
+        </div>
+      </section>
+      <div id="case-view"></div>
     </div>
   </main>
 
@@ -149,5 +164,6 @@
   <script src="data/locations.js"></script>
   <script src="data/rota.js"></script>
   <script src="planner.js"></script>
+  <script src="case.js"></script>
 </body>
 </html>
