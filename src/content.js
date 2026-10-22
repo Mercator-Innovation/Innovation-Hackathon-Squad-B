@@ -11,6 +11,7 @@ window.CONTENT = {
   navReports: "Reports from tenants",
   navVisits: "Visits booked",
   navCases: "Cases",
+  navExtra: "Additional views",
   navTenant: "Tenant view",
   navVisitApp: "Home visit",
   visitAppTitle: "Home visit",
