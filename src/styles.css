@@ -27,6 +27,9 @@ a { color: var(--brand); }
 header.site { background: var(--brand); color: #fff; padding: 16px; }
 header.site h1 { margin: 0; font-size: 1.5rem; }
 header.site p { margin: 4px 0 0; }
+header.site.has-logo { display: flex; align-items: center; gap: 14px; }
+header.site .logo { width: 52px; height: 52px; flex: none; }
+@media (max-width: 600px) { header.site .logo { width: 40px; height: 40px; } }
 nav.tabs { display: flex; flex-wrap: wrap; gap: 4px; background: var(--brand-dark); padding: 0 16px; }
 nav.tabs a { color: #fff; padding: 10px 12px; text-decoration: none; }
 nav.tabs a[aria-current="page"] { background: var(--bg); color: var(--text); border-radius: var(--radius) var(--radius) 0 0; }
