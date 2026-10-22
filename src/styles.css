@@ -160,3 +160,21 @@ fieldset.person legend small { font-weight: 400; color: var(--muted); }
 .map .stop-dot { fill: var(--c); stroke: #fff; stroke-width: 2; }
 .map .stop-n { fill: #fff; font-size: 12px; font-weight: 700; text-anchor: middle; dominant-baseline: central; }
 @media (max-width: 700px) { .where-map { grid-template-columns: 1fr; } }
+
+/* Booked follow-ups and done visits on the calendar */
+.cal-ev.booked { border-width: 2px; border-left-width: 6px; }
+.cal-ev.done { opacity: 0.65; }
+
+/* Cases */
+.case-grid { display: grid; grid-template-columns: minmax(0, 3fr) minmax(260px, 2fr); gap: 16px; align-items: start; }
+.timeline { list-style: none; margin: 0; padding: 0; }
+.timeline li { display: grid; grid-template-columns: 9em 1fr; gap: 4px 12px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+.tl-when { color: var(--muted); font-size: 0.9rem; font-variant-numeric: tabular-nums; }
+.tl-kind { display: inline-block; padding: 0 6px; border-radius: 4px; background: #e8f1f2; color: var(--brand-dark); font-size: 0.8rem; font-weight: 700; }
+.tl-outcome .tl-kind { background: var(--low-bg); color: var(--low); }
+.tl-report .tl-kind { background: var(--medium-bg); color: var(--medium); }
+@media (max-width: 760px) {
+  .case-grid { grid-template-columns: 1fr; }
+  .timeline li { grid-template-columns: 1fr; }
+}
+.cal-ev.short { justify-content: center; padding-top: 1px; padding-bottom: 1px; }

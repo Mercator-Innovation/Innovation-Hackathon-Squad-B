@@ -28,7 +28,7 @@ function renderSummary(list) {
     <div><strong>${count("High")}</strong> high risk homes</div>
     <div><strong>${count("Medium")}</strong> medium risk homes</div>
     <div><strong>${newReports}</strong> new reports from tenants</div>
-    <div><strong>${state.visits.length}</strong> visits booked</div>`;
+    <div><strong id="summary-visits">0</strong> visits in the next 5 working days</div>`;
 }
 
 function renderHeatmap(list) {
@@ -71,22 +71,9 @@ function renderList(list) {
 }
 
 // ---- Home detail ----
-function weekdaySlots() {
-  const slots = [];
-  const d = new Date();
-  while (slots.length < 10) {
-    d.setDate(d.getDate() + 1);
-    if (d.getDay() === 0 || d.getDay() === 6) continue;
-    const day = d.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" });
-    slots.push(`${day}, morning`, `${day}, afternoon`);
-  }
-  return slots.slice(0, 10);
-}
-
 function openHome(id) {
   const h = scored().find(x => x.id === id);
   const reports = allReports().filter(r => r.homeId === id);
-  const visits = state.visits.filter(v => v.homeId === id);
   const body = document.getElementById("detail-body");
   body.innerHTML = `
     <button type="button" class="link dialog-close" id="close-detail">Close</button>
@@ -109,12 +96,8 @@ function openHome(id) {
     <button type="button" class="primary" id="save-case">${C.saveButton}</button>
 
     <h3>${C.bookTitle}</h3>
-    ${visits.map(v => `<p>Booked: ${escapeHtml(v.who)}, ${escapeHtml(v.when)}</p>`).join("")}
-    <div class="form-row"><label for="visit-who">${C.bookWho}</label>
-      <select id="visit-who">${team.map(t => `<option value="${escapeHtml(t.name)}">${escapeHtml(t.name)} (${escapeHtml(t.role)})</option>`).join("")}</select></div>
-    <div class="form-row"><label for="visit-when">${C.bookWhen}</label>
-      <select id="visit-when">${weekdaySlots().map(s => `<option>${s}</option>`).join("")}</select></div>
-    <button type="button" class="primary" id="book-visit">${C.bookButton}</button>`;
+    <p>${C.bookHelp}</p>
+    <a class="button" href="#cases/${id}" id="open-case">${C.openCase}</a>`;
 
   document.getElementById("close-detail").onclick = () => dialog.close();
   document.getElementById("save-case").onclick = () => {
@@ -122,11 +105,7 @@ function openHome(id) {
     state.notes[id] = document.getElementById("note").value;
     saveState(state); render(); dialog.close();
   };
-  document.getElementById("book-visit").onclick = () => {
-    state.visits.push({ homeId: id, address: h.address, who: document.getElementById("visit-who").value, when: document.getElementById("visit-when").value });
-    state.status[id] = "Visit booked";
-    saveState(state); render(); openHome(id);
-  };
+  document.getElementById("open-case").onclick = () => dialog.close();
   if (!dialog.open) dialog.showModal();
 }
 
@@ -172,7 +151,6 @@ function render() {
   renderHeatmap(list);
   renderList(list);
   renderReports();
-  renderVisits();
 }
 
 const dialog = document.getElementById("detail");
