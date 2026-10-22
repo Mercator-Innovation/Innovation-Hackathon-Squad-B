@@ -1,4 +1,4 @@
-// "Where to act first": clickable summary cards, the trend chart, and risk by area.
+// "Where to act first": clickable summary cards, the trend chart, and risk by area (a map and an area matrix side by side).
 // app.js calls GLANCE.render(list) every time the dashboard redraws.
 window.GLANCE = (() => {
   const C = window.CONTENT;
@@ -130,23 +130,131 @@ window.GLANCE = (() => {
       `${sentence(C.trendSummaryHigh, high)} ${sentence(C.trendSummaryMedium, med)}`;
   }
 
-  // ---- Risk by area ----
+  // ---- Risk by area: a map and an area matrix, side by side ----
+  // Rough positions on a simplified map of Inverclyde (percent across, percent down). Not to scale.
+  // The Firth of Clyde is along the top and down the left; every town sits on land.
+  const MAP_POS = {
+    "Gourock": [28, 29], "Greenock West": [40, 37], "Greenock Central": [54, 49], "Greenock East": [68, 38],
+    "Port Glasgow": [87, 36], "Kilmacolm": [80, 66], "Inverkip": [28, 58], "Wemyss Bay": [24, 75]
+  };
+  // The coast, from the east end of the Firth round Gourock and down to Wemyss Bay
+  const LAND = "M100,27 L86,29 L74,31 L62,29 L50,30 L41,28 L34,23 L27,21 L24,29 L22,41 L21,52 L19,64 L17,76 L15,100 L100,100 Z";
+  const BANDS = ["High", "Medium", "Low"];
+
   function areaStats(list) {
-    const areas = [...new Set(list.map(h => h.area))].sort();
+    const areas = [...new Set(list.map(h => h.area))];
     return areas.map(area => {
       const inArea = list.filter(h => h.area === area);
       const avg = inArea.reduce((s, h) => s + h.risk.points, 0) / inArea.length;
-      return { area, homes: inArea.length, high: inArea.filter(h => h.risk.band === "High").length, avg, light: light(avg) };
-    });
+      const count = band => inArea.filter(h => h.risk.band === band).length;
+      return { area, homes: inArea.length, high: count("High"), medium: count("Medium"), low: count("Low"), avg, light: light(avg) };
+    // Highest risk first: most high risk homes, then the highest average
+    }).sort((a, b) => b.high - a.high || b.avg - a.avg);
+  }
+
+  const areaLabel = s => `${s.area}: ${s.light.label}. ${s.high} ${C.areaHighOf} ${s.homes} ${C.areaHomes}. ${C.areaAverage} ${s.avg.toFixed(1)}.`;
+
+  function mapHtml(stats) {
+    return `<figure class="area-map-wrap">
+      <div class="area-map">
+        <svg class="map-bg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          <path class="land" d="${LAND}" />
+          <text class="water-label" x="56" y="13">${C.mapWater}</text>
+        </svg>
+        <span class="map-north" aria-hidden="true">N ↑</span>
+        ${stats.map(s => {
+          const [left, top] = MAP_POS[s.area] || [60, 85];
+          return `<button type="button" class="map-pin light-${s.light.key}" style="left:${left}%;top:${top}%" data-area="${escapeHtml(s.area)}"
+            aria-pressed="${selectedArea === s.area}" aria-label="${escapeHtml(areaLabel(s))}">
+            <span class="pin-dot" aria-hidden="true">${s.high}</span>
+            <span class="pin-name" aria-hidden="true">${escapeHtml(s.area)}</span>
+          </button>`;
+        }).join("")}
+      </div>
+      <figcaption>
+        <span class="map-key">${["red", "amber", "green"].map(k => `<span class="light-${k}"><span class="dot" aria-hidden="true"></span>${C["light" + k[0].toUpperCase() + k.slice(1)]}</span>`).join("")}</span>
+        <span class="hint">${C.areaMapNote}</span>
+      </figcaption>
+    </figure>`;
+  }
+
+  // Each area against High, Medium and Low. Every number opens those homes in the list.
+  function matrixHtml(stats) {
+    const max = Math.max(1, ...stats.flatMap(s => [s.high, s.medium, s.low]));
+    const shade = n => n === 0 ? 0 : Math.min(3, Math.ceil((n / max) * 3));
+    const cell = (s, band) => {
+      const n = s[band.toLowerCase()];
+      return `<td class="m-${band.toLowerCase()} shade-${shade(n)}">${n
+        ? `<button type="button" class="m-num" data-area-band="${escapeHtml(s.area)}|${band}">${n}<span class="visually-hidden"> ${band.toLowerCase()} risk ${n === 1 ? "home" : "homes"} in ${escapeHtml(s.area)}</span></button>`
+        : `<span class="m-zero">0</span>`}</td>`;
+    };
+    const total = band => stats.reduce((sum, s) => sum + s[band.toLowerCase()], 0);
+    return `<div class="area-matrix">
+      <h3 id="matrix-title">${C.matrixTitle}</h3>
+      <p class="hint">${C.matrixHelp}</p>
+      <div class="table-wrap">
+        <table class="matrix" aria-labelledby="matrix-title">
+          <thead><tr><th scope="col">${C.colArea}</th>${BANDS.map(b => `<th scope="col" class="num">${b}</th>`).join("")}<th scope="col" class="num col-avg">${C.matrixAverage}</th></tr></thead>
+          <tbody>${stats.map(s => `<tr data-row-area="${escapeHtml(s.area)}" class="${selectedArea === s.area ? "is-selected" : ""}">
+            <th scope="row">
+              <button type="button" class="link m-area" data-area="${escapeHtml(s.area)}" aria-pressed="${selectedArea === s.area}">${escapeHtml(s.area)}</button>
+              <span class="light-tag light-${s.light.key}"><span class="dot" aria-hidden="true"></span>${s.light.label}</span>
+            </th>
+            ${BANDS.map(b => cell(s, b)).join("")}
+            <td class="num col-avg">${s.avg.toFixed(1)}</td>
+          </tr>`).join("")}</tbody>
+          <tfoot><tr><th scope="row">${C.matrixTotal}</th>${BANDS.map(b => `<td class="num">${total(b)}</td>`).join("")}<td class="col-avg"></td></tr></tfoot>
+        </table>
+      </div>
+      <details class="rating-how">
+        <summary>${C.ratingHowTitle}</summary>
+        <p>${C.ratingHowIntro}</p>
+        <ul>${window.RISK.rules.map(r => `<li>${escapeHtml(r.reason)}: <strong>+${r.points}</strong></li>`).join("")}</ul>
+        <p>${window.RISK.bands.map((b, i) => i === window.RISK.bands.length - 1
+          ? `<strong>${b.name}</strong>: ${C.ratingUnder} ${window.RISK.bands[i - 1].min} ${C.ratingPoints}`
+          : `<strong>${b.name}</strong>: ${b.min} ${C.ratingPoints} ${C.ratingOrMore}`).join(" · ")}</p>
+        <p class="hint">${C.humanCheck}</p>
+      </details>
+    </div>`;
   }
 
   function renderAreas(list) {
-    document.getElementById("heatmap").innerHTML = areaStats(list).map(s => `
-      <button type="button" class="light-${s.light.key}" data-area="${escapeHtml(s.area)}" aria-pressed="${selectedArea === s.area}">
-        <span class="light-tag"><span class="dot" aria-hidden="true"></span>${s.light.label}</span>
-        <span class="area-name">${escapeHtml(s.area)}</span>
-        ${s.high} ${C.areaHighOf} ${s.homes} ${C.areaHomes}<br>${C.areaAverage} ${s.avg.toFixed(1)}
-      </button>`).join("");
+    const stats = areaStats(list);
+    const box = document.getElementById("heatmap");
+    const open = box.querySelector(".rating-how[open]");
+    box.innerHTML = mapHtml(stats) + matrixHtml(stats);
+    if (open) box.querySelector(".rating-how").open = true;
+  }
+
+  // Pointing at an area in one column lights it up in the other
+  function hotArea(area) {
+    document.querySelectorAll("#heatmap .is-hot").forEach(el => el.classList.remove("is-hot"));
+    if (!area) return;
+    document.querySelectorAll(`#heatmap [data-area="${CSS.escape(area)}"].map-pin, #heatmap tr[data-row-area="${CSS.escape(area)}"]`)
+      .forEach(el => el.classList.add("is-hot"));
+  }
+  ["mouseover", "focusin"].forEach(type => document.addEventListener(type, e => {
+    const box = document.getElementById("heatmap");
+    if (!box || !box.contains(e.target)) return;
+    const el = e.target.closest("[data-area], [data-row-area], [data-area-band]");
+    hotArea(el && (el.dataset.area || el.dataset.rowArea || el.dataset.areaBand.split("|")[0]));
+  }));
+  ["mouseleave", "focusout"].forEach(type => document.getElementById("heatmap").addEventListener(type, e => {
+    if (type === "focusout" && document.getElementById("heatmap").contains(e.relatedTarget)) return;
+    hotArea(null);
+  }));
+
+  // A number in the matrix: show exactly those homes, then take you to the list
+  function showAreaBand(area, band) {
+    selectedArea = area;
+    document.getElementById("filter-area").value = area;
+    document.getElementById("filter-band").value = band;
+    window.listFilter = null;
+    document.getElementById("active-filter").hidden = true;
+    render();
+    const heading = document.getElementById("list-title");
+    heading.scrollIntoView({ behavior: "smooth", block: "start" });
+    heading.focus({ preventScroll: true });
   }
 
   // ---- Clicking a card ----
@@ -179,6 +287,8 @@ window.GLANCE = (() => {
       else applyFilter(card.dataset.glance);
     }
     if (e.target.closest("#clear-filter")) applyFilter(null);
+    const cell = e.target.closest("[data-area-band]");
+    if (cell) { const [area, band] = cell.dataset.areaBand.split("|"); showAreaBand(area, band); }
   });
   // Changing the Risk filter by hand replaces a card's filter.
   document.addEventListener("change", e => {
