@@ -23,7 +23,8 @@
 
   <main>
     <div id="tab-overview">
-      <section class="panel glance" aria-labelledby="glance-title">
+      <div class="page-export" id="page-export"></div>
+      <section class="panel glance" id="sec-glance" aria-labelledby="glance-title">
         <h2 id="glance-title" data-text="glanceTitle"></h2>
         <p class="hint" data-text="glanceHelp"></p>
         <div class="glance-cards" id="glance-cards"></div>
@@ -37,7 +38,7 @@
         <p class="trend-summary" id="trend-summary"></p>
       </section>
 
-      <section class="panel" aria-labelledby="heat-title">
+      <section class="panel" id="sec-areas" aria-labelledby="heat-title">
         <div class="area-head">
           <div>
             <h2 id="heat-title" data-text="heatTitle"></h2>
@@ -51,17 +52,31 @@
         <div class="heatmap" id="heatmap"></div>
       </section>
 
-      <section class="panel" aria-labelledby="list-title">
+      <section class="panel" id="sec-homes" aria-labelledby="list-title">
         <h2 id="list-title" tabindex="-1" data-text="listTitle"></h2>
         <p class="active-filter" id="active-filter" hidden><span></span> <button type="button" class="link" id="clear-filter" data-text="clearFilter"></button></p>
         <div class="filters">
-          <label><span data-text="filterSearch"></span><input type="search" id="search"></label>
+          <label><span data-text="filterSearch"></span><input type="search" id="search" class="with-hint"></label>
           <label><span data-text="filterArea"></span><select id="filter-area"></select></label>
           <label><span data-text="filterBand"></span><select id="filter-band"></select></label>
+          <label><span data-text="filterReason"></span><select id="filter-reason"></select></label>
+          <label><span data-text="filterStatus"></span><select id="filter-status"></select></label>
         </div>
+        <div class="list-meta">
+          <p id="homes-count" aria-live="polite"></p>
+          <button type="button" class="link" id="clear-all" data-text="clearAllFilters" hidden></button>
+        </div>
+        <p class="print-only" id="homes-print-note"></p>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Risk</th><th>Home</th><th>Area</th><th>Main reasons</th><th>Status</th></tr></thead>
+            <caption class="visually-hidden" id="homes-caption"></caption>
+            <thead><tr>
+              <th data-col="risk"><button type="button" class="sort" data-sort="risk"><span data-text="colRisk"></span><span class="sort-icon" aria-hidden="true"></span></button></th>
+              <th data-col="home"><button type="button" class="sort" data-sort="home"><span data-text="colHome"></span><span class="sort-icon" aria-hidden="true"></span></button></th>
+              <th data-col="area"><button type="button" class="sort" data-sort="area"><span data-text="colArea"></span><span class="sort-icon" aria-hidden="true"></span></button></th>
+              <th data-col="reasons"><button type="button" class="sort" data-sort="reasons"><span data-text="colReasons"></span><span class="sort-icon" aria-hidden="true"></span></button></th>
+              <th data-col="status"><button type="button" class="sort" data-sort="status"><span data-text="colStatus"></span><span class="sort-icon" aria-hidden="true"></span></button></th>
+            </tr></thead>
             <tbody id="homes"></tbody>
           </table>
         </div>
@@ -69,7 +84,8 @@
     </div>
 
     <section class="panel" id="tab-reports" hidden aria-labelledby="reports-title">
-      <h2 id="reports-title" data-text="reportsTitle"></h2>
+      <h2 id="reports-title" tabindex="-1" data-text="reportsTitle"></h2>
+      <p class="active-filter" id="report-home-filter" hidden><span></span> <button type="button" class="link" id="clear-report-home" data-text="showAllReports"></button></p>
       <div class="filters">
         <label><span data-text="filterReportBand"></span><select id="report-filter-band"></select></label>
         <label><span data-text="filterReportStatus"></span><select id="report-filter-status"></select></label>
@@ -194,6 +210,7 @@
   <script src="risk.js"></script>
   <script src="glance.js"></script>
   <script src="app.js"></script>
+  <script src="export.js"></script>
   <script src="data/locations.js"></script>
   <script src="data/rota.js"></script>
   <script src="data/cases.js"></script>

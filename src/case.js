@@ -10,6 +10,7 @@
   const KIND = { note: "Note", booking: "Booking", outcome: "Visit", report: "Tenant report" };
   const tab = document.getElementById("tab-cases");
   let message = "";
+  let justBooked = null;   // the booking to confirm, straight after it's made
 
   const homeById = id => scored().find(h => h.id === id);
   const when = isoTime => new Date(isoTime).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
@@ -38,6 +39,54 @@
       items.push({ at: `${r.received}T09:00`, kind: "report", text: `${r.ref}: ${r.problems.join(", ")}. ${r.description}`, by: "" }));
     if (state.notes[h.id]) items.push({ at: "", kind: "note", text: state.notes[h.id], by: "Note on the home's details" });
     return items.sort((a, b) => b.at.localeCompare(a.at));
+  }
+
+  // ---- Reasons for a visit, and the confirmation once it's booked ----
+  const reasonText = b => b.reason === "other" ? `${T.bookReasonOther}: ${b.reasonNote}` : b.reason;
+
+  function confirmation(h, b, st, statusChanged) {
+    const reports = allReports().filter(r => r.homeId === h.id);
+    const prefers = reports.length && reports[reports.length - 1].contactBy;
+    const tenant = escapeHtml(h.tenant);
+    return `<div class="confirm" id="visit-confirm" tabindex="-1" role="region" aria-labelledby="confirm-title">
+      <h3 id="confirm-title">${T.confirmTitle}</h3>
+      <p><strong>${PL.TYPE[b.type]}, ${day(b.date)} at ${b.time}</strong> ${T.confirmWith} ${escapeHtml(st.name)} (${escapeHtml(st.role)})<br>
+        ${T.visitReason}: ${escapeHtml(reasonText(b))}${b.note ? `<br>${T.caseBookNoteShort}: ${escapeHtml(b.note)}` : ""}</p>
+      <p><strong>${T.confirmNext}</strong></p>
+      <ul>
+        <li>${fillIn(T.confirmTexted, { tenant })} <em>${T.confirmPrototype}</em></li>
+        <li>${fillIn(T.confirmStaff, { who: escapeHtml(st.name) })}</li>
+        ${statusChanged ? `<li>${T.confirmStatus}</li>` : ""}
+        <li>${fillIn(T.confirmChange, { tenant })}</li>
+      </ul>
+      <dl class="facts">
+        <dt>${T.factTenant}</dt><dd>${tenant}</dd>
+        <dt>${T.factPhone}</dt><dd>${phoneHtml(h)}</dd>
+        ${prefers ? `<dt>${T.contactPrefers}</dt><dd>${escapeHtml(prefers)}</dd>` : ""}
+      </dl>
+      <div class="actions">
+        <button type="button" class="button" data-show-visit="b-${b.id}">${T.caseOnCalendar}</button>
+        <button type="button" class="small" data-book-another>${T.bookAnother}</button>
+      </div>
+    </div>`;
+  }
+
+  // Error messages sit above the field they're about, and the field says it's invalid
+  function showFieldError(fieldId, text) {
+    const field = document.getElementById(fieldId);
+    const error = document.getElementById(`${fieldId}-error`);
+    error.textContent = text;
+    error.hidden = false;
+    field.setAttribute("aria-invalid", "true");
+    field.setAttribute("aria-describedby", [field.dataset.hint, error.id].filter(Boolean).join(" "));
+  }
+
+  function clearFieldErrors() {
+    document.querySelectorAll("#book-form .error").forEach(e => { e.hidden = true; e.textContent = ""; });
+    document.querySelectorAll("#book-form [aria-invalid]").forEach(f => {
+      f.removeAttribute("aria-invalid");
+      if (f.dataset.hint) f.setAttribute("aria-describedby", f.dataset.hint); else f.removeAttribute("aria-describedby");
+    });
   }
 
   // ---- The list of cases: chips, filters, cards ----
@@ -218,6 +267,7 @@
         </dl>
         <p><button type="button" class="link" data-home="${h.id}">${T.openHome}</button></p>
         ${message ? `<p class="notice" role="status">${message}</p>` : ""}
+        ${justBooked ? confirmation(h, justBooked.booking, justBooked.staff, justBooked.statusChanged) : ""}
       </section>
 
       <div class="case-grid">
@@ -226,6 +276,7 @@
             ${coming.length ? `<ul class="timeline">${coming.map(e => `<li>
               <span class="tl-when">${PL.nice(e.date)}, ${PL.hhmm(e.start)}</span>
               <span><strong>${PL.TYPE[e.type]}</strong>${e.fixed ? " (booked)" : " (planned)"} with ${escapeHtml(e.staff.name)}
+                ${(c.bookings.find(b => b.id === e.booking) || {}).reason ? `<br>${T.visitReason}: ${escapeHtml(reasonText(c.bookings.find(b => b.id === e.booking)))}` : ""}
                 <br><button type="button" class="link" data-visit="${e.key}">Details and outcome</button>
                 · <button type="button" class="link" data-show-visit="${e.key}">${T.caseOnCalendar}</button>
                 ${e.fixed ? ` · <button type="button" class="link" data-cancel="${e.booking}">Cancel booking</button>` : ""}</span>
@@ -257,14 +308,29 @@
 
           <section class="panel" aria-labelledby="book-title">
             <h2 id="book-title">${T.caseBookTitle}</h2>
-            <form id="book-form">
+            <form id="book-form" novalidate>
               <div class="form-row"><label for="book-type">${T.caseBookType}</label>
                 <select id="book-type">${BOOK_TYPES.map(([v, l]) => `<option value="${v}">${l}</option>`).join("")}</select></div>
+              <div class="form-row">
+                <label for="book-reason">${T.bookReason}</label>
+                <span class="hint" id="book-reason-hint">${T.bookReasonHint}</span>
+                <span class="error" id="book-reason-error" hidden></span>
+                <select id="book-reason" aria-describedby="book-reason-hint" data-hint="book-reason-hint">
+                  <option value="">${T.bookReasonChoose}</option>
+                  ${h.risk.reasons.map(r => `<option>${escapeHtml(r.reason)}</option>`).join("")}
+                  <option value="other">${T.bookReasonOther}</option>
+                </select>
+              </div>
+              <div class="form-row" id="book-other-row" hidden>
+                <label for="book-other">${T.bookOtherLabel}</label>
+                <span class="error" id="book-other-error" hidden></span>
+                <textarea id="book-other" rows="2"></textarea>
+              </div>
               <div class="form-row"><label for="book-who">${T.caseBookWho}</label>
                 <select id="book-who">${staffOptions}</select></div>
               <div class="times">
-                <label for="book-date">${T.caseBookDate} <input type="date" id="book-date" min="${tomorrow}" required></label>
-                <label for="book-time">${T.caseBookTime} <input type="time" id="book-time" step="900" required></label>
+                <label for="book-date">${T.caseBookDate} <span class="error" id="book-date-error" hidden></span><input type="date" id="book-date" min="${tomorrow}" required></label>
+                <label for="book-time">${T.caseBookTime} <span class="error" id="book-time-error" hidden></span><input type="time" id="book-time" step="900" required></label>
               </div>
               <p><button type="button" class="small" id="find-slot">${T.caseFindSlot}</button> <span id="slot-out" role="status"></span></p>
               <div class="form-row"><label for="book-note">${T.caseBookNote}</label>
@@ -275,6 +341,16 @@
         </div>
       </div>`;
     message = "";
+    if (justBooked) {
+      const confirm = document.getElementById("visit-confirm");
+      confirm.scrollIntoView({ block: "start" });
+      confirm.focus({ preventScroll: true });
+      justBooked = null;
+    }
+
+    document.getElementById("book-reason").addEventListener("change", e => {
+      document.getElementById("book-other-row").hidden = e.target.value !== "other";
+    });
 
     // Suggest the right person for the type of visit.
     const pickWho = () => {
@@ -313,13 +389,27 @@
       const date = document.getElementById("book-date").value;
       const time = document.getElementById("book-time").value;
       const note = document.getElementById("book-note").value.trim();
-      if (!staffId || !date || !time) return;
+      const reason = document.getElementById("book-reason").value;
+      const reasonNote = document.getElementById("book-other").value.trim();
       const st = staff.find(s => s.id === staffId);
-      const bookingId = PL.book(id, { type, staffId, date, time, note });
-      PL.log(id, "booking", `${PL.TYPE[type]} booked with ${st.name}, ${day(date)} at ${time}${note ? `: ${note}` : ""}.`, writer());
-      if (type === "assess" && ["Not started", "Contacted"].includes(h.status)) state.status[id] = "Visit booked";
+
+      clearFieldErrors();
+      if (!reason) showFieldError("book-reason", T.errorReason);
+      if (reason === "other" && !reasonNote) showFieldError("book-other", T.errorOther);
+      if (!date) showFieldError("book-date", T.errorDate);
+      if (!time) showFieldError("book-time", T.errorTime);
+      if (date && time && PL.events().some(ev => ev.staff.id === staffId && ev.iso === date && PL.hhmm(ev.start) === time))
+        showFieldError("book-time", fillIn(T.errorClash, { who: st.name }));
+      const firstError = document.querySelector("#book-form [aria-invalid]");
+      if (firstError) { firstError.focus(); return; }
+
+      const booking = { type, staffId, date, time, note, reason, reasonNote: reason === "other" ? reasonNote : "" };
+      booking.id = PL.book(id, booking);
+      PL.log(id, "booking", `${PL.TYPE[type]} booked with ${st.name}, ${day(date)} at ${time}. ${T.visitReason}: ${reasonText(booking)}${note ? `. ${note}` : ""}.`, writer());
+      const statusChanged = type === "assess" && ["Not started", "Contacted"].includes(h.status);
+      if (statusChanged) state.status[id] = "Visit booked";
       PL.showWeekOf(date);
-      message = `${T.caseBooked} <button type="button" class="link" data-show-visit="b-${bookingId}">${T.caseOnCalendar}</button>`;
+      justBooked = { booking, staff: st, statusChanged };
       PL.save();
       renderCase(id);
     });
@@ -369,6 +459,12 @@
   });
   fillForm();
   tab.addEventListener("click", e => {
+    if (e.target.closest("[data-book-another]")) {
+      const reason = document.getElementById("book-reason");
+      reason.scrollIntoView({ block: "center" });
+      reason.focus({ preventScroll: true });
+      return;
+    }
     const show = e.target.closest("[data-show-visit]");
     if (show) return PL.showVisit(show.dataset.showVisit);
     const cancel = e.target.closest("[data-cancel]");

@@ -16,6 +16,7 @@
     <form id="report-form" novalidate>
       <h1 data-text="reportTitle"></h1>
       <p data-text="reportIntro"></p>
+      <p><a href="track.html" data-text="reportTrackLink"></a></p>
 
       <fieldset class="checks" aria-describedby="problem-hint">
         <legend data-text="qProblem"></legend>
@@ -27,7 +28,16 @@
         <label><input type="checkbox" name="problem" value="Something else"> Something else</label>
       </fieldset>
 
-      <div class="form-row"><label for="rooms" data-text="qRooms"></label><input id="rooms" name="rooms"></div>
+      <fieldset class="checks" aria-describedby="rooms-hint">
+        <legend data-text="qRooms"></legend>
+        <p class="hint" id="rooms-hint" data-text="qRoomsHint"></p>
+        <label><input type="checkbox" name="room" value="Kitchen"> Kitchen</label>
+        <label><input type="checkbox" name="room" value="Bedroom"> Bedroom</label>
+        <label><input type="checkbox" name="room" value="Bathroom or toilet"> Bathroom or toilet</label>
+        <label><input type="checkbox" name="room" value="Living room"> Living room</label>
+        <label><input type="checkbox" name="room" value="Hall or stairs"> Hall or stairs</label>
+        <label><input type="checkbox" name="room" value="Somewhere else"> Somewhere else</label>
+      </fieldset>
 
       <div class="form-row">
         <label for="description" data-text="qDescription"></label>
@@ -52,7 +62,23 @@
       <div class="form-row"><label for="name" data-text="qName"></label><input id="name" name="name" autocomplete="name"></div>
       <div class="form-row"><label for="address" data-text="qAddress"></label><input id="address" name="address" autocomplete="street-address"></div>
       <div class="form-row"><label for="contact" data-text="qContact"></label><input id="contact" name="contact"></div>
-      <div class="form-row"><label for="contact-when" data-text="qContactWhen"></label><input id="contact-when" name="contactWhen"></div>
+      <fieldset class="checks" aria-describedby="contact-way-hint">
+        <legend data-text="qContactWay"></legend>
+        <p class="hint" id="contact-way-hint" data-text="qContactWayHint"></p>
+        <label><input type="checkbox" name="contactWay" value="Phone call"> Phone call</label>
+        <label><input type="checkbox" name="contactWay" value="Text message"> Text message</label>
+        <label><input type="checkbox" name="contactWay" value="Email"> Email</label>
+        <label><input type="checkbox" name="contactWay" value="Letter"> Letter</label>
+      </fieldset>
+
+      <fieldset class="checks" aria-describedby="contact-time-hint">
+        <legend data-text="qContactTime"></legend>
+        <p class="hint" id="contact-time-hint" data-text="qContactTimeHint"></p>
+        <label><input type="checkbox" name="contactTime" value="Morning"> Morning</label>
+        <label><input type="checkbox" name="contactTime" value="Afternoon"> Afternoon</label>
+        <label><input type="checkbox" name="contactTime" value="Evening"> Evening</label>
+        <label><input type="checkbox" name="contactTime" value="Any time"> Any time</label>
+      </fieldset>
 
       <button type="submit" class="primary" data-text="submitButton"></button>
     </form>
@@ -60,6 +86,7 @@
     <section id="thanks" hidden tabindex="-1">
       <h1 data-text="thanksTitle"></h1>
       <p id="thanks-body"></p>
+      <p><a id="thanks-track" href="track.html" data-text="thanksTrack"></a></p>
       <button type="button" class="primary" id="again" data-text="thanksAgain"></button>
     </section>
   </main>
