@@ -541,3 +541,46 @@ dialog::backdrop { background: rgba(24, 52, 81, 0.28); -webkit-backdrop-filter: 
   nav.tabs { position: static; }
   .table-wrap, .area-map, .card { box-shadow: none; }
 }
+
+/* The Inverclyde map (map.js) behind the Who's where route */
+.map .water { fill: #d6e6ee; }
+.map .land { fill: #f7f1e6; stroke: none; }
+.map .land.far { fill: #efe6d6; }
+.map .coast { fill: none; stroke: #9fbccb; stroke-width: 1.5; stroke-linejoin: round; }
+.map .road-casing { fill: none; stroke: #d9c9ad; stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
+.map .road { fill: none; stroke: #ffffff; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.map .road-name { font-size: 10px; font-weight: 700; fill: #8a7350; text-anchor: middle; }
+.map .water-name { font-size: 13px; font-style: italic; fill: #5b8197; text-anchor: middle; letter-spacing: 0.08em; }
+.map .town { font-size: 12px; font-weight: 700; fill: var(--text); text-anchor: middle; paint-order: stroke; stroke: #f7f1e6; stroke-width: 3px; }
+.map .home-dot { fill: #9a8f80; }
+.map .leg rect { fill: #fff; stroke: var(--c); stroke-width: 1.5; }
+.map .leg text { font-size: 11px; font-weight: 700; fill: var(--text); text-anchor: middle; dominant-baseline: central; }
+.map-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-bottom: 8px; }
+.map-tools button[aria-pressed="true"] { background: var(--brand); border-color: var(--brand); color: #fff; }
+.map-tools label { display: flex; align-items: center; gap: 6px; font-weight: 600; font-size: 0.9rem; }
+.map-key { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
+.hot-key { flex: none; width: 22px; height: 22px; border-radius: 50%; background: radial-gradient(circle, rgba(192, 57, 43, 0.6), rgba(192, 57, 43, 0)); }
+
+/* Tab bar: the tenant's view and the home visit app sit apart on the right, labelled, so it's clear they're extra views */
+.tabs-extra { margin-left: auto; display: flex; align-items: center; gap: 6px; padding-left: 16px; border-left: 1px solid var(--hairline); flex: none; }
+.tabs-extra-label { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-right: 4px; white-space: nowrap; }
+.tabs-extra a { box-shadow: inset 0 0 0 1px rgba(24, 52, 81, 0.14); }
+.tabs-extra a[aria-current="page"] { box-shadow: none; }
+@media (max-width: 600px) { .tabs-extra { margin-left: 8px; padding-left: 10px; } }
+
+/* Tenant pages: the same content width as the staff view, in the same outlined panel.
+   On wide screens the report form flows into two columns, in reading order. */
+main.narrow { max-width: none; }
+main.narrow > form, main.narrow > section {
+  background: rgba(255, 255, 255, 0.45); border: 1px solid rgba(24, 52, 81, 0.12); border-radius: 22px; padding: 32px; margin-bottom: 32px;
+}
+@media (min-width: 900px) {
+  #report-form { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 56px; align-items: start; }
+  #report-form > h1, #report-form > p, #report-form > .error-summary,
+  #report-form > .form-row:has(#description), #report-form > button[type="submit"] { grid-column: 1 / -1; }
+  #report-form > h1 { margin: 0 0 4px; }
+  #report-form > p { margin: 0 0 6px; }
+  #report-form > fieldset, #report-form > .form-row { margin-top: 18px; }
+  #report-form > button[type="submit"] { justify-self: start; margin-top: 8px; }
+}
+@media (max-width: 600px) { main.narrow > form, main.narrow > section { padding: 22px 16px; border-radius: 18px; } }

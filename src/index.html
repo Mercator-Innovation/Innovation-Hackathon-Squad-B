@@ -22,8 +22,11 @@
     <a href="#reports" data-tab="reports" data-text="navReports"></a>
     <a href="#visits" data-tab="visits" data-text="navVisits"></a>
     <a href="#cases" data-tab="cases" data-text="navCases"></a>
-    <a href="report.html" data-text="navTenant"></a>
-    <a href="#visit-app" data-tab="visit-app" data-text="navVisitApp"></a>
+    <div class="tabs-extra" role="group" aria-labelledby="tabs-extra-label">
+      <span class="tabs-extra-label" id="tabs-extra-label" data-text="navExtra"></span>
+      <a href="report.html" data-text="navTenant"></a>
+      <a href="#visit-app" data-tab="visit-app" data-text="navVisitApp"></a>
+    </div>
   </nav>
 
   <main>
@@ -235,6 +238,7 @@
   <script src="data/locations.js"></script>
   <script src="data/rota.js"></script>
   <script src="data/cases.js"></script>
+  <script src="map.js"></script>
   <script src="planner.js"></script>
   <script src="case.js"></script>
   <script src="visit-tab.js"></script>
