@@ -10,12 +10,23 @@ window.DATA = {
       "built": 1998,
       "epc": "C",
       "dampRepairs12m": 2,
+      "repairNotes": [
+        {
+          "date": "2025-11-14",
+          "note": "Mould treatment on bedroom wall. Advised tenant on ventilation."
+        },
+        {
+          "date": "2026-02-19",
+          "note": "Extractor fan in bathroom not working. Replaced."
+        }
+      ],
       "sensor": null,
       "household": {
         "people": 1,
         "olderPerson": true,
         "youngChild": false,
-        "healthConditionShared": false
+        "healthConditionShared": false,
+        "tenantAgeBand": "65 to 74"
       },
       "askedForEnergyAdvice": false,
       "monthsSinceLastContact": 19,
@@ -30,6 +41,12 @@ window.DATA = {
       "built": 1958,
       "epc": "E",
       "dampRepairs12m": 1,
+      "repairNotes": [
+        {
+          "date": "2026-01-08",
+          "note": "Condensation on windows. Trickle vents cleared."
+        }
+      ],
       "sensor": {
         "humidity": 60,
         "temperature": 15.7
@@ -38,7 +55,8 @@ window.DATA = {
         "people": 5,
         "olderPerson": false,
         "youngChild": true,
-        "healthConditionShared": false
+        "healthConditionShared": false,
+        "tenantAgeBand": "25 to 44"
       },
       "askedForEnergyAdvice": false,
       "monthsSinceLastContact": 4,
@@ -53,12 +71,19 @@ window.DATA = {
       "built": 1998,
       "epc": "F",
       "dampRepairs12m": 1,
+      "repairNotes": [
+        {
+          "date": "2026-02-19",
+          "note": "Damp patch on ceiling under bathroom. Leak traced and fixed."
+        }
+      ],
       "sensor": null,
       "household": {
         "people": 1,
         "olderPerson": false,
         "youngChild": true,
-        "healthConditionShared": false
+        "healthConditionShared": false,
+        "tenantAgeBand": "45 to 64"
       },
       "askedForEnergyAdvice": false,
       "monthsSinceLastContact": 19,
@@ -73,12 +98,23 @@ window.DATA = {
       "built": 2006,
       "epc": "D",
       "dampRepairs12m": 2,
+      "repairNotes": [
+        {
+          "date": "2026-04-02",
+          "note": "Black mould behind wardrobe. Wall treated and repainted."
+        },
+        {
+          "date": "2026-08-27",
+          "note": "Kitchen extractor fan replaced."
+        }
+      ],
       "sensor": null,
       "household": {
         "people": 5,
         "olderPerson": false,
         "youngChild": true,
-        "healthConditionShared": false
+        "healthConditionShared": false,
+        "tenantAgeBand": "25 to 44"
       },
       "askedForEnergyAdvice": true,
       "monthsSinceLastContact": 19,
@@ -93,12 +129,14 @@ window.DATA = {
       "built": 1958,
       "epc": "F",
       "dampRepairs12m": 0,
+      "repairNotes": [],
       "sensor": null,
       "household": {
         "people": 2,
         "olderPerson": true,
         "youngChild": false,
-        "healthConditionShared": false
+        "healthConditionShared": false,
+        "tenantAgeBand": "65 to 74"
       },
       "askedForEnergyAdvice": false,
       "monthsSinceLastContact": 14,
@@ -113,6 +151,7 @@ window.DATA = {
       "built": 1964,
       "epc": "D",
       "dampRepairs12m": 0,
+      "repairNotes": [],
       "sensor": {
         "humidity": 56,
         "temperature": 19.1
@@ -121,7 +160,8 @@ window.DATA = {
         "people": 4,
         "olderPerson": true,
         "youngChild": true,
-        "healthConditionShared": false
+        "healthConditionShared": false,
+        "tenantAgeBand": "75 or over"
       },
       "askedForEnergyAdvice": true,
       "monthsSinceLastContact": 2,
@@ -136,6 +176,12 @@ window.DATA = {
       "built": 1964,
       "epc": "E",
       "dampRepairs12m": 1,
+      "repairNotes": [
+        {
+          "date": "2025-11-14",
+          "note": "Rising damp in hall. Surveyor visit arranged."
+        }
+      ],
       "sensor": {
         "humidity": 61,
         "temperature": 20.4
@@ -144,7 +190,8 @@ window.DATA = {
         "people": 3,
         "olderPerson": false,
         "youngChild": true,
-        "healthConditionShared": false
+        "healthConditionShared": false,
+        "tenantAgeBand": "25 to 44"
       },
       "askedForEnergyAdvice": false,
       "monthsSinceLastContact": 2,
@@ -159,12 +206,19 @@ window.DATA = {
       "built": 1971,
       "epc": "C",
       "dampRepairs12m": 1,
+      "repairNotes": [
+        {
+          "date": "2026-01-08",
+          "note": "Mould around bedroom window frame. Sealant replaced."
+        }
+      ],
       "sensor": null,
       "household": {
         "people": 5,
         "olderPerson": false,
         "youngChild": true,
-        "healthConditionShared": true
+        "healthConditionShared": true,
+        "tenantAgeBand": "45 to 64"
       },
       "askedForEnergyAdvice": false,
       "monthsSinceLastContact": 14,
@@ -179,12 +233,14 @@ window.DATA = {
       "built": 1958,
       "epc": "G",
       "dampRepairs12m": 0,
+      "repairNotes": [],
       "sensor": null,
       "household": {
         "people": 1,
         "olderPerson": false,
         "youngChild": false,
-        "healthConditionShared": false
+        "healthConditionShared": false,
+        "tenantAgeBand": "25 to 44"
       },
       "askedForEnergyAdvice": true,
       "monthsSinceLastContact": 4,
@@ -199,12 +255,23 @@ window.DATA = {
       "built": 1976,
       "epc": "C",
       "dampRepairs12m": 2,
+      "repairNotes": [
+        {
+          "date": "2026-04-02",
+          "note": "Mould treatment on bedroom wall. Advised tenant on ventilation."
+        },
+        {
+          "date": "2026-08-27",
+          "note": "Extractor fan in bathroom not working. Replaced."
+        }
+      ],
       "sensor": null,
       "household": {
         "people": 4,
         "olderPerson": true,
         "youngChild": false,
-        "healthConditionShared": false
+        "healthConditionShared": false,
+        "tenantAgeBand": "75 or over"
       },
       "askedForEnergyAdvice": false,
       "monthsSinceLastContact": 7,
@@ -219,6 +286,7 @@ window.DATA = {
       "built": 1958,
       "epc": "D",
       "dampRepairs12m": 0,
+      "repairNotes": [],
       "sensor": {
         "humidity": 73,
         "temperature": 17.5
@@ -227,7 +295,8 @@ window.DATA = {
         "people": 2,
         "olderPerson": false,
         "youngChild": true,
-        "healthConditionShared": false
+        "healthConditionShared": false,
+        "tenantAgeBand": "18 to 24"
       },
       "askedForEnergyAdvice": true,
       "monthsSinceLastContact": 1,
@@ -242,12 +311,14 @@ window.DATA = {
       "built": 2006,
       "epc": "E",
       "dampRepairs12m": 0,
+      "repairNotes": [],
       "sensor": null,
       "household": {
         "people": 3,
         "olderPerson": true,
         "youngChild": false,
-        "healthConditionShared": false
+        "healthConditionShared": false,
+        "tenantAgeBand": "75 or over"
       },
       "askedForEnergyAdvice": false,
       "monthsSinceLastContact": 2,
@@ -262,12 +333,23 @@ window.DATA = {
       "built": 1985,
       "epc": "F",
       "dampRepairs12m": 2,
+      "repairNotes": [
+        {
+          "date": "2025-11-14",
+          "note": "Condensation on windows. Trickle vents cleared."
+        },
+        {
+          "date": "2026-02-19",
+          "note": "Damp patch on ceiling under bathroom. Leak traced and fixed."
+        }
+      ],
       "sensor": null,
       "household": {
         "people": 5,
         "olderPerson": true,
         "youngChild": true,
-        "healthConditionShared": false
+        "healthConditionShared": false,
+        "tenantAgeBand": "65 to 74"
       },
       "askedForEnergyAdvice": false,
       "monthsSinceLastContact": 26,
@@ -282,12 +364,23 @@ window.DATA = {
       "built": 1998,
       "epc": "F",
       "dampRepairs12m": 2,
+      "repairNotes": [
+        {
+          "date": "2026-01-08",
+          "note": "Black mould behind wardrobe. Wall treated and repainted."
+        },
+        {
+          "date": "2026-04-02",
+          "note": "Kitchen extractor fan replaced."
+        }
+      ],
       "sensor": null,
       "household": {
         "people": 1,
         "olderPerson": false,
         "youngChild": false,
-        "healthConditionShared": true
+        "healthConditionShared": true,
+        "tenantAgeBand": "25 to 44"
       },
       "askedForEnergyAdvice": true,
       "monthsSinceLastContact": 1,
@@ -302,6 +395,16 @@ window.DATA = {
       "built": 1998,
       "epc": "D",
       "dampRepairs12m": 2,
+      "repairNotes": [
+        {
+          "date": "2026-02-19",
+          "note": "Rising damp in hall. Surveyor visit arranged."
+        },
+        {
+          "date": "2026-06-11",
+          "note": "Mould around bedroom window frame. Sealant replaced."
+        }
+      ],
       "sensor": {
         "humidity": 68,
         "temperature": 20.3
@@ -310,7 +413,8 @@ window.DATA = {
         "people": 5,
         "olderPerson": true,
         "youngChild": false,
-        "healthConditionShared": false
+        "healthConditionShared": false,
+        "tenantAgeBand": "65 to 74"
       },
       "askedForEnergyAdvice": true,
       "monthsSinceLastContact": 1,
@@ -325,6 +429,7 @@ window.DATA = {
       "built": 1998,
       "epc": "C",
       "dampRepairs12m": 0,
+      "repairNotes": [],
       "sensor": {
         "humidity": 57,
         "temperature": 15.3
@@ -333,7 +438,8 @@ window.DATA = {
         "people": 1,
         "olderPerson": false,
         "youngChild": false,
-        "healthConditionShared": false
+        "healthConditionShared": false,
+        "tenantAgeBand": "18 to 24"
       },
       "askedForEnergyAdvice": false,
       "monthsSinceLastContact": 11,
@@ -348,6 +454,16 @@ window.DATA = {
       "built": 1964,
       "epc": "C",
       "dampRepairs12m": 2,
+      "repairNotes": [
+        {
+          "date": "2025-11-14",
+          "note": "Extractor fan in bathroom not working. Replaced."
+        },
+        {
+          "date": "2026-06-11",
+          "note": "Mould treatment on bedroom wall. Advised tenant on ventilation."
+        }
+      ],
       "sensor": {
         "humidity": 81,
         "temperature": 15.7
@@ -356,7 +472,8 @@ window.DATA = {
         "people": 3,
         "olderPerson": false,
         "youngChild": true,
-        "healthConditionShared": false
+        "healthConditionShared": false,
+        "tenantAgeBand": "25 to 44"
       },
       "askedForEnergyAdvice": false,
       "monthsSinceLastContact": 4,
@@ -371,12 +488,27 @@ window.DATA = {
       "built": 2019,
       "epc": "D",
       "dampRepairs12m": 3,
+      "repairNotes": [
+        {
+          "date": "2026-01-08",
+          "note": "Damp patch on ceiling under bathroom. Leak traced and fixed."
+        },
+        {
+          "date": "2026-04-02",
+          "note": "Black mould behind wardrobe. Wall treated and repainted."
+        },
+        {
+          "date": "2026-08-27",
+          "note": "Condensation on windows. Trickle vents cleared."
+        }
+      ],
       "sensor": null,
       "household": {
         "people": 5,
         "olderPerson": false,
         "youngChild": true,
-        "healthConditionShared": false
+        "healthConditionShared": false,
+        "tenantAgeBand": "45 to 64"
       },
       "askedForEnergyAdvice": false,
       "monthsSinceLastContact": 4,
@@ -391,12 +523,14 @@ window.DATA = {
       "built": 2019,
       "epc": "B",
       "dampRepairs12m": 0,
+      "repairNotes": [],
       "sensor": null,
       "household": {
         "people": 2,
         "olderPerson": false,
         "youngChild": true,
-        "healthConditionShared": false
+        "healthConditionShared": false,
+        "tenantAgeBand": "25 to 44"
       },
       "askedForEnergyAdvice": false,
       "monthsSinceLastContact": 26,
@@ -411,6 +545,7 @@ window.DATA = {
       "built": 1976,
       "epc": "E",
       "dampRepairs12m": 0,
+      "repairNotes": [],
       "sensor": {
         "humidity": 73,
         "temperature": 16.7
@@ -419,7 +554,8 @@ window.DATA = {
         "people": 1,
         "olderPerson": false,
         "youngChild": true,
-        "healthConditionShared": false
+        "healthConditionShared": false,
+        "tenantAgeBand": "45 to 64"
       },
       "askedForEnergyAdvice": false,
       "monthsSinceLastContact": 2,
@@ -434,12 +570,23 @@ window.DATA = {
       "built": 1958,
       "epc": "E",
       "dampRepairs12m": 2,
+      "repairNotes": [
+        {
+          "date": "2026-02-19",
+          "note": "Kitchen extractor fan replaced."
+        },
+        {
+          "date": "2026-06-11",
+          "note": "Rising damp in hall. Surveyor visit arranged."
+        }
+      ],
       "sensor": null,
       "household": {
         "people": 2,
         "olderPerson": false,
         "youngChild": false,
-        "healthConditionShared": false
+        "healthConditionShared": false,
+        "tenantAgeBand": "18 to 24"
       },
       "askedForEnergyAdvice": false,
       "monthsSinceLastContact": 14,
@@ -454,12 +601,14 @@ window.DATA = {
       "built": 2006,
       "epc": "D",
       "dampRepairs12m": 0,
+      "repairNotes": [],
       "sensor": null,
       "household": {
         "people": 2,
         "olderPerson": false,
         "youngChild": true,
-        "healthConditionShared": false
+        "healthConditionShared": false,
+        "tenantAgeBand": "25 to 44"
       },
       "askedForEnergyAdvice": false,
       "monthsSinceLastContact": 1,
@@ -474,6 +623,7 @@ window.DATA = {
       "built": 1976,
       "epc": "E",
       "dampRepairs12m": 0,
+      "repairNotes": [],
       "sensor": {
         "humidity": 66,
         "temperature": 19.1
@@ -482,7 +632,8 @@ window.DATA = {
         "people": 3,
         "olderPerson": true,
         "youngChild": false,
-        "healthConditionShared": true
+        "healthConditionShared": true,
+        "tenantAgeBand": "65 to 74"
       },
       "askedForEnergyAdvice": false,
       "monthsSinceLastContact": 11,
@@ -497,12 +648,14 @@ window.DATA = {
       "built": 1971,
       "epc": "C",
       "dampRepairs12m": 0,
+      "repairNotes": [],
       "sensor": null,
       "household": {
         "people": 5,
         "olderPerson": false,
         "youngChild": true,
-        "healthConditionShared": true
+        "healthConditionShared": true,
+        "tenantAgeBand": "25 to 44"
       },
       "askedForEnergyAdvice": false,
       "monthsSinceLastContact": 14,
@@ -517,6 +670,7 @@ window.DATA = {
       "built": 1964,
       "epc": "D",
       "dampRepairs12m": 0,
+      "repairNotes": [],
       "sensor": {
         "humidity": 71,
         "temperature": 14.6
@@ -525,7 +679,8 @@ window.DATA = {
         "people": 2,
         "olderPerson": false,
         "youngChild": false,
-        "healthConditionShared": false
+        "healthConditionShared": false,
+        "tenantAgeBand": "45 to 64"
       },
       "askedForEnergyAdvice": false,
       "monthsSinceLastContact": 26,
@@ -540,12 +695,14 @@ window.DATA = {
       "built": 1964,
       "epc": "E",
       "dampRepairs12m": 0,
+      "repairNotes": [],
       "sensor": null,
       "household": {
         "people": 1,
         "olderPerson": false,
         "youngChild": false,
-        "healthConditionShared": false
+        "healthConditionShared": false,
+        "tenantAgeBand": "18 to 24"
       },
       "askedForEnergyAdvice": false,
       "monthsSinceLastContact": 14,
@@ -560,6 +717,12 @@ window.DATA = {
       "built": 1998,
       "epc": "E",
       "dampRepairs12m": 1,
+      "repairNotes": [
+        {
+          "date": "2026-02-19",
+          "note": "Mould around bedroom window frame. Sealant replaced."
+        }
+      ],
       "sensor": {
         "humidity": 79,
         "temperature": 19.1
@@ -568,7 +731,8 @@ window.DATA = {
         "people": 3,
         "olderPerson": true,
         "youngChild": false,
-        "healthConditionShared": false
+        "healthConditionShared": false,
+        "tenantAgeBand": "65 to 74"
       },
       "askedForEnergyAdvice": false,
       "monthsSinceLastContact": 1,
@@ -583,6 +747,7 @@ window.DATA = {
       "built": 2006,
       "epc": "D",
       "dampRepairs12m": 0,
+      "repairNotes": [],
       "sensor": {
         "humidity": 82,
         "temperature": 19.2
@@ -591,7 +756,8 @@ window.DATA = {
         "people": 5,
         "olderPerson": true,
         "youngChild": false,
-        "healthConditionShared": false
+        "healthConditionShared": false,
+        "tenantAgeBand": "75 or over"
       },
       "askedForEnergyAdvice": true,
       "monthsSinceLastContact": 4,
@@ -606,6 +772,7 @@ window.DATA = {
       "built": 2019,
       "epc": "G",
       "dampRepairs12m": 0,
+      "repairNotes": [],
       "sensor": {
         "humidity": 66,
         "temperature": 19.2
@@ -614,7 +781,8 @@ window.DATA = {
         "people": 1,
         "olderPerson": true,
         "youngChild": true,
-        "healthConditionShared": false
+        "healthConditionShared": false,
+        "tenantAgeBand": "65 to 74"
       },
       "askedForEnergyAdvice": false,
       "monthsSinceLastContact": 26,
@@ -629,12 +797,14 @@ window.DATA = {
       "built": 1985,
       "epc": "D",
       "dampRepairs12m": 0,
+      "repairNotes": [],
       "sensor": null,
       "household": {
         "people": 4,
         "olderPerson": false,
         "youngChild": true,
-        "healthConditionShared": false
+        "healthConditionShared": false,
+        "tenantAgeBand": "45 to 64"
       },
       "askedForEnergyAdvice": true,
       "monthsSinceLastContact": 11,
@@ -660,6 +830,30 @@ window.DATA = {
     }
   ],
   "reports": [
+    {
+      "ref": "R-0410",
+      "homeId": "H-1022",
+      "received": "2026-10-18",
+      "problems": [
+        "Condensation"
+      ],
+      "description": "The kitchen window steams up when I'm cooking. It clears during the day. Not sure if it's a problem.",
+      "rooms": "Kitchen",
+      "contactBy": "Email",
+      "status": "New"
+    },
+    {
+      "ref": "R-0411",
+      "homeId": "H-1006",
+      "received": "2026-10-19",
+      "problems": [
+        "Damp"
+      ],
+      "description": "A damp patch has appeared on the ceiling in the hall. It's about the size of a dinner plate and smells musty.",
+      "rooms": "Hall",
+      "contactBy": "Phone, any time",
+      "status": "New"
+    },
     {
       "ref": "R-0412",
       "homeId": "H-1004",

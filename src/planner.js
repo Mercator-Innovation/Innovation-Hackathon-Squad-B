@@ -570,8 +570,9 @@
     appRender();
     renderSchedule();
   };
+  // The "Visits" card on the Risk overview (glance.js) counts the next 5 working days of the plan.
   function fillVisitsCount() {
-    const el = document.getElementById("summary-visits");
+    const el = document.querySelector('[data-glance="visits"] .g-count');
     if (el) el.textContent = events.filter(e => !e.done && lastDays.slice(0, 5).some(d => iso(d) === e.iso)).length;
   }
 

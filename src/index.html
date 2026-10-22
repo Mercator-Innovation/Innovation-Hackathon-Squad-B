@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Healthier homes: staff view</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="glance.css">
 </head>
 <body>
   <div class="banner" data-text="prototypeBanner"></div>
@@ -22,16 +23,37 @@
 
   <main>
     <div id="tab-overview">
-      <div class="summary" id="summary"></div>
+      <section class="panel glance" aria-labelledby="glance-title">
+        <h2 id="glance-title" data-text="glanceTitle"></h2>
+        <p class="hint" data-text="glanceHelp"></p>
+        <div class="glance-cards" id="glance-cards"></div>
+
+        <h3 id="trend-title" data-text="trendTitle"></h3>
+        <div class="trend-key" aria-hidden="true">
+          <span class="key-high" data-text="seriesHighKey"></span>
+          <span class="key-medium" data-text="seriesMediumKey"></span>
+        </div>
+        <div class="trend-chart" id="trend-chart"></div>
+        <p class="trend-summary" id="trend-summary"></p>
+      </section>
 
       <section class="panel" aria-labelledby="heat-title">
-        <h2 id="heat-title" data-text="heatTitle"></h2>
-        <p class="hint" data-text="heatHelp"></p>
+        <div class="area-head">
+          <div>
+            <h2 id="heat-title" data-text="heatTitle"></h2>
+            <p class="hint" data-text="heatHelp"></p>
+          </div>
+          <div class="view-switch" role="group" aria-label="Show areas as">
+            <button type="button" data-area-view="grid" aria-pressed="true" data-text="viewGrid"></button>
+            <button type="button" data-area-view="map" aria-pressed="false" data-text="viewMap"></button>
+          </div>
+        </div>
         <div class="heatmap" id="heatmap"></div>
       </section>
 
       <section class="panel" aria-labelledby="list-title">
-        <h2 id="list-title" data-text="listTitle"></h2>
+        <h2 id="list-title" tabindex="-1" data-text="listTitle"></h2>
+        <p class="active-filter" id="active-filter" hidden><span></span> <button type="button" class="link" id="clear-filter" data-text="clearFilter"></button></p>
         <div class="filters">
           <label><span data-text="filterSearch"></span><input type="search" id="search"></label>
           <label><span data-text="filterArea"></span><select id="filter-area"></select></label>
@@ -48,6 +70,11 @@
 
     <section class="panel" id="tab-reports" hidden aria-labelledby="reports-title">
       <h2 id="reports-title" data-text="reportsTitle"></h2>
+      <div class="filters">
+        <label><span data-text="filterReportBand"></span><select id="report-filter-band"></select></label>
+        <label><span data-text="filterReportStatus"></span><select id="report-filter-status"></select></label>
+        <label><span data-text="filterReportType"></span><select id="report-filter-type"></select></label>
+      </div>
       <div id="reports-list"></div>
     </section>
 
@@ -130,7 +157,9 @@
   <script src="content.js"></script>
   <script src="shared.js"></script>
   <script src="data/homes.js"></script>
+  <script src="data/trend.js"></script>
   <script src="risk.js"></script>
+  <script src="glance.js"></script>
   <script src="app.js"></script>
   <script src="data/locations.js"></script>
   <script src="data/rota.js"></script>
