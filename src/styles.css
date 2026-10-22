@@ -73,6 +73,8 @@ th { font-size: 0.9rem; }
 
 button.primary, .button { font: inherit; background: var(--brand); color: #fff; border: 0; border-radius: 4px; padding: 10px 16px; cursor: pointer; font-weight: 600; text-decoration: none; display: inline-block; }
 button.primary:hover, .button:hover { background: var(--brand-dark); }
+.button.case-button { background: #1f4e8c; }
+.button.case-button:hover { background: #163a69; }
 button.link { font: inherit; text-align: left; background: none; border: 0; color: var(--brand); text-decoration: underline; cursor: pointer; padding: 0; }
 
 /* Home detail */
@@ -249,4 +251,21 @@ dl.facts dd .hint { font-size: 0.875rem; }
 @media print {
   #tab-overview .filters { display: none; }
   table { font-size: 0.85rem; }
+}
+
+/* Reports from tenants: rows laid out like the Cases table */
+.report-cols, .report-row { display: grid; grid-template-columns: 2.2fr 0.9fr 1.4fr 1fr 1.3fr; gap: 4px 16px; align-items: start; }
+.report-cols { padding: 0 8px 8px; border-bottom: 1px solid var(--border); font-weight: 700; font-size: 0.9rem; }
+.report-row { padding: 12px 8px; border-bottom: 1px solid var(--border); }
+.report-row small { color: var(--muted); }
+.rr-label { display: none; }
+.rr-actions { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+.rr-comment { grid-column: 1 / -1; margin: 4px 0 0; padding: 8px 10px; background: var(--bg); border-radius: 6px; }
+.rr-contact { display: block; margin-top: 2px; }
+@media (max-width: 760px) {
+  .report-cols { display: none; }
+  .report-row { grid-template-columns: 1fr 1fr; }
+  .rr-home, .rr-actions { grid-column: 1 / -1; }
+  .rr-label { display: block; font-weight: 700; font-size: 0.85rem; color: var(--muted); }
+  .rr-actions { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 12px; order: 9; }
 }

@@ -29,6 +29,7 @@ ai_use_week_after:
 
 ## During
 <!-- Claude adds one line per moment: prompts that worked (word for word), dead ends, surprises, things done outside my usual job, what made working as a squad easier or harder -->
+- 16:47 I redesigned the staff view's Reports from tenants cards, added risk, status and type filters, and added sample data, normally a developer's and designer's job: it went well, by describing each change in plain words and checking it in the browser.
 
 ## At 19:00
 - What I worked on: <answers>
