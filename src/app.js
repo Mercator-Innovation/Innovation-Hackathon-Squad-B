@@ -21,29 +21,7 @@ function scored() {
 }
 
 // ---- Overview ----
-function renderSummary(list) {
-  const count = band => list.filter(h => h.risk.band === band).length;
-  const newReports = allReports().filter(r => (state.status[r.ref] || r.status) === "New").length;
-  document.getElementById("summary").innerHTML = `
-    <div><strong>${count("High")}</strong> high risk homes</div>
-    <div><strong>${count("Medium")}</strong> medium risk homes</div>
-    <div><strong>${newReports}</strong> new reports from tenants</div>
-    <div><strong>${state.visits.length}</strong> visits booked</div>`;
-}
-
-function renderHeatmap(list) {
-  const areas = [...new Set(homes.map(h => h.area))].sort();
-  document.getElementById("heatmap").innerHTML = areas.map(area => {
-    const inArea = list.filter(h => h.area === area);
-    const high = inArea.filter(h => h.risk.band === "High").length;
-    const avg = inArea.reduce((s, h) => s + h.risk.points, 0) / inArea.length;
-    const level = avg >= 6 ? 3 : avg >= 4.5 ? 2 : avg >= 3 ? 1 : 0;
-    return `<button type="button" class="heat-${level}" data-area="${escapeHtml(area)}" aria-pressed="${selectedArea === area}">
-      <span class="area-name">${escapeHtml(area)}</span>
-      ${high} high risk of ${inArea.length} homes<br>Average score ${avg.toFixed(1)}
-    </button>`;
-  }).join("");
-}
+// The cards, trend chart and risk by area are drawn by glance.js.
 
 function renderFilters() {
   const areas = [...new Set(homes.map(h => h.area))].sort();
@@ -51,6 +29,11 @@ function renderFilters() {
     `<option value="">${C.filterAll}</option>` + areas.map(a => `<option>${escapeHtml(a)}</option>`).join("");
   document.getElementById("filter-band").innerHTML =
     `<option value="">${C.filterAll}</option><option>High</option><option>Medium</option><option>Low</option>`;
+  // Reports from tenants
+  const options = values => `<option value="">${C.filterAll}</option>` + values.map(v => `<option>${escapeHtml(v)}</option>`).join("");
+  document.getElementById("report-filter-band").innerHTML = options(["High", "Medium", "Low"]) + `<option value="none">${C.filterNotRated}</option>`;
+  document.getElementById("report-filter-status").innerHTML = options(["New", "Picked up", "Closed"]);
+  document.getElementById("report-filter-type").innerHTML = options(["Damp", "Mould", "Condensation", "Cold", "Something else", "Not sure"]);
 }
 
 function renderList(list) {
@@ -59,6 +42,7 @@ function renderList(list) {
   const shown = list.filter(h =>
     (!selectedArea || h.area === selectedArea) &&
     (!band || h.risk.band === band) &&
+    (!window.listFilter || window.listFilter(h)) &&
     (!search || `${h.address} ${h.tenant} ${h.id}`.toLowerCase().includes(search)));
   document.getElementById("homes").innerHTML = shown.map(h => `
     <tr>
@@ -71,22 +55,9 @@ function renderList(list) {
 }
 
 // ---- Home detail ----
-function weekdaySlots() {
-  const slots = [];
-  const d = new Date();
-  while (slots.length < 10) {
-    d.setDate(d.getDate() + 1);
-    if (d.getDay() === 0 || d.getDay() === 6) continue;
-    const day = d.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" });
-    slots.push(`${day}, morning`, `${day}, afternoon`);
-  }
-  return slots.slice(0, 10);
-}
-
 function openHome(id) {
   const h = scored().find(x => x.id === id);
   const reports = allReports().filter(r => r.homeId === id);
-  const visits = state.visits.filter(v => v.homeId === id);
   const body = document.getElementById("detail-body");
   body.innerHTML = `
     <button type="button" class="link dialog-close" id="close-detail">Close</button>
@@ -97,7 +68,17 @@ function openHome(id) {
 
     <h3>${C.whyFlagged}</h3>
     <ul class="reasons">${h.risk.reasons.map(r => `<li>${escapeHtml(r.reason)} (+${r.points})</li>`).join("") || "<li>Nothing flagged</li>"}</ul>
+    <h3>${C.suggestedTitle}</h3>
+    <p class="card suggested">${escapeHtml(C[window.RISK.suggest(h, h.risk)])}</p>
     <p class="notice">${C.humanCheck}</p>
+
+    <h3>${C.householdTitle}</h3>
+    <p>${C.ageBandLabel}: ${escapeHtml(h.household.tenantAgeBand)}</p>
+
+    <h3>${C.repairsTitle}</h3>
+    ${h.repairNotes.length
+      ? `<ul class="repairs">${h.repairNotes.map(r => `<li><strong>${new Date(r.date).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}</strong>: ${escapeHtml(r.note)}</li>`).join("")}</ul>`
+      : `<p>${C.repairsNone}</p>`}
 
     ${reports.length ? `<h3>Reports from this tenant</h3>${reports.map(r => `<div class="card"><strong>${r.ref}</strong>, ${r.received}: ${escapeHtml(r.problems.join(", "))}<br>${escapeHtml(r.description)}</div>`).join("")}` : ""}
 
@@ -109,12 +90,8 @@ function openHome(id) {
     <button type="button" class="primary" id="save-case">${C.saveButton}</button>
 
     <h3>${C.bookTitle}</h3>
-    ${visits.map(v => `<p>Booked: ${escapeHtml(v.who)}, ${escapeHtml(v.when)}</p>`).join("")}
-    <div class="form-row"><label for="visit-who">${C.bookWho}</label>
-      <select id="visit-who">${team.map(t => `<option value="${escapeHtml(t.name)}">${escapeHtml(t.name)} (${escapeHtml(t.role)})</option>`).join("")}</select></div>
-    <div class="form-row"><label for="visit-when">${C.bookWhen}</label>
-      <select id="visit-when">${weekdaySlots().map(s => `<option>${s}</option>`).join("")}</select></div>
-    <button type="button" class="primary" id="book-visit">${C.bookButton}</button>`;
+    <p>${C.bookHelp}</p>
+    <a class="button" href="#cases/${id}" id="open-case">${C.openCase}</a>`;
 
   document.getElementById("close-detail").onclick = () => dialog.close();
   document.getElementById("save-case").onclick = () => {
@@ -122,37 +99,56 @@ function openHome(id) {
     state.notes[id] = document.getElementById("note").value;
     saveState(state); render(); dialog.close();
   };
-  document.getElementById("book-visit").onclick = () => {
-    state.visits.push({ homeId: id, address: h.address, who: document.getElementById("visit-who").value, when: document.getElementById("visit-when").value });
-    state.status[id] = "Visit booked";
-    saveState(state); render(); openHome(id);
-  };
+  document.getElementById("open-case").onclick = () => dialog.close();
   if (!dialog.open) dialog.showModal();
 }
 
 // ---- Reports and visits ----
+// "2026-10-21" → "21 Oct 2026"
+function formatDate(iso) {
+  return new Date(iso + "T00:00").toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+}
+
 function renderReports() {
-  const list = allReports().slice().reverse();
-  document.getElementById("reports-list").innerHTML = list.map(r => {
+  const rated = scored();
+  const band = document.getElementById("report-filter-band").value;
+  const statusFilter = document.getElementById("report-filter-status").value;
+  const type = document.getElementById("report-filter-type").value;
+  const list = allReports().slice().reverse().map(r => {
     const home = homes.find(h => h.id === r.homeId);
-    const status = state.status[r.ref] || r.status;
+    const risk = home && rated.find(h => h.id === home.id).risk;
+    return { r, home, risk, status: state.status[r.ref] || r.status };
+  }).filter(({ r, risk, status }) =>
+    (!band || (risk ? risk.band === band : band === "none")) &&
+    (!statusFilter || status === statusFilter) &&
+    (!type || r.problems.includes(type))
+  );
+  const anyFilter = band || statusFilter || type;
+  document.getElementById("reports-list").innerHTML = list.map(({ r, home, risk, status }) => {
     return `<div class="card">
-      <h3>${r.ref}: ${escapeHtml(r.problems.join(", "))}</h3>
-      <p>${home ? `<button type="button" class="link" data-home="${home.id}">${escapeHtml(home.address)}, ${escapeHtml(home.area)}</button>` : escapeHtml(r.address || "Address not matched")}
-        · received ${r.received} · ${escapeHtml(status)}</p>
-      <p>${escapeHtml(r.description)}</p>
-      <p><small>Rooms: ${escapeHtml(r.rooms || "not given")} · Contact: ${escapeHtml(r.contactBy || "not given")}</small></p>
+      <div class="report-top">
+        <h3 class="report-head"><span class="badges">${risk ? `<span class="badge ${risk.band}">${risk.band} risk</span>` : `<span class="badge">${C.reportNotRated}</span>`} <span class="badge status">${C.reportStatus} ${escapeHtml(status)} (${formatDate(r.received)})</span></span></h3>
+        <p class="ref">${C.reportRef} ${r.ref}</p>
+      </div>
+      <p><span class="label">${C.reportType}</span> ${escapeHtml(r.problems.join(", "))}</p>
+      <p><span class="label">${C.reportRooms}</span> ${escapeHtml(r.rooms || C.reportNotGiven)}</p>
+      <p><span class="label">${C.reportComments}</span> ${escapeHtml(r.description)}</p>
+      <p><span class="label">${C.reportName}</span> ${escapeHtml(r.name || (home && home.tenant) || C.reportNotGiven)}</p>
+      <p><span class="label">${C.reportArea}</span> ${home ? escapeHtml(home.area) : C.reportNotGiven}</p>
+      <p><span class="label">${C.reportAddress}</span> ${home ? `<button type="button" class="link" data-home="${home.id}">${escapeHtml(home.address)}</button>` : escapeHtml(r.address || "Address not matched")}</p>
+      <p><span class="label">${C.reportContact}</span> ${escapeHtml(r.contactBy || C.reportNotGiven)}</p>
       ${status === "New" ? `<button type="button" class="primary" data-close-report="${r.ref}">Mark as picked up</button>` : ""}
     </div>`;
-  }).join("") || `<p>${C.reportsEmpty}</p>`;
+  }).join("") || `<p>${anyFilter ? C.reportsNoMatch : C.reportsEmpty}</p>`;
 }
 
 function renderVisits() {
   document.getElementById("visits-list").innerHTML = team.map(t => {
     const mine = state.visits.filter(v => v.who === t.name);
+    if (!mine.length) return "";
     return `<div class="card"><h3>${escapeHtml(t.name)}, ${escapeHtml(t.role)}</h3>
-      ${mine.length ? `<ul>${mine.map(v => `<li>${escapeHtml(v.when)}: <button type="button" class="link" data-home="${v.homeId}">${escapeHtml(v.address)}</button></li>`).join("")}</ul>` : "<p>No visits yet.</p>"}</div>`;
-  }).join("") + (state.visits.length ? "" : `<p>${C.visitsEmpty}</p>`);
+      <ul>${mine.map(v => `<li>${escapeHtml(v.when)}: <button type="button" class="link" data-home="${v.homeId}">${escapeHtml(v.address)}</button></li>`).join("")}</ul></div>`;
+  }).join("") || `<p>${C.visitsEmpty}</p>`;
 }
 
 // ---- Tabs ----
@@ -167,11 +163,9 @@ function showTab() {
 
 function render() {
   const list = scored();
-  renderSummary(list);
-  renderHeatmap(list);
+  window.GLANCE.render(list);
   renderList(list);
   renderReports();
-  renderVisits();
 }
 
 const dialog = document.getElementById("detail");
@@ -183,6 +177,8 @@ showTab();
 window.addEventListener("hashchange", showTab);
 document.getElementById("search").addEventListener("input", render);
 document.getElementById("filter-band").addEventListener("change", render);
+["report-filter-band", "report-filter-status", "report-filter-type"].forEach(id =>
+  document.getElementById(id).addEventListener("change", renderReports));
 document.getElementById("filter-area").addEventListener("change", e => { selectedArea = e.target.value; render(); });
 document.addEventListener("click", e => {
   const area = e.target.closest("[data-area]");

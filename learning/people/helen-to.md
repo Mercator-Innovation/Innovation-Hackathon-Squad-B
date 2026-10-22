@@ -29,6 +29,7 @@ ai_use_week_after:
 
 ## During
 <!-- Claude adds one line per moment: prompts that worked (word for word), dead ends, surprises, things done outside my usual job, what made working as a squad easier or harder -->
+- 16:40 I designed and built the dashboard's "Where to act first" section (clickable cards, trend chart, map view with traffic lights), normally a designer's and developer's job: I described what I wanted in one message, Claude built it, and I shared it to the squad's screen.
 
 ## At 19:00
 - What I worked on: <answers>

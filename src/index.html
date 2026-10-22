@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Healthier homes: staff view</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="glance.css">
 </head>
 <body>
   <div class="banner" data-text="prototypeBanner"></div>
@@ -16,21 +17,43 @@
     <a href="#overview" data-tab="overview" aria-current="page" data-text="navDashboard"></a>
     <a href="#reports" data-tab="reports" data-text="navReports"></a>
     <a href="#visits" data-tab="visits" data-text="navVisits"></a>
+    <a href="#cases" data-tab="cases" data-text="navCases"></a>
     <a href="report.html" data-text="navTenant"></a>
   </nav>
 
   <main>
     <div id="tab-overview">
-      <div class="summary" id="summary"></div>
+      <section class="panel glance" aria-labelledby="glance-title">
+        <h2 id="glance-title" data-text="glanceTitle"></h2>
+        <p class="hint" data-text="glanceHelp"></p>
+        <div class="glance-cards" id="glance-cards"></div>
+
+        <h3 id="trend-title" data-text="trendTitle"></h3>
+        <div class="trend-key" aria-hidden="true">
+          <span class="key-high" data-text="seriesHighKey"></span>
+          <span class="key-medium" data-text="seriesMediumKey"></span>
+        </div>
+        <div class="trend-chart" id="trend-chart"></div>
+        <p class="trend-summary" id="trend-summary"></p>
+      </section>
 
       <section class="panel" aria-labelledby="heat-title">
-        <h2 id="heat-title" data-text="heatTitle"></h2>
-        <p class="hint" data-text="heatHelp"></p>
+        <div class="area-head">
+          <div>
+            <h2 id="heat-title" data-text="heatTitle"></h2>
+            <p class="hint" data-text="heatHelp"></p>
+          </div>
+          <div class="view-switch" role="group" aria-label="Show areas as">
+            <button type="button" data-area-view="grid" aria-pressed="true" data-text="viewGrid"></button>
+            <button type="button" data-area-view="map" aria-pressed="false" data-text="viewMap"></button>
+          </div>
+        </div>
         <div class="heatmap" id="heatmap"></div>
       </section>
 
       <section class="panel" aria-labelledby="list-title">
-        <h2 id="list-title" data-text="listTitle"></h2>
+        <h2 id="list-title" tabindex="-1" data-text="listTitle"></h2>
+        <p class="active-filter" id="active-filter" hidden><span></span> <button type="button" class="link" id="clear-filter" data-text="clearFilter"></button></p>
         <div class="filters">
           <label><span data-text="filterSearch"></span><input type="search" id="search"></label>
           <label><span data-text="filterArea"></span><select id="filter-area"></select></label>
@@ -47,23 +70,100 @@
 
     <section class="panel" id="tab-reports" hidden aria-labelledby="reports-title">
       <h2 id="reports-title" data-text="reportsTitle"></h2>
+      <div class="filters">
+        <label><span data-text="filterReportBand"></span><select id="report-filter-band"></select></label>
+        <label><span data-text="filterReportStatus"></span><select id="report-filter-status"></select></label>
+        <label><span data-text="filterReportType"></span><select id="report-filter-type"></select></label>
+      </div>
       <div id="reports-list"></div>
     </section>
 
-    <section class="panel" id="tab-visits" hidden aria-labelledby="visits-title">
-      <h2 id="visits-title" data-text="visitsTitle"></h2>
-      <div id="visits-list"></div>
-    </section>
+    <div id="tab-visits" hidden>
+      <div class="summary compact" id="plan-summary"></div>
+
+      <section class="panel" aria-labelledby="visits-title">
+        <h2 id="visits-title" data-text="visitsTitle"></h2>
+        <p class="hint" data-text="planIntro"></p>
+        <div class="cal-tools">
+          <button type="button" class="small" id="week-prev" data-text="weekPrev"></button>
+          <strong id="week-label" aria-live="polite"></strong>
+          <button type="button" class="small" id="week-next" data-text="weekNext"></button>
+          <label class="cal-who"><span data-text="planWho"></span> <select id="plan-who"></select></label>
+        </div>
+        <div class="cal-wrap"><div id="calendar" class="calendar"></div></div>
+        <p id="cal-empty" class="hint"></p>
+        <div id="cal-legend" class="cal-legend"></div>
+        <div id="plan-unplanned"></div>
+        <div id="plan-recorded"></div>
+      </section>
+
+      <section class="panel" aria-labelledby="where-title">
+        <h2 id="where-title" data-text="whereTitle"></h2>
+        <p class="hint" data-text="whereHelp"></p>
+        <div class="table-wrap"><table class="where" id="where-grid"></table></div>
+        <div id="where-map" class="where-map"></div>
+      </section>
+
+      <details class="panel">
+        <summary><h2 id="team-title" data-text="teamTitle"></h2></summary>
+        <p class="hint" data-text="teamHelp"></p>
+        <div id="plan-team" class="team"></div>
+        <form id="plan-add" class="add-person">
+          <h3 data-text="addPersonTitle"></h3>
+          <div class="times">
+            <label for="add-name">Name <input id="add-name" autocomplete="off" required></label>
+            <label for="add-role">Role <input id="add-role" autocomplete="off"></label>
+          </div>
+          <button type="submit" class="primary" data-text="addPersonButton"></button>
+        </form>
+      </details>
+
+      <details class="panel">
+        <summary><h2 id="rules-title" data-text="rulesTitle"></h2></summary>
+        <p class="hint" data-text="rulesHelp"></p>
+        <div id="plan-rules"></div>
+        <button type="button" class="link" id="plan-reset" data-text="resetPlanner"></button>
+      </details>
+    </div>
+
+    <div id="tab-cases" hidden>
+      <section class="panel" id="cases-list" aria-labelledby="cases-title">
+        <h2 id="cases-title" data-text="casesTitle"></h2>
+        <p class="hint" data-text="casesHelp"></p>
+        <div class="filters">
+          <label><span data-text="casesSearch"></span><input type="search" id="case-search"></label>
+          <label><span data-text="casesShow"></span><select id="case-show">
+            <option value="open">Open cases</option><option value="all">All homes</option></select></label>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Home</th><th>Risk</th><th>Where it's at</th><th>Next visit</th><th>Last update</th></tr></thead>
+            <tbody id="cases-rows"></tbody>
+          </table>
+        </div>
+      </section>
+      <div id="case-view"></div>
+    </div>
   </main>
 
   <dialog id="detail" aria-labelledby="detail-title">
     <div class="dialog-body" id="detail-body"></div>
   </dialog>
 
+  <dialog id="visit-dialog" aria-labelledby="visit-title">
+    <div class="dialog-body" id="visit-body"></div>
+  </dialog>
+
   <script src="content.js"></script>
   <script src="shared.js"></script>
   <script src="data/homes.js"></script>
+  <script src="data/trend.js"></script>
   <script src="risk.js"></script>
+  <script src="glance.js"></script>
   <script src="app.js"></script>
+  <script src="data/locations.js"></script>
+  <script src="data/rota.js"></script>
+  <script src="planner.js"></script>
+  <script src="case.js"></script>
 </body>
 </html>
