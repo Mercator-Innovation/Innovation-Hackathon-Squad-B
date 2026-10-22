@@ -414,8 +414,15 @@
       if (reason === "other" && !reasonNote) showFieldError("book-other", T.errorOther);
       if (!date) showFieldError("book-date", T.errorDate);
       if (!time) showFieldError("book-time", T.errorTime);
-      if (date && time && PL.events().some(ev => ev.staff.id === staffId && ev.iso === date && PL.hhmm(ev.start) === time))
-        showFieldError("book-time", fillIn(T.errorClash, { who: st.name }));
+      // A clash: the same start time as any visit, or overlapping another booked visit.
+      // (Planned visits that overlap are fine: the planner moves them out of the way.)
+      if (date && time) {
+        const [hh, mm] = time.split(":").map(Number);
+        const from = hh * 60 + mm, to = from + PL.minutesFor(type);
+        const clash = PL.events().some(ev => ev.staff.id === staffId && ev.iso === date &&
+          (PL.hhmm(ev.start) === time || (ev.fixed && from < ev.end && ev.start < to)));
+        if (clash) showFieldError("book-time", fillIn(T.errorClash, { who: st.name }));
+      }
       const firstError = document.querySelector("#book-form [aria-invalid]");
       if (firstError) { firstError.focus(); return; }
 

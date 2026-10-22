@@ -1,5 +1,6 @@
 /* The look. Change colours and fonts here. */
-/* Palette: Terracotta leads; Riviera Blue for text; Soft Ivory and Sand Linen for warm, light backgrounds.
+/* Palette: Terracotta leads for actions; Riviera Blue anchors the page (header, tabs, table headings) and the text;
+   Soft Ivory and Sand Linen for warm, light backgrounds.
    Every text colour below passes 4.5:1 on white and on the page background. */
 :root {
   --terracotta: #a9501c;
@@ -18,6 +19,8 @@
   --brand-dark: #873e12;
   --brand-tint: #f8ede4;      /* gentle terracotta wash for highlights */
   --brand-tint-2: #f0d9c8;
+  --navy-tint: #eaeff5;       /* table headings */
+  --navy-tint-2: #d9e2ec;
   --focus: #ffbf47;
   --high: #a1173a;            /* crimson, so high risk never looks like the brand colour */
   --high-bg: #fbe7ec;
@@ -36,17 +39,23 @@ a:hover { color: var(--brand-dark); }
 :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; box-shadow: 0 0 0 5px var(--text); }
 
 .banner { background: #ead7be; color: var(--text); padding: 6px 20px; font-size: 0.85rem; }
-header.site { background: var(--ivory); color: var(--text); padding: 22px 20px 16px; }
+header.site { background: var(--riviera); color: #fff; padding: 22px 20px 16px; }
 header.site h1 { margin: 0; font-size: 1.6rem; letter-spacing: -0.01em; }
-header.site p { margin: 4px 0 0; color: var(--muted); }
-header.site a { color: var(--brand); }
+header.site p { margin: 4px 0 0; color: #c9d3de; }
+header.site a { color: var(--ivory); }
+header.site a:hover { color: #fff; }
 header.site.has-logo { display: flex; align-items: center; gap: 16px; }
-header.site .logo { width: 52px; height: 52px; flex: none; }
+header.site .logo { width: 52px; height: 52px; flex: none; border-radius: 14px; box-shadow: 0 0 0 2px rgba(243, 236, 222, 0.35); }
 @media (max-width: 600px) { header.site .logo { width: 40px; height: 40px; } }
-nav.tabs { display: flex; flex-wrap: wrap; gap: 4px 8px; background: var(--ivory); padding: 0 20px; border-bottom: 1px solid var(--border); }
-nav.tabs a { color: var(--text); padding: 10px 6px 12px; margin: 0 4px; text-decoration: none; font-weight: 600; border-bottom: 3px solid transparent; }
-nav.tabs a:hover { color: var(--brand); border-bottom-color: var(--brand-tint-2); }
-nav.tabs a[aria-current="page"] { color: var(--brand); border-bottom-color: var(--brand); }
+nav.tabs { display: flex; flex-wrap: wrap; gap: 4px 8px; background: var(--riviera); padding: 0 20px; border-top: 1px solid rgba(255, 255, 255, 0.08); }
+nav.tabs a { color: #e3e9f0; padding: 10px 14px 11px; margin-top: 4px; text-decoration: none; font-weight: 600; border-bottom: 3px solid transparent; border-radius: 10px 10px 0 0; }
+nav.tabs a:hover { color: #fff; border-bottom-color: rgba(212, 175, 131, 0.5); }
+/* The current tab echoes the terracotta logo tile */
+nav.tabs a[aria-current="page"] { color: #fff; background: var(--brand); border-bottom-color: var(--brand); }
+@media (max-width: 600px) {
+  nav.tabs { gap: 4px; padding: 6px 12px 10px; }
+  nav.tabs a { border-radius: 10px; padding: 7px 12px; margin: 0; border-bottom: 0; }
+}
 
 main { max-width: 1160px; margin: 0 auto; padding: 28px 20px 56px; }
 section.panel { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin-bottom: 24px; box-shadow: var(--shadow); }
@@ -84,6 +93,8 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--brand); }
 table { width: 100%; border-collapse: collapse; }
 th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--border); vertical-align: top; }
 th { font-size: 0.85rem; color: var(--muted); }
+thead th { background: var(--navy-tint); color: var(--text); border-bottom: 2px solid var(--riviera); }
+thead th:first-child { border-radius: 8px 0 0 0; } thead th:last-child { border-radius: 0 8px 0 0; }
 tbody tr:hover td { background: #fdfaf5; }
 
 .badge { display: inline-block; padding: 2px 8px; border-radius: 999px; font-weight: 700; font-size: 0.85rem; white-space: nowrap; }
@@ -334,9 +345,9 @@ input.with-hint::placeholder { color: #4d4d4d; opacity: 1; } /* about 70% black 
 .list-meta p { margin: 0 0 8px; font-weight: 600; }
 th[data-col] { padding: 0; }
 button.sort { font: inherit; font-weight: 700; display: flex; align-items: center; gap: 6px; width: 100%; padding: 8px; background: none; border: 0; color: var(--text); cursor: pointer; text-align: left; }
-button.sort:hover { background: var(--brand-tint); }
+button.sort:hover { background: var(--navy-tint-2); }
 .sort-icon { color: var(--muted); font-size: 0.8em; }
-th[aria-sort] { background: var(--brand-tint); color: var(--text); }
+th[aria-sort] { background: var(--navy-tint-2); color: var(--text); }
 th[aria-sort] .sort-icon { color: var(--brand); }
 
 /* Downloads */
@@ -415,3 +426,116 @@ blockquote.sms { margin: 6px 0 4px; padding: 10px 14px; background: var(--surfac
 .error-summary { border: 3px solid var(--high); border-radius: 12px; padding: 14px 18px; margin: 0 0 16px; background: var(--surface); }
 .error-summary h2 { font-size: 1.1rem; margin: 0 0 4px; }
 .error-summary a { color: var(--high); font-weight: 700; }
+
+/* ==========================================================================
+   Lighter, calmer look (Apple-inspired). Sections sit on the open page with a
+   big heading; only the things you act on (cards, tables, the map) get a soft
+   white surface. Hairline borders, pills, quiet labels, terracotta accents.
+   Later rules here override the older ones above.
+   ========================================================================== */
+:root {
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Inter, Roboto, "Helvetica Neue", sans-serif;
+  --bg: #f7f5f2;
+  --hairline: rgba(24, 52, 81, 0.09);
+  --border: rgba(24, 52, 81, 0.09);
+  --soft: 0 1px 2px rgba(24, 52, 81, 0.04), 0 8px 28px rgba(24, 52, 81, 0.06);
+  --page: max(20px, calc((100% - 1120px) / 2));
+}
+body { -webkit-font-smoothing: antialiased; font-size: 16px; }
+:focus-visible { outline: 3px solid var(--brand); outline-offset: 2px; box-shadow: none; }
+a { text-decoration-thickness: 1px; text-decoration-color: rgba(169, 80, 28, 0.45); }
+a:hover { text-decoration-color: currentColor; }
+
+/* Top of the page: a quiet note, a large title, and a frosted bar of tabs that stays in view */
+.banner { background: transparent; color: var(--muted); text-align: center; font-size: 0.8rem; padding: 8px var(--page); border-bottom: 1px solid var(--hairline); }
+header.site { background: transparent; color: var(--text); padding: 36px var(--page) 18px; }
+header.site h1 { font-size: 2.25rem; font-weight: 700; letter-spacing: -0.025em; line-height: 1.1; }
+header.site p { color: var(--muted); font-size: 1.05rem; margin-top: 6px; }
+header.site a { color: var(--brand); }
+header.site .logo { width: 48px; height: 48px; border-radius: 12px; box-shadow: none; }
+nav.tabs {
+  position: sticky; top: 0; z-index: 20; gap: 6px; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none;
+  padding: 10px var(--page); border: 0; border-bottom: 1px solid var(--hairline);
+  background: rgba(247, 245, 242, 0.82); -webkit-backdrop-filter: saturate(180%) blur(18px); backdrop-filter: saturate(180%) blur(18px);
+}
+nav.tabs::-webkit-scrollbar { display: none; }
+nav.tabs a { flex: none; color: var(--text); font-weight: 500; font-size: 0.95rem; padding: 7px 16px; margin: 0; border: 0; border-radius: 999px; }
+nav.tabs a:hover { color: var(--text); background: rgba(24, 52, 81, 0.06); }
+nav.tabs a[aria-current="page"] { color: #fff; background: var(--brand); font-weight: 600; }
+
+/* Sections: no box, just space and a big heading */
+section, h2, h3, [tabindex="-1"] { scroll-margin-top: 76px; } /* clear of the sticky tab bar when the page jumps */
+main { max-width: none; padding: 40px var(--page) 80px; }
+section.panel, details.panel { background: transparent; border: 0; border-radius: 0; box-shadow: none; padding: 0; margin: 0 0 64px; }
+section.panel > h2, section.panel h2, details.panel > summary h2 { font-size: 1.75rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 6px; }
+details.panel { margin-bottom: 28px; padding-top: 20px; border-top: 1px solid var(--hairline); }
+.hint { color: var(--muted); }
+section.panel > .hint, .area-head .hint { font-size: 1.02rem; margin-bottom: 20px; }
+h3 { font-weight: 600; }
+
+/* Surfaces: one soft white level, never a box inside a box */
+.table-wrap, .area-map, .cal-wrap, .case-filters, .case-item, .card, .where-map .map, .vd-facts div, fieldset.person {
+  background: var(--surface); border: 0; border-radius: 18px; box-shadow: var(--soft);
+}
+.table-wrap { padding: 4px 8px; }
+.card { padding: 16px 20px; margin-bottom: 12px; }
+.case-filters { padding: 18px 20px; }
+.case-item { border-left: 0; padding: 16px 20px; }
+.case-item::before { content: ""; position: absolute; left: 0; top: 18px; bottom: 18px; width: 4px; border-radius: 0 4px 4px 0; background: transparent; }
+.case-item.risk-High::before { background: var(--high); }
+.case-item.risk-Medium::before { background: var(--amber-solid, #f0b429); }
+.case-item.risk-Low::before { background: var(--low); }
+.case-head { border-left: 0; }
+
+/* Tables: quiet headings, hairlines, roomy rows */
+th, td { border-bottom: 1px solid var(--hairline); padding: 12px 10px; }
+thead th, thead th:first-child, thead th:last-child { background: transparent; border-radius: 0; color: var(--muted); font-weight: 600; font-size: 0.8rem; border-bottom: 1px solid var(--hairline); }
+tbody tr:last-child td, tbody tr:last-child th { border-bottom: 0; }
+tbody tr:hover td { background: rgba(169, 80, 28, 0.035); }
+th[aria-sort] { background: transparent; color: var(--text); }
+button.sort { padding: 6px 4px; border-radius: 8px; color: inherit; font-weight: 600; }
+button.sort:hover { background: rgba(24, 52, 81, 0.05); }
+
+/* Form controls: calm labels, rounded fields with a clear edge */
+.filters { gap: 16px 18px; margin-bottom: 20px; }
+.filters label, .times label, .cf-field, .cf-search, .cf-risk legend { font-weight: 500; font-size: 0.85rem; color: var(--muted); gap: 6px; }
+input, select, textarea { border: 1px solid #8f8a80; border-radius: 10px; padding: 9px 12px; background: #fff; color: var(--text); }
+input:hover, select:hover, textarea:hover { border-color: var(--text); }
+.form-row label, legend { font-weight: 600; }
+
+/* Buttons: pills. Primary is terracotta; the rest are soft tints, no outlines */
+button.primary, .button { border-radius: 999px; padding: 10px 22px; font-weight: 600; }
+button.small, .button.secondary, .chip, .icon-button { border: 0; border-radius: 999px; }
+button.small, .button.secondary { background: var(--brand-tint); color: var(--brand-dark); padding: 7px 14px; font-weight: 600; }
+button.small:hover, .button.secondary:hover { background: var(--brand-tint-2); color: var(--brand-dark); }
+.chip { background: var(--surface); box-shadow: inset 0 0 0 1px rgba(24, 52, 81, 0.14); padding: 7px 16px; }
+.chip:hover { box-shadow: inset 0 0 0 1px var(--brand); }
+.chip[aria-pressed="true"] { box-shadow: none; }
+.has-export > .export { top: 4px; right: 0; }
+
+/* Cards, notes and badges: soft tints instead of bars */
+.notice, blockquote.latest, blockquote.sms { border-left: 0; border-radius: 12px; }
+.notice { background: var(--brand-tint); }
+.card.suggested { border-left: 0; background: #fbf3ea; box-shadow: none; font-weight: 600; }
+.badge { font-weight: 600; padding: 3px 10px; }
+.confirm { border: 0; border-radius: 18px; box-shadow: var(--soft); }
+.active-filter { border-left: 0; border-radius: 12px; }
+
+/* Dialogs */
+dialog { border-radius: 22px; box-shadow: 0 30px 80px rgba(24, 52, 81, 0.28); }
+dialog::backdrop { background: rgba(24, 52, 81, 0.28); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.dialog-body { padding: 28px 32px; }
+
+@media (max-width: 600px) {
+  header.site { padding-top: 24px; }
+  header.site h1 { font-size: 1.7rem; }
+  nav.tabs { padding: 8px 14px; }
+  main { padding: 28px 16px 56px; }
+  section.panel, details.panel { margin-bottom: 48px; }
+  section.panel > h2, section.panel h2 { font-size: 1.45rem; }
+  .dialog-body { padding: 22px 18px; }
+}
+@media print {
+  nav.tabs { position: static; }
+  .table-wrap, .area-map, .card { box-shadow: none; }
+}

@@ -35,6 +35,10 @@ ai_use_week_after:
 - 17:44 prompt: "add some test to the core functionality" then "use playwright for the testing of the UI" → Claude wrote 68 Playwright tests (risk scoring, Awaab's Law dates, traffic lights, data checks, dashboard clicks and keyboard, phone width, tenant form). My usual job, done far faster.
 - 17:44 surprise: the tests caught a real bug in our made-up data (home H-1029 was one person who was both an older person and a young child). The test was right, so we fixed the data, not the test.
 - 17:44 dead end: the tests were flaky at first because the Python preview server dropped files when many tests ran at once → switched to a tiny Node server and they passed every time.
+- 17:55 surprise: testing the visit planner found a real bug: two follow-ups could be booked for the same person at overlapping times (only exact same start times were blocked). Simon knew, I fixed it and added a test so it stays fixed.
+- 18:03 prompt: "if you are the people for home visit, we want an app, the core task is the visit, so we want an app for the workers visiting the home" then "the app can be on a tablet or phone" → Claude built a visit app joined up with the staff dashboard: what you record on a visit updates the case and plans the repair.
+- 18:07 prompt: "use playwright to test this" → 16 tests for the visit app, all passed first time, then "add this as a tab view on the main desktop site" → a Visit app tab in a tablet or phone frame. I did product, design, build and testing, normally four different jobs.
+- 18:12 squad: sharing small and often meant Petra's new colour palette arrived while I was building, so I could match it straight away.
 
 ## At 19:00
 - What I worked on: <answers>
