@@ -43,7 +43,7 @@ The **squad lead** runs the squad's setup before the day: agreeing the two roles
 
 ## Links
 
-- Discovery Wall (optional): _(added if the squad makes one)_
+- Discovery Wall (Mural): https://app.mural.co/t/productusercentreddesign1266/m/productusercentreddesign1266/1792679017200/3f911eefa098da8a057f5968b10eec0c4fef1b41
 
 ## Working agreements
 
