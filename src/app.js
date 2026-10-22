@@ -51,6 +51,11 @@ function renderFilters() {
     `<option value="">${C.filterAll}</option>` + areas.map(a => `<option>${escapeHtml(a)}</option>`).join("");
   document.getElementById("filter-band").innerHTML =
     `<option value="">${C.filterAll}</option><option>High</option><option>Medium</option><option>Low</option>`;
+  // Reports from tenants
+  const options = values => `<option value="">${C.filterAll}</option>` + values.map(v => `<option>${escapeHtml(v)}</option>`).join("");
+  document.getElementById("report-filter-band").innerHTML = options(["High", "Medium", "Low"]) + `<option value="none">${C.filterNotRated}</option>`;
+  document.getElementById("report-filter-status").innerHTML = options(["New", "Picked up", "Closed"]);
+  document.getElementById("report-filter-type").innerHTML = options(["Damp", "Mould", "Condensation", "Cold", "Something else", "Not sure"]);
 }
 
 function renderList(list) {
@@ -137,24 +142,35 @@ function formatDate(iso) {
 }
 
 function renderReports() {
-  const list = allReports().slice().reverse();
   const rated = scored();
-  document.getElementById("reports-list").innerHTML = list.map(r => {
+  const band = document.getElementById("report-filter-band").value;
+  const statusFilter = document.getElementById("report-filter-status").value;
+  const type = document.getElementById("report-filter-type").value;
+  const list = allReports().slice().reverse().map(r => {
     const home = homes.find(h => h.id === r.homeId);
     const risk = home && rated.find(h => h.id === home.id).risk;
-    const status = state.status[r.ref] || r.status;
+    return { r, home, risk, status: state.status[r.ref] || r.status };
+  }).filter(({ r, risk, status }) =>
+    (!band || (risk ? risk.band === band : band === "none")) &&
+    (!statusFilter || status === statusFilter) &&
+    (!type || r.problems.includes(type))
+  );
+  const anyFilter = band || statusFilter || type;
+  document.getElementById("reports-list").innerHTML = list.map(({ r, home, risk, status }) => {
     return `<div class="card">
       <div class="report-top">
-        <h3 class="report-head">${risk ? `<span class="badge ${risk.band}">${risk.band} risk</span>` : `<span class="badge">${C.reportNotRated}</span>`} <span><span class="label">${C.reportType}</span> ${escapeHtml(r.problems.join(", "))}</span> <span class="received">${C.reportReceived} ${formatDate(r.received)}</span></h3>
+        <h3 class="report-head"><span class="badges">${risk ? `<span class="badge ${risk.band}">${risk.band} risk</span>` : `<span class="badge">${C.reportNotRated}</span>`} <span class="badge status">${C.reportStatus} ${escapeHtml(status)} (${formatDate(r.received)})</span></span></h3>
         <p class="ref">${C.reportRef} ${r.ref}</p>
       </div>
+      <p><span class="label">${C.reportType}</span> ${escapeHtml(r.problems.join(", "))}</p>
       <p><span class="label">${C.reportRooms}</span> ${escapeHtml(r.rooms || C.reportNotGiven)}</p>
       <p><span class="label">${C.reportComments}</span> ${escapeHtml(r.description)}</p>
       <p><span class="label">${C.reportAddress}</span> ${home ? `<button type="button" class="link" data-home="${home.id}">${escapeHtml(home.address)}, ${escapeHtml(home.area)}</button>` : escapeHtml(r.address || "Address not matched")}</p>
-      <p><small>${C.reportContact} ${escapeHtml(r.contactBy || C.reportNotGiven)} · ${C.reportStatus} ${escapeHtml(status)}</small></p>
+      <p><span class="label">${C.reportName}</span> ${escapeHtml(r.name || (home && home.tenant) || C.reportNotGiven)}</p>
+      <p><span class="label">${C.reportContact}</span> ${escapeHtml(r.contactBy || C.reportNotGiven)}</p>
       ${status === "New" ? `<button type="button" class="primary" data-close-report="${r.ref}">Mark as picked up</button>` : ""}
     </div>`;
-  }).join("") || `<p>${C.reportsEmpty}</p>`;
+  }).join("") || `<p>${anyFilter ? C.reportsNoMatch : C.reportsEmpty}</p>`;
 }
 
 function renderVisits() {
@@ -193,6 +209,8 @@ showTab();
 window.addEventListener("hashchange", showTab);
 document.getElementById("search").addEventListener("input", render);
 document.getElementById("filter-band").addEventListener("change", render);
+["report-filter-band", "report-filter-status", "report-filter-type"].forEach(id =>
+  document.getElementById(id).addEventListener("change", renderReports));
 document.getElementById("filter-area").addEventListener("change", e => { selectedArea = e.target.value; render(); });
 document.addEventListener("click", e => {
   const area = e.target.closest("[data-area]");

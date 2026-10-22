@@ -38,8 +38,7 @@ h2 { margin-top: 0; font-size: 1.25rem; }
 .report-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
 .ref { flex-shrink: 0; color: var(--muted); font-size: 0.8rem; margin: 4px 0 0; white-space: nowrap; }
 .report-head { flex: 1; min-width: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; }
-.received { font-weight: 400; color: var(--muted); white-space: nowrap; }
-.label { font-weight: 400; white-space: nowrap; color: var(--muted); }
+.label { font-weight: 700; white-space: nowrap; color: var(--muted); }
 
 /* Summary counts */
 .summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 16px; }
@@ -69,6 +68,8 @@ th { font-size: 0.9rem; }
 .badge.High { background: var(--high-bg); color: var(--high); }
 .badge.Medium { background: var(--medium-bg); color: var(--medium); }
 .badge.Low { background: var(--low-bg); color: var(--low); }
+.badge.status { background: var(--surface); color: var(--text); border: 1px solid var(--muted); font-weight: 400; }
+.badges { display: inline-flex; flex-wrap: wrap; gap: 6px; }
 
 button.primary, .button { font: inherit; background: var(--brand); color: #fff; border: 0; border-radius: 4px; padding: 10px 16px; cursor: pointer; font-weight: 600; text-decoration: none; display: inline-block; }
 button.primary:hover, .button:hover { background: var(--brand-dark); }
