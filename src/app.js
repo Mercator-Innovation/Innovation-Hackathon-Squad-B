@@ -21,29 +21,7 @@ function scored() {
 }
 
 // ---- Overview ----
-function renderSummary(list) {
-  const count = band => list.filter(h => h.risk.band === band).length;
-  const newReports = allReports().filter(r => (state.status[r.ref] || r.status) === "New").length;
-  document.getElementById("summary").innerHTML = `
-    <div><strong>${count("High")}</strong> high risk homes</div>
-    <div><strong>${count("Medium")}</strong> medium risk homes</div>
-    <div><strong>${newReports}</strong> new reports from tenants</div>
-    <div><strong>${state.visits.length}</strong> visits booked</div>`;
-}
-
-function renderHeatmap(list) {
-  const areas = [...new Set(homes.map(h => h.area))].sort();
-  document.getElementById("heatmap").innerHTML = areas.map(area => {
-    const inArea = list.filter(h => h.area === area);
-    const high = inArea.filter(h => h.risk.band === "High").length;
-    const avg = inArea.reduce((s, h) => s + h.risk.points, 0) / inArea.length;
-    const level = avg >= 6 ? 3 : avg >= 4.5 ? 2 : avg >= 3 ? 1 : 0;
-    return `<button type="button" class="heat-${level}" data-area="${escapeHtml(area)}" aria-pressed="${selectedArea === area}">
-      <span class="area-name">${escapeHtml(area)}</span>
-      ${high} high risk of ${inArea.length} homes<br>Average score ${avg.toFixed(1)}
-    </button>`;
-  }).join("");
-}
+// The cards, trend chart and risk by area are drawn by glance.js.
 
 function renderFilters() {
   const areas = [...new Set(homes.map(h => h.area))].sort();
@@ -59,6 +37,7 @@ function renderList(list) {
   const shown = list.filter(h =>
     (!selectedArea || h.area === selectedArea) &&
     (!band || h.risk.band === band) &&
+    (!window.listFilter || window.listFilter(h)) &&
     (!search || `${h.address} ${h.tenant} ${h.id}`.toLowerCase().includes(search)));
   document.getElementById("homes").innerHTML = shown.map(h => `
     <tr>
@@ -177,8 +156,7 @@ function showTab() {
 
 function render() {
   const list = scored();
-  renderSummary(list);
-  renderHeatmap(list);
+  window.GLANCE.render(list);
   renderList(list);
   renderReports();
   renderVisits();
