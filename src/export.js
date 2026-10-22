@@ -1,4 +1,4 @@
-// Downloads for the Risk overview: each section, or the whole page, as a PDF or an Excel file.
+// Downloads for the Risk overview: each section as a PDF or an Excel file.
 // PDF uses the browser's print window (choose "Save as PDF").
 // Excel files are built here, with no add-ons: one sheet per section, plus "About this download".
 // Uses scored(), shownHomes(), filterDescription() and sortDescription() from app.js, so it loads after it.
@@ -7,8 +7,7 @@ window.EXPORT = (() => {
   const SECTIONS = {
     glance: { id: "sec-glance", title: () => C.glanceTitle, sheets: () => [glanceSheet(), trendSheet()] },
     areas: { id: "sec-areas", title: () => C.heatTitle, sheets: () => [areasSheet()] },
-    homes: { id: "sec-homes", title: () => C.listTitle, sheets: () => [homesSheet()] },
-    page: { id: "tab-overview", title: () => C.navDashboard, sheets: () => [glanceSheet(), trendSheet(), areasSheet(), homesSheet()] }
+    homes: { id: "sec-homes", title: () => C.listTitle, sheets: () => [homesSheet()] }
   };
 
   const today = () => new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
@@ -211,7 +210,6 @@ window.EXPORT = (() => {
   }
 
   function addButtons() {
-    document.getElementById("page-export").innerHTML = `<div class="export"><span class="export-label">${C.downloadPage}</span>${buttons("page")}</div>`;
     ["glance", "areas", "homes"].forEach(section => {
       const sec = document.getElementById(SECTIONS[section].id);
       const tools = document.createElement("div");
