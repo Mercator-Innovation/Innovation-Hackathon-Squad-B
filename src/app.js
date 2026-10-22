@@ -339,6 +339,7 @@ function renderReports() {
         ${r.health === "Yes" ? `<span class="rr-health"><span class="label">${C.reportHealth}</span> ${C.reportHealthYes}</span>` : ""}
         <small class="rr-contact">${C.reportContact} ${escapeHtml([r.contact, r.contactBy].filter(Boolean).join(" · ") || C.reportNotGiven)}</small></p>
     </article>`).join("");
+  document.getElementById("reports-count").textContent = `${list.length} ${list.length === 1 ? "report" : "reports"} shown`;
   document.getElementById("reports-list").innerHTML = rows
     ? `<div class="report-cols" aria-hidden="true"><span>${C.rrHome}</span><span>${C.rrRisk}</span><span>${C.rrType}</span><span>${C.rrStatus}</span><span></span></div>${rows}`
     : `<p>${anyFilter ? C.reportsNoMatch : C.reportsEmpty}</p>`;

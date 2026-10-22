@@ -129,7 +129,7 @@ dialog::backdrop { background: rgba(24, 52, 81, 0.4); }
 fieldset { border: 0; padding: 0; margin: 0 0 16px; }
 legend { font-weight: 700; margin-bottom: 4px; }
 .checks label { display: flex; align-items: center; gap: 8px; font-weight: 400; margin: 6px 0; }
-.checks input { width: 22px; height: 22px; }
+.checks input { width: 24px; height: 24px; }
 .form-row label { font-weight: 700; }
 
 /* Suggested action and repair history in the home detail */
@@ -593,3 +593,9 @@ select {
 }
 select::-ms-expand { display: none; }
 @media (forced-colors: active) { select { appearance: auto; background-image: none; padding-right: 12px; } }
+
+/* Accessibility fixes */
+@media (max-width: 760px) { nav.tabs { flex-wrap: wrap; overflow-x: visible; } }
+.skip-link { position: absolute; left: 8px; top: -100px; z-index: 100; background: var(--surface); color: var(--text); padding: 10px 16px; border-radius: 8px; font-weight: 700; }
+.skip-link:focus { top: 8px; }
+input[type=checkbox], input[type=radio] { min-width: 24px; min-height: 24px; }
