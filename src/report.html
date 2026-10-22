@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Report damp, mould or cold</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="banner" data-text="prototypeBanner"></div>
+  <header class="site">
+    <p><a href="index.html" style="color:#fff">Back to staff view</a></p>
+  </header>
+
+  <main class="narrow">
+    <form id="report-form" novalidate>
+      <h1 data-text="reportTitle"></h1>
+      <p data-text="reportIntro"></p>
+
+      <fieldset class="checks" aria-describedby="problem-hint">
+        <legend data-text="qProblem"></legend>
+        <p class="hint" id="problem-hint" data-text="qProblemHint"></p>
+        <label><input type="checkbox" name="problem" value="Damp"> Damp</label>
+        <label><input type="checkbox" name="problem" value="Mould"> Mould</label>
+        <label><input type="checkbox" name="problem" value="Condensation"> Wet windows or walls</label>
+        <label><input type="checkbox" name="problem" value="Cold"> Can't keep warm</label>
+        <label><input type="checkbox" name="problem" value="Something else"> Something else</label>
+      </fieldset>
+
+      <div class="form-row"><label for="rooms" data-text="qRooms"></label><input id="rooms" name="rooms"></div>
+
+      <div class="form-row">
+        <label for="description" data-text="qDescription"></label>
+        <span class="hint" id="description-hint" data-text="qDescriptionHint"></span>
+        <textarea id="description" name="description" rows="4" aria-describedby="description-hint"></textarea>
+      </div>
+
+      <div class="form-row">
+        <label for="photos" data-text="qPhotos"></label>
+        <span class="hint" id="photos-hint" data-text="qPhotosHint"></span>
+        <input type="file" id="photos" name="photos" accept="image/*" multiple aria-describedby="photos-hint">
+      </div>
+
+      <fieldset class="checks" aria-describedby="health-hint">
+        <legend data-text="qHealth"></legend>
+        <p class="hint" id="health-hint" data-text="qHealthHint"></p>
+        <label><input type="radio" name="health" value="Yes"> Yes</label>
+        <label><input type="radio" name="health" value="No"> No</label>
+        <label><input type="radio" name="health" value="Rather not say" checked> I'd rather not say</label>
+      </fieldset>
+
+      <div class="form-row"><label for="name" data-text="qName"></label><input id="name" name="name" autocomplete="name"></div>
+      <div class="form-row"><label for="address" data-text="qAddress"></label><input id="address" name="address" autocomplete="street-address"></div>
+      <div class="form-row"><label for="contact" data-text="qContact"></label><input id="contact" name="contact"></div>
+      <div class="form-row"><label for="contact-when" data-text="qContactWhen"></label><input id="contact-when" name="contactWhen"></div>
+
+      <button type="submit" class="primary" data-text="submitButton"></button>
+    </form>
+
+    <section id="thanks" hidden tabindex="-1">
+      <h1 data-text="thanksTitle"></h1>
+      <p id="thanks-body"></p>
+      <button type="button" class="primary" id="again" data-text="thanksAgain"></button>
+    </section>
+  </main>
+
+  <script src="content.js"></script>
+  <script src="shared.js"></script>
+  <script src="data/homes.js"></script>
+  <script src="report.js"></script>
+</body>
+</html>
