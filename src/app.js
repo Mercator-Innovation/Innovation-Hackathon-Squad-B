@@ -146,18 +146,6 @@ function renderList(list) {
 }
 
 // ---- Home detail ----
-function weekdaySlots() {
-  const slots = [];
-  const d = new Date();
-  while (slots.length < 10) {
-    d.setDate(d.getDate() + 1);
-    if (d.getDay() === 0 || d.getDay() === 6) continue;
-    const day = d.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" });
-    slots.push(`${day}, morning`, `${day}, afternoon`);
-  }
-  return slots.slice(0, 10);
-}
-
 // "07700 900148" → "***** **0148": enough to check you've got the right person
 function maskPhone(phone) {
   const last4 = phone.replace(/\D/g, "").slice(-4);
@@ -181,9 +169,6 @@ function togglePhone(button) {
 }
 
 const monthsText = m => `${m} ${m === 1 ? "month" : "months"}`;
-const visitReasonText = v => v.reason === "other" ? `${C.bookReasonOther}: ${v.reasonNote}` : (v.reason || C.reportNotGiven);
-const teamRole = name => (team.find(t => t.name === name) || {}).role;
-const whoText = name => teamRole(name) ? `${name} (${teamRole(name)})` : name;
 
 function contactHtml(h, reports) {
   if (!reports.length) return `${C.contactNotReported}. ${fillIn(C.contactLast, { months: monthsText(h.monthsSinceLastContact) })}`;
@@ -191,59 +176,7 @@ function contactHtml(h, reports) {
   return `<strong>${C.contactReported}</strong> (${count}). <button type="button" class="link" data-show-reports="${h.id}">${C.contactSeeReports}</button>`;
 }
 
-function visitsHtml(id) {
-  const mine = state.visits.map((v, i) => ({ v, i })).filter(({ v }) => v.homeId === id);
-  if (!mine.length) return `<p>${C.noVisitsForHome}</p>`;
-  return `<ul class="visit-list">${mine.map(({ v, i }) => `<li>
-      <strong>${escapeHtml(v.when)}</strong> ${C.confirmWith} ${escapeHtml(whoText(v.who))}<br>
-      ${C.visitReason}: ${escapeHtml(visitReasonText(v))}<br>
-      <button type="button" class="link" data-cancel-visit="${i}">${C.cancelVisit}<span class="visually-hidden">: ${escapeHtml(v.when)}</span></button>
-    </li>`).join("")}</ul>`;
-}
-
-function confirmHtml(h, v, prefers) {
-  const tenant = escapeHtml(h.tenant);
-  return `<div class="confirm" id="visit-confirm" tabindex="-1" role="region" aria-labelledby="confirm-title">
-    <h4 id="confirm-title">${C.confirmTitle}</h4>
-    <p><strong>${escapeHtml(v.when)}</strong> ${C.confirmWith} ${escapeHtml(whoText(v.who))}<br>${C.visitReason}: ${escapeHtml(visitReasonText(v))}</p>
-    <p><strong>${C.confirmNext}</strong></p>
-    <ul>
-      <li>${fillIn(C.confirmTexted, { tenant })} <em>${C.confirmPrototype}</em></li>
-      <li>${fillIn(C.confirmStaff, { who: escapeHtml(v.who) })}</li>
-      <li>${C.confirmStatus}</li>
-      <li>${fillIn(C.confirmChange, { tenant })}</li>
-    </ul>
-    <dl class="facts">
-      <dt>${C.factTenant}</dt><dd>${tenant}</dd>
-      <dt>${C.factPhone}</dt><dd>${phoneHtml(h)}</dd>
-      ${prefers ? `<dt>${C.contactPrefers}</dt><dd>${escapeHtml(prefers)}</dd>` : ""}
-    </dl>
-    <div class="actions">
-      <button type="button" class="small" data-book-another>${C.bookAnother}</button>
-      <button type="button" class="small" data-close-detail>${C.closeButton}</button>
-    </div>
-  </div>`;
-}
-
-// Error messages sit above the field they're about, and the field says it's invalid
-function showFieldError(fieldId, message) {
-  const field = document.getElementById(fieldId);
-  const error = document.getElementById(`${fieldId}-error`);
-  error.textContent = message;
-  error.hidden = false;
-  field.setAttribute("aria-invalid", "true");
-  field.setAttribute("aria-describedby", [field.dataset.hint, error.id].filter(Boolean).join(" "));
-}
-
-function clearFieldErrors() {
-  document.querySelectorAll("#book-form .error").forEach(e => { e.hidden = true; e.textContent = ""; });
-  document.querySelectorAll("#book-form [aria-invalid]").forEach(f => {
-    f.removeAttribute("aria-invalid");
-    if (f.dataset.hint) f.setAttribute("aria-describedby", f.dataset.hint); else f.removeAttribute("aria-describedby");
-  });
-}
-
-function openHome(id, booked) {
+function openHome(id) {
   const h = scored().find(x => x.id === id);
   const reports = allReports().filter(r => r.homeId === id);
   const latest = reports[reports.length - 1];
@@ -299,34 +232,9 @@ function openHome(id, booked) {
       <textarea id="note" rows="3">${escapeHtml(state.notes[id] || "")}</textarea></div>
     <button type="button" class="primary" id="save-case">${C.saveButton}</button>
 
-    <h3>${C.visitsForHome}</h3>
-    ${booked ? confirmHtml(h, booked, prefers) : ""}
-    ${visitsHtml(id)}
-
-    <div id="book-form">
-      <h3 id="book-title">${C.bookTitle}</h3>
-      <div class="form-row">
-        <label for="visit-reason">${C.bookReason}</label>
-        <span class="hint" id="visit-reason-hint">${C.bookReasonHint}</span>
-        <span class="error" id="visit-reason-error" hidden></span>
-        <select id="visit-reason" aria-describedby="visit-reason-hint" data-hint="visit-reason-hint">
-          <option value="">${C.bookReasonChoose}</option>
-          ${h.risk.reasons.map(r => `<option>${escapeHtml(r.reason)}</option>`).join("")}
-          <option value="other">${C.bookReasonOther}</option>
-        </select>
-      </div>
-      <div class="form-row" id="other-row" hidden>
-        <label for="visit-other">${C.bookOtherLabel}</label>
-        <span class="error" id="visit-other-error" hidden></span>
-        <textarea id="visit-other" rows="2"></textarea>
-      </div>
-      <div class="form-row"><label for="visit-who">${C.bookWho}</label>
-        <select id="visit-who">${team.map(t => `<option value="${escapeHtml(t.name)}">${escapeHtml(t.name)} (${escapeHtml(t.role)})</option>`).join("")}</select></div>
-      <div class="form-row"><label for="visit-when">${C.bookWhen}</label>
-        <span class="error" id="visit-when-error" hidden></span>
-        <select id="visit-when">${weekdaySlots().map(s => `<option>${s}</option>`).join("")}</select></div>
-      <button type="button" class="primary" id="book-visit">${C.bookButton}</button>
-    </div>`;
+    <h3>${C.bookTitle}</h3>
+    <p>${C.bookHelp}</p>
+    <a class="button" href="#cases/${id}" id="open-case">${C.openCase}</a>`;
 
   document.getElementById("close-detail").onclick = () => dialog.close();
   document.getElementById("save-case").onclick = () => {
@@ -334,39 +242,8 @@ function openHome(id, booked) {
     state.notes[id] = document.getElementById("note").value;
     saveState(state); render(); dialog.close();
   };
-  document.getElementById("visit-reason").onchange = e => {
-    document.getElementById("other-row").hidden = e.target.value !== "other";
-  };
-  document.getElementById("book-visit").onclick = () => {
-    clearFieldErrors();
-    const reason = document.getElementById("visit-reason").value;
-    const reasonNote = document.getElementById("visit-other").value.trim();
-    const who = document.getElementById("visit-who").value;
-    const when = document.getElementById("visit-when").value;
-    if (!reason) showFieldError("visit-reason", C.errorReason);
-    if (reason === "other" && !reasonNote) showFieldError("visit-other", C.errorOther);
-    if (state.visits.some(v => v.who === who && v.when === when)) showFieldError("visit-when", fillIn(C.errorClash, { who }));
-    const firstError = document.querySelector("#book-form [aria-invalid]");
-    if (firstError) { firstError.focus(); return; }
-
-    const visit = { homeId: id, address: h.address, who, when, reason, reasonNote: reason === "other" ? reasonNote : "", booked: new Date().toISOString() };
-    state.visits.push(visit);
-    state.status[id] = "Visit booked";
-    saveState(state); render(); openHome(id, visit);
-  };
+  document.getElementById("open-case").onclick = () => dialog.close();
   if (!dialog.open) dialog.showModal();
-  if (booked) {
-    const confirm = document.getElementById("visit-confirm");
-    confirm.scrollIntoView({ block: "start" });
-    confirm.focus({ preventScroll: true });
-  }
-}
-
-function cancelVisit(index) {
-  const [visit] = state.visits.splice(index, 1);
-  const stillBooked = state.visits.some(v => v.homeId === visit.homeId);
-  if (!stillBooked && state.status[visit.homeId] === "Visit booked") delete state.status[visit.homeId];
-  saveState(state); render(); openHome(visit.homeId);
 }
 
 // From a home's card to its reports, on the Reports from tenants tab
@@ -429,7 +306,7 @@ function renderVisits() {
     const mine = state.visits.filter(v => v.who === t.name);
     if (!mine.length) return "";
     return `<div class="card"><h3>${escapeHtml(t.name)}, ${escapeHtml(t.role)}</h3>
-      <ul>${mine.map(v => `<li>${escapeHtml(v.when)}: <button type="button" class="link" data-home="${v.homeId}">${escapeHtml(v.address)}</button><br><small>${C.visitReason}: ${escapeHtml(visitReasonText(v))}</small></li>`).join("")}</ul></div>`;
+      <ul>${mine.map(v => `<li>${escapeHtml(v.when)}: <button type="button" class="link" data-home="${v.homeId}">${escapeHtml(v.address)}</button></li>`).join("")}</ul></div>`;
   }).join("") || `<p>${C.visitsEmpty}</p>`;
 }
 
@@ -448,7 +325,6 @@ function render() {
   window.GLANCE.render(list);
   renderList(list);
   renderReports();
-  renderVisits();
 }
 
 const dialog = document.getElementById("detail");
@@ -490,14 +366,6 @@ document.addEventListener("click", e => {
   if (showReports) showReportsFor(showReports.dataset.showReports);
   const phone = e.target.closest("[data-toggle-phone]");
   if (phone) togglePhone(phone);
-  const cancel = e.target.closest("[data-cancel-visit]");
-  if (cancel) cancelVisit(Number(cancel.dataset.cancelVisit));
-  if (e.target.closest("[data-book-another]")) {
-    const reason = document.getElementById("visit-reason");
-    reason.scrollIntoView({ block: "center" });
-    reason.focus({ preventScroll: true });
-  }
-  if (e.target.closest("[data-close-detail]")) dialog.close();
 
   // Reports from tenants: back to all reports
   if (e.target.closest("#clear-report-home") || e.target.closest('[data-tab="reports"]')) {
