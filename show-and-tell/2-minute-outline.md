@@ -1,26 +1,30 @@
 # Show and tell: Commitment issues (2 minutes)
 
 **Presenting:** Okeli Okonye (picked at random; the squad can swap)
-**Last updated:** 18:22, after pull request #60
+**Last updated:** 18:36, after pull request #73
+
+Want it read out? Open `show-and-tell/speak.html` for a recording in a Scottish voice.
 
 Before your turn, tell Claude `get the latest and make it run for me`, so you show the squad's latest version. Join the Teams call from the link in the squad's Teams chat and share your screen when it's your turn.
 
-## 0:00 to 1:00: What we built, and for whom
+## 0:00 to 1:15: What we built, and for whom
 
-- **Who it's for:** staff at Cloch Housing Association. Cold, damp and mould make tenants ill, and Awaab's Law means landlords must act faster. Our prototype helps staff find the tenants most at risk *before* they get ill. All the data is made up.
-- **What it does:** the Risk overview shows where to act first and why each home is flagged. Visits booked plans the visits: highest risk first, then the nearest, on a week calendar, with route maps and risk hotspots. Cases keeps one record per home. Staff record what they find in the Home visit app, on a phone or tablet. Tenants can report damp from their phone and track it.
+- **Who it's for:** staff at Cloch Housing Association, to find tenants at risk from cold, damp and mould *before* they get ill. Awaab's Law means landlords must act faster. All our data is made up.
+- **Risk overview:** every home gets a risk score, with the reasons shown, so staff can see why it's flagged. A map of Inverclyde shows the hotspots, and cards show where to act first.
+- **Visits booked:** the visits are planned for you. Highest risk first, then the nearest, on a week calendar. Each person's route is on a map, with the driving time for every leg.
+- **Cases:** one record for each home. Notes on repairs, follow-ups booked straight onto the calendar, and the full history.
+- **Home visit:** an app for the phone or tablet. Staff see why they're visiting and record what they find. That updates the case and plans the repair.
+- **For tenants:** report damp, mould or cold from your phone, then track what happens next.
 
-**Click through (about 40 seconds):** Risk overview → Visits booked → Next week → click a visit → Open the case.
+**Click through (about 50 seconds):** Risk overview → Visits booked → click a visit → Open the case → Home visit.
 
-## 1:00 to 1:30: One thing that didn't work
+## 1:15 to 1:40: One thing that didn't work
 
-- Five of us building one small prototype at once meant we kept changing the same files, like the overview cards and the case booking form, so our shares clashed. Claude kept both sides each time, but it slowed us down.
-- Why: a few files everyone touches. Splitting each screen into its own file helped. Next time we'd agree who owns which file before we start.
+- Five of us kept changing the same few files at once, so our shares clashed. Claude kept both sides each time, but it slowed us down. Next time we'd agree who owns which file first.
 
-## 1:30 to 2:00: One surprise from the tooling
+## 1:40 to 2:00: One surprise from the tooling
 
-- A whole visit planner went from an idea to the shared screen in under an hour: a calendar, route maps, and a plan that weighs risk against driving time. One person built it by describing it to Claude.
-- And everyone built, whatever their job. Our QA engineer designed, built and tested a whole visit app: four jobs in one. Her tests caught real bugs too. Our business analyst built the tenant's Track your report page.
+- Everyone built, whatever their job. Our QA engineer designed, built and tested the Home visit app. And the whole visit planner went from an idea to the shared screen in under an hour, just by describing it to Claude.
 
 ---
 
@@ -57,3 +61,11 @@ Before your turn, tell Claude `get the latest and make it run for me`, so you sh
 | 18:20 | Petra | Tab bar: the tenant view and Home visit sit on the right under Additional views |
 | 18:21 | Simon | A more realistic map with risk hotspots, and driving time on each leg of a route |
 | 18:22 | Petra | Tenant pages the same width as the staff view |
+| 18:25 | Simon | A page that reads this presentation aloud (`show-and-tell/speak.html`) |
+| 18:26 | Petra | Risk by area now uses the new heat map, with her area pins on top |
+| 18:28 | Petra | Risk by area map: zoom in on an area |
+| 18:30 | Helen | Automated accessibility tests (WCAG 2.2 AA), and a calendar fix for voice control |
+| 18:31 | Petra | Risk by area: a ranked list with stacked bars in place of the grid |
+| 18:32 | Petra | Rolled that back: the Risk by area table is back |
+| 18:34 | Petra | Dropdowns: the arrow set in from the edge |
+| 18:35 | Simon | The presentation reworded around the features, with a new Fiona recording |

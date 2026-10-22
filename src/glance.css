@@ -169,3 +169,24 @@
 .view-switch button { border-radius: 999px; background: transparent; color: var(--text); font-weight: 500; padding: 6px 16px; min-height: 36px; }
 .view-switch button[aria-pressed="true"] { background: var(--surface); color: var(--text); font-weight: 600; box-shadow: 0 1px 3px rgba(24, 52, 81, 0.15); }
 .device-frame { box-shadow: 0 30px 80px rgba(24, 52, 81, 0.18); }
+
+/* Risk by area on Simon's map: the SVG fills the frame, pins sit on top */
+.area-map.heat { max-height: none; background: #d6e6ee; }
+.area-map.heat svg.map { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; border-radius: 0; background: none; box-shadow: none; }
+.area-map.heat .pin-dot { width: 34px; height: 34px; font-size: 0.9rem; }
+.area-map.heat .map-pin { transform: translate(-50%, -17px); }
+.area-map.heat .pin-dot { width: 26px; height: 26px; font-size: 0.8rem; border-width: 2px; }
+.area-map.heat .map-pin { transform: translate(-50%, -13px); }
+/* Names show when you point at or choose an area (the table beside the map lists them all) */
+.area-map.heat .pin-name { position: absolute; top: 30px; left: 50%; transform: translateX(-50%); opacity: 0; pointer-events: none; transition: opacity 0.12s; }
+.area-map.heat .map-pin:hover .pin-name, .area-map.heat .map-pin:focus-visible .pin-name,
+.area-map.heat .map-pin.is-hot .pin-name, .area-map.heat .map-pin[aria-pressed="true"] .pin-name { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { .area-map.heat .pin-name { transition: none; } }
+
+/* Zoomed in on an area: a dot for each home, and a way back out */
+.map-home { position: absolute; z-index: 4; width: 16px; height: 16px; padding: 0; transform: translate(-50%, -50%); border: 2px solid #fff; border-radius: 50%; cursor: pointer; box-shadow: 0 1px 3px rgba(24, 52, 81, 0.35); background: var(--green); }
+.map-home.High { background: var(--red); width: 20px; height: 20px; }
+.map-home.Medium { background: var(--amber-solid); box-shadow: 0 0 0 1px var(--amber), 0 1px 3px rgba(24, 52, 81, 0.35); }
+.map-home:hover { transform: translate(-50%, -50%) scale(1.25); }
+.map-zoom-out { position: absolute; z-index: 3; top: 10px; right: 10px; font: inherit; font-size: 0.85rem; font-weight: 600; padding: 7px 14px; border: 0; border-radius: 999px; background: rgba(255, 255, 255, 0.92); color: var(--text); box-shadow: 0 2px 8px rgba(24, 52, 81, 0.18); cursor: pointer; }
+.map-zoom-out:hover { background: #fff; color: var(--brand); }
