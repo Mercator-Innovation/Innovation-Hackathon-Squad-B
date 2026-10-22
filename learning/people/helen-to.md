@@ -32,6 +32,9 @@ ai_use_week_after:
 - 16:35 sharing hit a clash: Simon and I had both added styles to the end of styles.css. Claude showed both, proposed keeping both, checked the whole prototype still worked, then merged. Other squad mates' work (visit planner, report cards) came in at the same time without problems.
 - 16:40 I designed and built the dashboard's "Where to act first" section (clickable cards, trend chart, map view with traffic lights), normally a designer's and developer's job: I described what I wanted in one message, Claude built it, and I shared it to the squad's screen.
 - 16:48 I asked to share again, but there was nothing new: everything was already in the squad's copy.
+- 17:44 prompt: "add some test to the core functionality" then "use playwright for the testing of the UI" → Claude wrote 68 Playwright tests (risk scoring, Awaab's Law dates, traffic lights, data checks, dashboard clicks and keyboard, phone width, tenant form). My usual job, done far faster.
+- 17:44 surprise: the tests caught a real bug in our made-up data (home H-1029 was one person who was both an older person and a young child). The test was right, so we fixed the data, not the test.
+- 17:44 dead end: the tests were flaky at first because the Python preview server dropped files when many tests ran at once → switched to a tiny Node server and they passed every time.
 
 ## At 19:00
 - What I worked on: <answers>
