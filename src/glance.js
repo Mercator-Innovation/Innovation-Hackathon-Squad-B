@@ -163,14 +163,16 @@ window.GLANCE = (() => {
   }
 
   // Simon's map (map.js): coast, far shore, main roads and glowing risk hotspots, the same as on Who's where.
-  // A pin for each area sits at the middle of its homes.
+  // A pin for each area sits at the middle of its homes. Choose an area and the map zooms in to it,
+  // with a dot for each home (choose a dot to open the home).
   function heatMapHtml(stats) {
     const L = window.LOCATIONS.homes;
     const k = Math.cos(55.93 * Math.PI / 180);
-    const pts = window.DATA.homes.map(h => L[h.id]).filter(Boolean);
+    const zoomed = selectedArea && window.DATA.homes.some(h => h.area === selectedArea && L[h.id]);
+    const pts = window.DATA.homes.filter(h => !zoomed || h.area === selectedArea).map(h => L[h.id]).filter(Boolean);
     const xs = pts.map(p => p.lng * k), ys = pts.map(p => -p.lat);
     const W = 600, H = 480, pad = 56;
-    let spanX = Math.max(...xs) - Math.min(...xs), spanY = Math.max(...ys) - Math.min(...ys);
+    let spanX = Math.max(Math.max(...xs) - Math.min(...xs), 0.03), spanY = Math.max(Math.max(...ys) - Math.min(...ys), 0.018);
     if (spanX / spanY < W / H) spanX = spanY * W / H; else spanY = spanX * H / W;
     const midX = (Math.max(...xs) + Math.min(...xs)) / 2, midY = (Math.max(...ys) + Math.min(...ys)) / 2;
     const scale = Math.min((W - 2 * pad) / spanX, (H - 2 * pad) / spanY);
@@ -183,7 +185,17 @@ window.GLANCE = (() => {
       <div class="area-map heat" style="aspect-ratio: ${W} / ${H}">
         <svg class="map" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">${window.MAP.layers(xy, scale / 111.32, { hot: true, towns: false })}</svg>
         <span class="map-north" aria-hidden="true">N ↑</span>
-        ${stats.map(s => { const [x, y] = centre(s.area); return pinHtml(s, (x / W * 100).toFixed(1), (y / H * 100).toFixed(1)); }).join("")}
+        ${stats.map(s => {
+          const [x, y] = centre(s.area);
+          if (x < 0 || x > W || y < 0 || y > H) return "";   // off the edge when zoomed in
+          return pinHtml(s, (x / W * 100).toFixed(1), (y / H * 100).toFixed(1));
+        }).join("")}
+        ${zoomed ? scored().filter(h => h.area === selectedArea && L[h.id]).map(h => {
+          const [x, y] = xy(L[h.id]);
+          return `<button type="button" class="map-home ${h.risk.band}" style="left:${(x / W * 100).toFixed(1)}%;top:${(y / H * 100).toFixed(1)}%"
+            data-home="${h.id}" aria-label="${escapeHtml(`${h.address}: ${h.risk.band} risk, ${h.risk.points} points`)}" title="${escapeHtml(h.address)}"></button>`;
+        }).join("") : ""}
+        ${zoomed ? `<button type="button" class="map-zoom-out" data-area="${escapeHtml(selectedArea)}">← ${C.mapZoomOut}</button>` : ""}
       </div>
       <figcaption>
         <span class="map-key">${["red", "amber", "green"].map(k2 => `<span class="light-${k2}"><span class="dot" aria-hidden="true"></span>${C["light" + k2[0].toUpperCase() + k2.slice(1)]}</span>`).join("")}</span>
