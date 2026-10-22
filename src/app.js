@@ -97,7 +97,17 @@ function openHome(id) {
 
     <h3>${C.whyFlagged}</h3>
     <ul class="reasons">${h.risk.reasons.map(r => `<li>${escapeHtml(r.reason)} (+${r.points})</li>`).join("") || "<li>Nothing flagged</li>"}</ul>
+    <h3>${C.suggestedTitle}</h3>
+    <p class="card suggested">${escapeHtml(C[window.RISK.suggest(h, h.risk)])}</p>
     <p class="notice">${C.humanCheck}</p>
+
+    <h3>${C.householdTitle}</h3>
+    <p>${C.ageBandLabel}: ${escapeHtml(h.household.tenantAgeBand)}</p>
+
+    <h3>${C.repairsTitle}</h3>
+    ${h.repairNotes.length
+      ? `<ul class="repairs">${h.repairNotes.map(r => `<li><strong>${new Date(r.date).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}</strong>: ${escapeHtml(r.note)}</li>`).join("")}</ul>`
+      : `<p>${C.repairsNone}</p>`}
 
     ${reports.length ? `<h3>Reports from this tenant</h3>${reports.map(r => `<div class="card"><strong>${r.ref}</strong>, ${r.received}: ${escapeHtml(r.problems.join(", "))}<br>${escapeHtml(r.description)}</div>`).join("")}` : ""}
 

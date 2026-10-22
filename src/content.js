@@ -32,6 +32,19 @@ window.CONTENT = {
   bookButton: "Book visit",
   noteLabel: "Note",
   saveButton: "Save",
+  householdTitle: "Household",
+  ageBandLabel: "Tenant's age",
+  repairsTitle: "Damp and mould repairs in the last year",
+  repairsNone: "No damp or mould repairs in the last year.",
+  suggestedTitle: "Suggested action",
+
+  // Suggested actions (chosen in risk.js)
+  actionReport: "Call the tenant about their report today. Book a damp and mould check within 10 working days (Awaab's Law).",
+  actionVisitUrgent: "Book a home visit this week. Check for damp and mould, and whether the tenant can afford to heat the home.",
+  actionCheckRepair: "Check the last repair worked. Call the tenant and ask if the damp or mould has come back.",
+  actionEnergy: "Refer to the energy advice team. Offer help with heating costs and check what improvements the home needs.",
+  actionCheckIn: "Get in touch for a friendly check-in. Ask if the home is warm and dry.",
+  actionMonitor: "No action needed now. Keep an eye on it.",
 
   // Tenant form (report.html)
   reportTitle: "Tell us about damp, mould or cold in your home",

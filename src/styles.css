@@ -89,3 +89,8 @@ legend { font-weight: 700; margin-bottom: 4px; }
 .checks label { display: flex; align-items: center; gap: 8px; font-weight: 400; margin: 6px 0; }
 .checks input { width: 22px; height: 22px; }
 .form-row label { font-weight: 700; }
+
+/* Suggested action and repair history in the home detail */
+.card.suggested { border-left: 6px solid var(--brand); font-weight: 600; }
+.repairs { padding-left: 20px; }
+.repairs li { margin-bottom: 4px; }
