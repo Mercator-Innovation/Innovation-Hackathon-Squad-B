@@ -6,7 +6,7 @@ window.CONTENT = {
 
   // Staff dashboard (index.html)
   dashTitle: "Healthier homes",
-  dashIntro: "Find the homes most at risk of cold, damp and mould, and act before people get ill.",
+  dashIntro: "See which homes are most at risk from cold, damp and mould. Help before anyone gets ill.",
   navDashboard: "Risk overview",
   navReports: "Reports from tenants",
   navVisits: "Visits booked",
