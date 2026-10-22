@@ -186,14 +186,14 @@ test.describe("Phone and tablet", () => {
   });
 });
 
-test.describe("The Visit app tab on the staff view", () => {
+test.describe("The Home visit tab on the staff view", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/");
     await page.evaluate(() => ["healthier-homes", "healthier-homes-planner", "healthier-homes-visit-app"].forEach(k => localStorage.removeItem(k)));
   });
 
   test("shows the visit app in a tablet frame, and switches to a phone", async ({ page }) => {
-    await page.getByRole("link", { name: "Visit app" }).click();
+    await page.getByRole("link", { name: "Home visit" }).click();
     await expect(page.locator("#tab-visit-app")).toBeVisible();
     await expect(page.locator("#tab-overview")).toBeHidden();
     const app = page.frameLocator("#visit-app-frame");
