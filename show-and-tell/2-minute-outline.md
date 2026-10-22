@@ -1,7 +1,7 @@
 # Show and tell: Commitment issues (2 minutes)
 
 **Presenting:** Okeli Okonye (picked at random; the squad can swap)
-**Last updated:** 17:46, after pull request #26
+**Last updated:** 17:50, after pull request #28
 
 Before your turn, tell Claude `get the latest and make it run for me`, so you show the squad's latest version. Join the Teams call from the link in the squad's Teams chat and share your screen when it's your turn.
 
@@ -41,3 +41,4 @@ Before your turn, tell Claude `get the latest and make it run for me`, so you sh
 | 17:25 | Petra | Risk by area: back to a simple grid |
 | 17:32 | Simon | Clearer words on the visit plan and Cases |
 | 17:43 | Helen | 68 automated tests, and a fix to an impossible household in the data |
+| 17:48 | Petra | Risk by area: a map and table side by side. Fixes from an expert review: reports close themselves when the work is done, and health details stay private |
