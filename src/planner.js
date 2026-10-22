@@ -661,7 +661,7 @@
 
   // For the case page (case.js).
   window.PLANNER = {
-    TYPE, nice, hhmm, iso,
+    TYPE, nice, hhmm, iso, minutesFor,
     staff: () => P.staff,
     events: () => events,
     outcome: id => P.outcomes[id],
