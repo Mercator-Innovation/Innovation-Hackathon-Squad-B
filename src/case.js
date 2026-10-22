@@ -54,7 +54,8 @@
         ${T.visitReason}: ${escapeHtml(reasonText(b))}${b.note ? `<br>${T.caseBookNoteShort}: ${escapeHtml(b.note)}` : ""}</p>
       <p><strong>${T.confirmNext}</strong></p>
       <ul>
-        <li>${fillIn(T.confirmTexted, { tenant })} <em>${T.confirmPrototype}</em></li>
+        <li>${fillIn(T.confirmTexted, { tenant })} <em>${T.confirmPrototype}</em>
+          <blockquote class="sms">${fillIn(T.confirmSms, { when: `${day(b.date)} at ${b.time}` })}</blockquote></li>
         <li>${fillIn(T.confirmStaff, { who: escapeHtml(st.name) })}</li>
         ${statusChanged ? `<li>${T.confirmStatus}</li>` : ""}
         <li>${fillIn(T.confirmChange, { tenant })}</li>

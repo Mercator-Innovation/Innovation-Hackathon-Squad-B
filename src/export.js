@@ -53,7 +53,8 @@ window.EXPORT = (() => {
     const reported = new Set(allReports().map(r => r.homeId));
     shownHomes().forEach(h => rows.push([
       h.id, h.address, h.area, h.risk.band, h.risk.points,
-      h.risk.reasons.map(r => r.reason).join("; "), h.status,
+      // Health and household reasons stay in the system, not in a file that can be passed around
+      [...new Set(h.risk.reasons.map(r => r.sensitive ? C.downloadSensitive : r.reason))].join("; "), h.status,
       reported.has(h.id) ? "Yes" : "No", h.monthsSinceLastContact
     ]));
     return { name: C.listTitle, rows };

@@ -54,7 +54,7 @@ window.GLANCE = (() => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     return allReports()
-      .filter(r => !["Closed"].includes(state.status[r.ref] || r.status))
+      .filter(r => reportStatus(r) !== "Closed")
       .map(r => {
         const due = addWorkingDays(new Date(r.received + "T00:00"), 10);
         return { ref: r.ref, due, left: workingDaysBetween(today, due) };
@@ -71,7 +71,7 @@ window.GLANCE = (() => {
     const due = checksDue();
     const next = due[0];
     const urgent = due.filter(d => d.left <= 3).length;
-    const newReports = allReports().filter(r => (state.status[r.ref] || r.status) === "New").length;
+    const newReports = allReports().filter(r => reportStatus(r) === "New").length;
 
     const highSeries = series("High", high);
     const medSeries = series("Medium", medium);

@@ -74,20 +74,32 @@ test.describe("Where to act first", () => {
 });
 
 test.describe("Risk by area", () => {
-  test("every area shows its traffic light in words, not just colour", async ({ page }) => {
-    const areas = page.locator("#heatmap button");
-    await expect(areas).toHaveCount(8);
+  test("the map and the area table show every area, with the traffic light in words, not just colour", async ({ page }) => {
+    await expect(page.locator("#heatmap .map-pin")).toHaveCount(8);
+    await expect(page.locator("#heatmap .matrix tbody tr")).toHaveCount(8);
+    for (const label of await page.locator("#heatmap .map-pin").evaluateAll(pins => pins.map(p => p.getAttribute("aria-label")))) expect(label).toMatch(/Red|Amber|Green/);
     for (const tag of await page.locator("#heatmap .light-tag").allTextContents()) expect(tag).toMatch(/Red|Amber|Green/);
   });
 
-  test("choosing an area shows only its homes", async ({ page }) => {
-    const area = page.locator("#heatmap button").first();
-    const name = (await area.locator(".area-name").textContent()).trim();
-    await area.click();
-    await expect(area).toHaveAttribute("aria-pressed", "true");
+  test("choosing an area on the map shows only its homes, and marks it in the table", async ({ page }) => {
+    const pin = page.locator("#heatmap .map-pin").first();
+    const name = await pin.getAttribute("data-area");
+    await pin.click();
+    await expect(page.locator(`#heatmap .map-pin[data-area="${name}"]`)).toHaveAttribute("aria-pressed", "true");
+    await expect(page.locator(`#heatmap .matrix tr[data-row-area="${name}"]`)).toHaveClass(/is-selected/);
     const shown = await page.locator("#homes tr td:nth-child(3)").allTextContents();
     expect(shown.length).toBeGreaterThan(0);
     shown.forEach(a => expect(a.trim()).toBe(name));
+  });
+
+  test("a number in the area table shows exactly those homes", async ({ page }) => {
+    const cell = page.locator("#heatmap [data-area-band]").first();
+    const [area, band] = (await cell.getAttribute("data-area-band")).split("|");
+    const n = Number((await cell.textContent()).trim().split(" ")[0]);
+    await cell.click();
+    await expect(page.locator("#homes tr")).toHaveCount(n);
+    for (const a of await page.locator("#homes tr td:nth-child(3)").allTextContents()) expect(a.trim()).toBe(area);
+    for (const b of await page.locator("#homes .badge").allTextContents()) expect(b).toContain(band);
   });
 });
 
