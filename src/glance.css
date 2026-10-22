@@ -14,7 +14,7 @@
 .glance-card {
   font: inherit; color: var(--text); text-align: left; cursor: pointer; position: relative;
   display: flex; flex-direction: column; gap: 2px;
-  background: var(--surface); border: 1px solid var(--border); border-top: 5px solid #ead7be;
+  background: var(--surface); border: 1px solid var(--border); border-top: 5px solid var(--riviera);
   border-radius: 14px; padding: 14px 16px;
 }
 .glance-card:hover { box-shadow: var(--shadow); border-color: var(--brand-tint-2); }

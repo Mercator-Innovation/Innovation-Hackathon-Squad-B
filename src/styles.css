@@ -1,5 +1,6 @@
 /* The look. Change colours and fonts here. */
-/* Palette: Terracotta leads; Riviera Blue for text; Soft Ivory and Sand Linen for warm, light backgrounds.
+/* Palette: Terracotta leads for actions; Riviera Blue anchors the page (header, tabs, table headings) and the text;
+   Soft Ivory and Sand Linen for warm, light backgrounds.
    Every text colour below passes 4.5:1 on white and on the page background. */
 :root {
   --terracotta: #a9501c;
@@ -18,6 +19,8 @@
   --brand-dark: #873e12;
   --brand-tint: #f8ede4;      /* gentle terracotta wash for highlights */
   --brand-tint-2: #f0d9c8;
+  --navy-tint: #eaeff5;       /* table headings */
+  --navy-tint-2: #d9e2ec;
   --focus: #ffbf47;
   --high: #a1173a;            /* crimson, so high risk never looks like the brand colour */
   --high-bg: #fbe7ec;
@@ -36,17 +39,18 @@ a:hover { color: var(--brand-dark); }
 :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; box-shadow: 0 0 0 5px var(--text); }
 
 .banner { background: #ead7be; color: var(--text); padding: 6px 20px; font-size: 0.85rem; }
-header.site { background: var(--ivory); color: var(--text); padding: 22px 20px 16px; }
+header.site { background: var(--riviera); color: #fff; padding: 22px 20px 16px; }
 header.site h1 { margin: 0; font-size: 1.6rem; letter-spacing: -0.01em; }
-header.site p { margin: 4px 0 0; color: var(--muted); }
-header.site a { color: var(--brand); }
+header.site p { margin: 4px 0 0; color: #c9d3de; }
+header.site a { color: var(--ivory); }
+header.site a:hover { color: #fff; }
 header.site.has-logo { display: flex; align-items: center; gap: 16px; }
-header.site .logo { width: 52px; height: 52px; flex: none; }
+header.site .logo { width: 52px; height: 52px; flex: none; border-radius: 14px; box-shadow: 0 0 0 2px rgba(243, 236, 222, 0.35); }
 @media (max-width: 600px) { header.site .logo { width: 40px; height: 40px; } }
-nav.tabs { display: flex; flex-wrap: wrap; gap: 4px 8px; background: var(--ivory); padding: 0 20px; border-bottom: 1px solid var(--border); }
-nav.tabs a { color: var(--text); padding: 10px 6px 12px; margin: 0 4px; text-decoration: none; font-weight: 600; border-bottom: 3px solid transparent; }
-nav.tabs a:hover { color: var(--brand); border-bottom-color: var(--brand-tint-2); }
-nav.tabs a[aria-current="page"] { color: var(--brand); border-bottom-color: var(--brand); }
+nav.tabs { display: flex; flex-wrap: wrap; gap: 4px 8px; background: var(--riviera); padding: 0 20px; border-top: 1px solid rgba(255, 255, 255, 0.08); }
+nav.tabs a { color: #e3e9f0; padding: 10px 6px 12px; margin: 0 4px; text-decoration: none; font-weight: 600; border-bottom: 3px solid transparent; }
+nav.tabs a:hover { color: #fff; border-bottom-color: rgba(212, 175, 131, 0.5); }
+nav.tabs a[aria-current="page"] { color: #fff; border-bottom-color: var(--sand); }
 
 main { max-width: 1160px; margin: 0 auto; padding: 28px 20px 56px; }
 section.panel { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin-bottom: 24px; box-shadow: var(--shadow); }
@@ -84,6 +88,8 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--brand); }
 table { width: 100%; border-collapse: collapse; }
 th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--border); vertical-align: top; }
 th { font-size: 0.85rem; color: var(--muted); }
+thead th { background: var(--navy-tint); color: var(--text); border-bottom: 2px solid var(--riviera); }
+thead th:first-child { border-radius: 8px 0 0 0; } thead th:last-child { border-radius: 0 8px 0 0; }
 tbody tr:hover td { background: #fdfaf5; }
 
 .badge { display: inline-block; padding: 2px 8px; border-radius: 999px; font-weight: 700; font-size: 0.85rem; white-space: nowrap; }
@@ -332,9 +338,9 @@ input.with-hint::placeholder { color: #4d4d4d; opacity: 1; } /* about 70% black 
 .list-meta p { margin: 0 0 8px; font-weight: 600; }
 th[data-col] { padding: 0; }
 button.sort { font: inherit; font-weight: 700; display: flex; align-items: center; gap: 6px; width: 100%; padding: 8px; background: none; border: 0; color: var(--text); cursor: pointer; text-align: left; }
-button.sort:hover { background: var(--brand-tint); }
+button.sort:hover { background: var(--navy-tint-2); }
 .sort-icon { color: var(--muted); font-size: 0.8em; }
-th[aria-sort] { background: var(--brand-tint); color: var(--text); }
+th[aria-sort] { background: var(--navy-tint-2); color: var(--text); }
 th[aria-sort] .sort-icon { color: var(--brand); }
 
 /* Downloads */
