@@ -20,10 +20,10 @@ form.addEventListener("submit", e => {
     received: new Date().toISOString().slice(0, 10),
     problems: data.getAll("problem").length ? data.getAll("problem") : ["Not sure"],
     description: data.get("description") || "No description given",
-    rooms: data.get("rooms"),
+    rooms: data.getAll("room").join(", "),
     photos: [...form.photos.files].map(f => f.name),
     health: data.get("health"),
-    contactBy: data.get("contactWhen"),
+    contactBy: [...data.getAll("contactWay"), ...data.getAll("contactTime")].join(", "),
     status: "New"
   });
   saveState(state);
@@ -31,6 +31,7 @@ form.addEventListener("submit", e => {
   form.hidden = true;
   thanks.hidden = false;
   document.getElementById("thanks-body").textContent = window.CONTENT.thanksBody.replace("{ref}", ref);
+  document.getElementById("thanks-track").href = "track.html?ref=" + ref;
   thanks.focus();
 });
 
