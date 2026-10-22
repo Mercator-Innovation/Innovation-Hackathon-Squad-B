@@ -13,3 +13,4 @@ Run them: `npm test` (or ask Claude "run the tests"). See a report you can click
 - `planner.spec.js`: the visit planner keeps its promises (no double-booking, working hours and days, the right people, high risk first, nothing forgotten) and booking follow-ups
 - `track.spec.js`: Track your report reads references and shows the right progress
 - `visit-app.spec.js`: the visit app on a phone and tablet: your visits, private reasons, saving findings and outcomes, and that staff see them
+- `accessibility.spec.js`: axe checks against WCAG 2.2 AA on every page, tab and pop-up, at desktop and phone width, plus keyboard and focus checks

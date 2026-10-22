@@ -38,18 +38,19 @@ test("the report shows up for staff, linked to the right home", async ({ page })
 });
 
 test("sending a report makes that home score 2 points higher", async ({ page }) => {
-  const points = () => page.evaluate(() => {
-    const st = JSON.parse(localStorage.getItem("healthier-homes") || "{}");
-    const open = [...window.DATA.reports.map(r => r.homeId), ...(st.reports || []).map(r => r.homeId)];
-    const h = window.DATA.homes.find(x => x.address === "29 Firth View");
-    return h && window.RISK.score(h, { openReports: open }).points;
-  });
   await page.goto("/");
+  // A home with no reports yet, so the report's 2 points show
+  const address = await page.evaluate(() => {
+    const reported = new Set(window.DATA.reports.map(r => r.homeId));
+    const h = window.DATA.homes.find(x => !reported.has(x.id));
+    return h && h.address;
+  });
+  test.skip(!address, "every sample home already has a report");
+  const points = () => page.evaluate(a => scored().find(h => h.address === a).risk.points, address);
   const before = await points();
-  test.skip(before === undefined, "29 Firth View isn't in the data any more");
 
   await page.goto("/report.html");
-  await page.locator("#address").fill("29 Firth View");
+  await page.locator("#address").fill(address);
   await page.getByRole("button", { name: /send/i }).click();
   await expect(page.locator("#thanks")).toBeVisible();
 
