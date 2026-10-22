@@ -300,6 +300,8 @@ window.GLANCE = (() => {
       renderCards(list);
       renderTrend(list);
       renderAreas(list);
-    }
+    },
+    // Shared so the tests in tests/ can check them
+    workingDaysBetween, addWorkingDays, light
   };
 })();

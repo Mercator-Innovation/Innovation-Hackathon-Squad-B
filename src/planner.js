@@ -414,7 +414,7 @@
       </svg>
       <div>
         <h3>${escapeHtml(st.name)}, ${nice(date)}</h3>
-        <p class="hint">${route.length} ${route.length === 1 ? "visit" : "visits"} in ${escapeHtml(areasOf(route).join(", "))}. ${travel} min travel.</p>
+        <p class="hint">${route.length} ${route.length === 1 ? "visit" : "visits"} in ${escapeHtml(areasOf(route).join(", "))}. ${travel} minutes of driving.</p>
         <ol class="where-list">${route.map(e => `<li>${hhmm(e.start)} ${TYPE[e.type]}:
           <button type="button" class="link" data-visit="${e.key}">${escapeHtml(e.home.address)}</button>, ${escapeHtml(e.home.area)}
           <span class="badge ${e.home.risk.band}">${e.home.risk.band} ${e.home.risk.points}</span>
@@ -460,7 +460,7 @@
         <dl class="vd-facts">
           <div><dt>When</dt><dd>${nice(e.date)}<br>${hhmm(e.start)} to ${hhmm(e.end)}</dd></div>
           <div><dt>Who</dt><dd><span class="swatch c${colour(e.staff)}" aria-hidden="true"></span>${escapeHtml(e.staff.name)}<br><small>${escapeHtml(e.staff.role)}</small></dd></div>
-          <div><dt>Travel</dt><dd>${e.travel} min<br><small>from the last stop</small></dd></div>
+          <div><dt>Driving</dt><dd>${e.travel} minutes<br><small>from the last visit</small></dd></div>
           <div><dt>${e.fixed ? "Booked" : "Target"}</dt><dd>${e.fixed ? `Follow-up<br><small>${T.visitBookedShort}</small>` : `By ${dueDate(lastDays, e.due)}`}</dd></div>
         </dl>
         <h3>${T.whyFlagged}</h3>
@@ -593,8 +593,8 @@
 
   // ---- Recording what happened at a visit ----
   const OUTCOME_TEXT = {
-    work: "Assessment: work needed. A repair will be planned.",
-    none: "Assessment: no work needed.",
+    work: "Visit done. Work is needed, so a repair will be planned.",
+    none: "Visit done. No work is needed.",
     fixed: "Repair done.",
     checked: "Check-in done."
   };
