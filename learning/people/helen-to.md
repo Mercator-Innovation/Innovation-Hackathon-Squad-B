@@ -29,7 +29,9 @@ ai_use_week_after:
 
 ## During
 <!-- Claude adds one line per moment: prompts that worked (word for word), dead ends, surprises, things done outside my usual job, what made working as a squad easier or harder -->
+- 16:35 sharing hit a clash: Simon and I had both added styles to the end of styles.css. Claude showed both, proposed keeping both, checked the whole prototype still worked, then merged. Other squad mates' work (visit planner, report cards) came in at the same time without problems.
 - 16:40 I designed and built the dashboard's "Where to act first" section (clickable cards, trend chart, map view with traffic lights), normally a designer's and developer's job: I described what I wanted in one message, Claude built it, and I shared it to the squad's screen.
+- 16:48 I asked to share again, but there was nothing new: everything was already in the squad's copy.
 
 ## At 19:00
 - What I worked on: <answers>
