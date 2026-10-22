@@ -1,7 +1,7 @@
 # Show and tell: Commitment issues (2 minutes)
 
 **Presenting:** Okeli Okonye (picked at random; the squad can swap)
-**Last updated:** 18:27, after pull request #63
+**Last updated:** 18:28, after pull request #65
 
 Before your turn, tell Claude `get the latest and make it run for me`, so you show the squad's latest version. Join the Teams call from the link in the squad's Teams chat and share your screen when it's your turn.
 
@@ -59,3 +59,4 @@ Before your turn, tell Claude `get the latest and make it run for me`, so you sh
 | 18:22 | Petra | Tenant pages the same width as the staff view |
 | 18:25 | Simon | A page that reads this presentation aloud (`show-and-tell/speak.html`) |
 | 18:26 | Petra | Risk by area now uses the new heat map, with her area pins on top |
+| 18:28 | Petra | Risk by area map: zoom in on an area |
