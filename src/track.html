@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Track your report</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Progress steps: each step says "Done" or "Not yet" in words, not just colour */
+    .steps { list-style: none; padding: 0; margin: 16px 0; }
+    .steps li { border-left: 4px solid var(--border); padding: 4px 0 12px 16px; position: relative; }
+    .steps li::before { content: ""; position: absolute; left: -12px; top: 6px; width: 20px; height: 20px; border-radius: 50%; background: var(--surface); border: 3px solid var(--border); }
+    .steps li.done { border-left-color: var(--brand); }
+    .steps li.done::before { background: var(--brand); border-color: var(--brand); }
+    .steps .state { display: block; font-size: 0.9rem; color: var(--muted); }
+    .steps li.done .state { color: var(--brand-dark); font-weight: 600; }
+    .error { border-left: 4px solid var(--high); padding: 4px 12px; color: var(--high); font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div class="banner" data-text="prototypeBanner"></div>
+  <header class="site">
+    <p><a href="report.html" style="color:#fff" data-text="trackBackToForm"></a></p>
+  </header>
+
+  <main class="narrow">
+    <h1 data-text="trackTitle"></h1>
+    <p data-text="trackIntro"></p>
+
+    <form id="track-form" novalidate>
+      <div class="form-row">
+        <label for="ref" data-text="trackRefLabel"></label>
+        <span class="hint" id="ref-hint" data-text="trackRefHint"></span>
+        <p class="error" id="ref-error" hidden></p>
+        <input id="ref" name="ref" autocomplete="off" aria-describedby="ref-hint ref-error" style="max-width: 12em">
+      </div>
+      <button type="submit" class="primary" data-text="trackButton"></button>
+    </form>
+
+    <section id="result" hidden tabindex="-1" aria-labelledby="result-title">
+      <h2 id="result-title"></h2>
+      <p id="result-summary"></p>
+      <ol class="steps" id="steps"></ol>
+      <p class="notice" id="result-next"></p>
+      <p data-text="trackPrivacy" class="hint"></p>
+    </section>
+  </main>
+
+  <script src="content.js"></script>
+  <script src="shared.js"></script>
+  <script src="data/homes.js"></script>
+  <script src="track.js"></script>
+</body>
+</html>
