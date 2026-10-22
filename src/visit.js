@@ -19,6 +19,7 @@
   // ---- Fill in the fixed words ----
   document.title = `${V.title}: Healthier homes`;
   $("app-title").textContent = V.title;
+  $("app-intro").textContent = V.intro;
   $("who-label").textContent = V.whoLabel;
   $("day-label").textContent = V.dayLabel;
   $("list-status").textContent = V.loading;
