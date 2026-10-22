@@ -1,7 +1,7 @@
 # Show and tell: Commitment issues (2 minutes)
 
 **Presenting:** Okeli Okonye (picked at random; the squad can swap)
-**Last updated:** 17:09, after pull request #46
+**Last updated:** 18:09, after pull request #46
 
 Before your turn, tell Claude `get the latest and make it run for me`, so you show the squad's latest version. Join the Teams call from the link in the squad's Teams chat and share your screen when it's your turn.
 
@@ -49,4 +49,4 @@ Before your turn, tell Claude `get the latest and make it run for me`, so you sh
 | 18:04 | Petra | A new look: a light, welcoming terracotta palette in place of the green |
 | 18:07 | Petra | More navy: the header, tabs and table headings |
 | 18:07 | Simon | A shorter tagline: "See which homes are most at risk from cold, damp and mould. Help before anyone gets ill." |
-| 17:09 | Petra | The current tab and heading markers in terracotta, to match the logo |
+| 18:09 | Petra | The current tab and heading markers in terracotta, to match the logo |
