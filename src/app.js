@@ -4,6 +4,13 @@ const { homes, team } = window.DATA;
 const STATUSES = ["Not started", "Contacted", "Visit booked", "Work ordered", "Fixed", "Checked: risk down"];
 let state = loadState();
 let selectedArea = "";
+let sort = { key: "risk", dir: "desc" };
+let reportHomeFilter = null;   // set when you follow "See their reports" from a home
+
+// "Showing {shown} of {total}" + { shown: 3, total: 30 } → "Showing 3 of 30"
+function fillIn(text, values) {
+  return text.replace(/\{(\w+)\}/g, (m, key) => values[key] ?? m);
+}
 
 // Seeded reports plus any sent from the tenant form in this browser.
 function allReports() {
@@ -29,27 +36,111 @@ function renderFilters() {
     `<option value="">${C.filterAll}</option>` + areas.map(a => `<option>${escapeHtml(a)}</option>`).join("");
   document.getElementById("filter-band").innerHTML =
     `<option value="">${C.filterAll}</option><option>High</option><option>Medium</option><option>Low</option>`;
-  // Reports from tenants
   const options = values => `<option value="">${C.filterAll}</option>` + values.map(v => `<option>${escapeHtml(v)}</option>`).join("");
+  // The reasons come straight from the risk model, so a new rule shows up here too
+  document.getElementById("filter-reason").innerHTML = options(window.RISK.rules.map(r => r.reason));
+  document.getElementById("filter-status").innerHTML = options(STATUSES);
+  document.getElementById("search").placeholder = C.searchPlaceholder;
+  // Reports from tenants
   document.getElementById("report-filter-band").innerHTML = options(["High", "Medium", "Low"]) + `<option value="none">${C.filterNotRated}</option>`;
   document.getElementById("report-filter-status").innerHTML = options(["New", "Picked up", "Closed"]);
   document.getElementById("report-filter-type").innerHTML = options(["Damp", "Mould", "Condensation", "Cold", "Something else", "Not sure"]);
 }
 
-function renderList(list) {
-  const search = document.getElementById("search").value.trim().toLowerCase();
-  const band = document.getElementById("filter-band").value;
-  const shown = list.filter(h =>
-    (!selectedArea || h.area === selectedArea) &&
-    (!band || h.risk.band === band) &&
+// ---- Homes to look at first: filters and sorting ----
+// "29 Firth View" → "Firth View 29", so homes sort by street, then house number
+const streetFirst = address => address.replace(/^(\S+)\s+(.*)$/, "$2 $1");
+const SORTS = {
+  risk: { value: h => h.risk.points, label: "colRisk", asc: "sortLowFirst", desc: "sortHighFirst", first: "desc" },
+  home: { value: h => streetFirst(h.address), label: "colHome", asc: "sortAtoZ", desc: "sortZtoA", first: "asc" },
+  area: { value: h => h.area, label: "colArea", asc: "sortAtoZ", desc: "sortZtoA", first: "asc" },
+  reasons: { value: h => h.risk.reasons.length ? h.risk.reasons[0].reason : "~", label: "colReasons", asc: "sortAtoZ", desc: "sortZtoA", first: "asc" },
+  status: { value: h => STATUSES.indexOf(h.status), label: "colStatus", asc: "sortStatusFirst", desc: "sortStatusLast", first: "asc" }
+};
+
+function compareHomes(a, b) {
+  const va = SORTS[sort.key].value(a), vb = SORTS[sort.key].value(b);
+  const c = typeof va === "number" ? va - vb : va.localeCompare(vb, "en-GB", { numeric: true });
+  // Ties: highest risk first
+  return (sort.dir === "asc" ? c : -c) || b.risk.points - a.risk.points;
+}
+
+function filterValues() {
+  const v = id => document.getElementById(id).value;
+  return { search: v("search").trim(), area: selectedArea, band: v("filter-band"), reason: v("filter-reason"), status: v("filter-status") };
+}
+
+// The homes the list shows right now, filtered and sorted. export.js uses this too.
+function shownHomes(list = scored()) {
+  const f = filterValues();
+  const search = f.search.toLowerCase();
+  return list.filter(h =>
+    (!f.area || h.area === f.area) &&
+    (!f.band || h.risk.band === f.band) &&
+    (!f.reason || h.risk.reasons.some(r => r.reason === f.reason)) &&
+    (!f.status || h.status === f.status) &&
     (!window.listFilter || window.listFilter(h)) &&
-    (!search || `${h.address} ${h.tenant} ${h.id}`.toLowerCase().includes(search)));
+    (!search || `${h.address} ${h.tenant} ${h.id}`.toLowerCase().includes(search))
+  ).sort(compareHomes);
+}
+
+function sortDescription() {
+  const s = SORTS[sort.key];
+  return `${C.sortedBy} ${C[s.label].toLowerCase()}, ${C[s[sort.dir]]}`;
+}
+
+// "Area: Gourock · Risk: High", for the PDF and Excel downloads
+function filterDescription() {
+  const f = filterValues();
+  const parts = [
+    f.search && `${C.filterSearch}: "${f.search}"`,
+    f.area && `${C.filterArea}: ${f.area}`,
+    f.band && `${C.filterBand}: ${f.band}`,
+    f.reason && `${C.filterReason}: ${f.reason}`,
+    f.status && `${C.filterStatus}: ${f.status}`,
+    window.listFilter && !document.getElementById("active-filter").hidden && document.getElementById("active-filter").querySelector("span").textContent
+  ].filter(Boolean);
+  return parts.join(" · ") || C.downloadNoFilters;
+}
+
+function renderSortHeaders() {
+  document.querySelectorAll("th[data-col]").forEach(th => {
+    const on = th.dataset.col === sort.key;
+    if (on) th.setAttribute("aria-sort", sort.dir === "asc" ? "ascending" : "descending");
+    else th.removeAttribute("aria-sort");
+    th.querySelector(".sort-icon").textContent = on ? (sort.dir === "asc" ? "▲" : "▼") : "↕";
+  });
+  document.getElementById("homes-caption").textContent = `${C.listTitle}. ${sortDescription()}. ${C.sortHint}`;
+}
+
+function clearAllFilters() {
+  ["search", "filter-band", "filter-reason", "filter-status", "filter-area"].forEach(id => { document.getElementById(id).value = ""; });
+  selectedArea = "";
+  window.listFilter = null;
+  document.getElementById("active-filter").hidden = true;
+  render();
+  document.getElementById("search").focus();
+}
+
+// The top two reasons. When you filter by a reason, it comes first, so you can see why the home is listed.
+function mainReasons(h, filterReason) {
+  const picked = h.risk.reasons.filter(r => r.reason === filterReason);
+  return [...picked, ...h.risk.reasons.filter(r => r.reason !== filterReason)].slice(0, 2);
+}
+
+function renderList(list) {
+  const shown = shownHomes(list);
+  const f = filterValues();
+  const anyFilter = f.search || f.area || f.band || f.reason || f.status || window.listFilter;
+  document.getElementById("homes-count").textContent = fillIn(C.homesCount, { shown: shown.length, total: list.length });
+  document.getElementById("clear-all").hidden = !anyFilter;
+  renderSortHeaders();
   document.getElementById("homes").innerHTML = shown.map(h => `
     <tr>
       <td><span class="badge ${h.risk.band}">${h.risk.band} · ${h.risk.points}</span></td>
       <td><button type="button" class="link" data-home="${h.id}">${escapeHtml(h.address)}</button><br><small>${h.id}</small></td>
       <td>${escapeHtml(h.area)}</td>
-      <td>${h.risk.reasons.slice(0, 2).map(r => escapeHtml(r.reason)).join("<br>") || "None"}</td>
+      <td>${mainReasons(h, f.reason).map(r => escapeHtml(r.reason)).join("<br>") || "None"}</td>
       <td>${escapeHtml(h.status)}</td>
     </tr>`).join("") || `<tr><td colspan="5">No homes match.</td></tr>`;
 }
@@ -67,17 +158,125 @@ function weekdaySlots() {
   return slots.slice(0, 10);
 }
 
-function openHome(id) {
+// "07700 900148" → "***** **0148": enough to check you've got the right person
+function maskPhone(phone) {
+  const last4 = phone.replace(/\D/g, "").slice(-4);
+  return { masked: phone.slice(0, -4).replace(/\d/g, "*") + last4, last4 };
+}
+
+// The number stays hidden until someone chooses "Show number"
+function phoneHtml(h) {
+  const { masked, last4 } = maskPhone(h.phone);
+  return `<span class="phone" data-full="${escapeHtml(h.phone)}" data-masked="${escapeHtml(masked)}" data-last4="${last4}"><span class="phone-number" aria-hidden="true">${escapeHtml(masked)}</span><span class="visually-hidden phone-sr">${C.phoneEnding} ${last4}</span></span>
+    <button type="button" class="small" data-toggle-phone aria-pressed="false">${C.showNumber}</button>`;
+}
+
+function togglePhone(button) {
+  const phone = button.previousElementSibling;
+  const show = button.getAttribute("aria-pressed") !== "true";
+  phone.querySelector(".phone-number").textContent = show ? phone.dataset.full : phone.dataset.masked;
+  phone.querySelector(".phone-sr").textContent = show ? phone.dataset.full : `${C.phoneEnding} ${phone.dataset.last4}`;
+  button.setAttribute("aria-pressed", show);
+  button.textContent = show ? C.hideNumber : C.showNumber;
+}
+
+const monthsText = m => `${m} ${m === 1 ? "month" : "months"}`;
+const visitReasonText = v => v.reason === "other" ? `${C.bookReasonOther}: ${v.reasonNote}` : (v.reason || C.reportNotGiven);
+const teamRole = name => (team.find(t => t.name === name) || {}).role;
+const whoText = name => teamRole(name) ? `${name} (${teamRole(name)})` : name;
+
+function contactHtml(h, reports) {
+  if (!reports.length) return `${C.contactNotReported}. ${fillIn(C.contactLast, { months: monthsText(h.monthsSinceLastContact) })}`;
+  const count = reports.length === 1 ? C.contactOneReport : fillIn(C.contactReportCount, { count: reports.length });
+  return `<strong>${C.contactReported}</strong> (${count}). <button type="button" class="link" data-show-reports="${h.id}">${C.contactSeeReports}</button>`;
+}
+
+function visitsHtml(id) {
+  const mine = state.visits.map((v, i) => ({ v, i })).filter(({ v }) => v.homeId === id);
+  if (!mine.length) return `<p>${C.noVisitsForHome}</p>`;
+  return `<ul class="visit-list">${mine.map(({ v, i }) => `<li>
+      <strong>${escapeHtml(v.when)}</strong> ${C.confirmWith} ${escapeHtml(whoText(v.who))}<br>
+      ${C.visitReason}: ${escapeHtml(visitReasonText(v))}<br>
+      <button type="button" class="link" data-cancel-visit="${i}">${C.cancelVisit}<span class="visually-hidden">: ${escapeHtml(v.when)}</span></button>
+    </li>`).join("")}</ul>`;
+}
+
+function confirmHtml(h, v, prefers) {
+  const tenant = escapeHtml(h.tenant);
+  return `<div class="confirm" id="visit-confirm" tabindex="-1" role="region" aria-labelledby="confirm-title">
+    <h4 id="confirm-title">${C.confirmTitle}</h4>
+    <p><strong>${escapeHtml(v.when)}</strong> ${C.confirmWith} ${escapeHtml(whoText(v.who))}<br>${C.visitReason}: ${escapeHtml(visitReasonText(v))}</p>
+    <p><strong>${C.confirmNext}</strong></p>
+    <ul>
+      <li>${fillIn(C.confirmTexted, { tenant })} <em>${C.confirmPrototype}</em></li>
+      <li>${fillIn(C.confirmStaff, { who: escapeHtml(v.who) })}</li>
+      <li>${C.confirmStatus}</li>
+      <li>${fillIn(C.confirmChange, { tenant })}</li>
+    </ul>
+    <dl class="facts">
+      <dt>${C.factTenant}</dt><dd>${tenant}</dd>
+      <dt>${C.factPhone}</dt><dd>${phoneHtml(h)}</dd>
+      ${prefers ? `<dt>${C.contactPrefers}</dt><dd>${escapeHtml(prefers)}</dd>` : ""}
+    </dl>
+    <div class="actions">
+      <button type="button" class="small" data-book-another>${C.bookAnother}</button>
+      <button type="button" class="small" data-close-detail>${C.closeButton}</button>
+    </div>
+  </div>`;
+}
+
+// Error messages sit above the field they're about, and the field says it's invalid
+function showFieldError(fieldId, message) {
+  const field = document.getElementById(fieldId);
+  const error = document.getElementById(`${fieldId}-error`);
+  error.textContent = message;
+  error.hidden = false;
+  field.setAttribute("aria-invalid", "true");
+  field.setAttribute("aria-describedby", [field.dataset.hint, error.id].filter(Boolean).join(" "));
+}
+
+function clearFieldErrors() {
+  document.querySelectorAll("#book-form .error").forEach(e => { e.hidden = true; e.textContent = ""; });
+  document.querySelectorAll("#book-form [aria-invalid]").forEach(f => {
+    f.removeAttribute("aria-invalid");
+    if (f.dataset.hint) f.setAttribute("aria-describedby", f.dataset.hint); else f.removeAttribute("aria-describedby");
+  });
+}
+
+function openHome(id, booked) {
   const h = scored().find(x => x.id === id);
   const reports = allReports().filter(r => r.homeId === id);
-  const visits = state.visits.filter(v => v.homeId === id);
+  const latest = reports[reports.length - 1];
+  const prefers = latest && latest.contactBy;
   const body = document.getElementById("detail-body");
   body.innerHTML = `
-    <button type="button" class="link dialog-close" id="close-detail">Close</button>
+    <button type="button" class="link dialog-close" id="close-detail">${C.closeButton}</button>
     <h2 id="detail-title">${escapeHtml(h.address)}, ${escapeHtml(h.area)}</h2>
-    <p><span class="badge ${h.risk.band}">${h.risk.band} risk · ${h.risk.points} points</span></p>
-    <p>${escapeHtml(h.tenant)} · ${h.household.people} ${h.household.people === 1 ? "person" : "people"} · ${h.propertyType}, built ${h.built} · EPC ${h.epc}
-      ${h.sensor ? `<br>Sensor: ${h.sensor.humidity}% humidity, ${h.sensor.temperature}°C` : ""}</p>
+    <p class="badges">
+      <span class="badge ${h.risk.band}">${h.risk.band} risk · ${h.risk.points} points</span>
+      ${reports.length
+        ? `<button type="button" class="badge contact yes" data-show-reports="${h.id}">${C.contactReported} →</button>`
+        : `<span class="badge contact">${C.contactNotReported}</span>`}
+    </p>
+
+    <h3>${C.aboutHomeTitle}</h3>
+    <dl class="facts">
+      <dt>${C.factTenant}</dt>
+      <dd>${escapeHtml(h.tenant)}<br><span class="hint">${C.factTenantHint}</span></dd>
+      <dt>${C.factContact}</dt>
+      <dd>${contactHtml(h, reports)}</dd>
+      <dt>${C.factPhone}</dt>
+      <dd>${phoneHtml(h)}${prefers ? `<br><span class="hint">${C.contactPrefers}: ${escapeHtml(prefers)}</span>` : ""}</dd>
+      <dt>${C.factHousehold}</dt>
+      <dd>${h.household.people} ${h.household.people === 1 ? C.factPerson : C.factPeople}<br>${C.ageBandLabel}: ${escapeHtml(h.household.tenantAgeBand)}</dd>
+      <dt>${C.factHome}</dt>
+      <dd>${h.propertyType}, ${C.factBuilt} ${h.built}</dd>
+      <dt>${C.factEpc}</dt>
+      <dd>${h.epc}<br><span class="hint">${C.factEpcHint}</span></dd>
+      <dt>${C.factSensor}</dt>
+      <dd>${h.sensor ? fillIn(C.factSensorReading, h.sensor) : C.factNoSensor}</dd>
+    </dl>
+    <p class="hint">${C.factsSource}</p>
 
     <h3>${C.whyFlagged}</h3>
     <ul class="reasons">${h.risk.reasons.map(r => `<li>${escapeHtml(r.reason)} (+${r.points})</li>`).join("") || "<li>Nothing flagged</li>"}</ul>
@@ -85,15 +284,13 @@ function openHome(id) {
     <p class="card suggested">${escapeHtml(C[window.RISK.suggest(h, h.risk)])}</p>
     <p class="notice">${C.humanCheck}</p>
 
-    <h3>${C.householdTitle}</h3>
-    <p>${C.ageBandLabel}: ${escapeHtml(h.household.tenantAgeBand)}</p>
-
     <h3>${C.repairsTitle}</h3>
     ${h.repairNotes.length
       ? `<ul class="repairs">${h.repairNotes.map(r => `<li><strong>${new Date(r.date).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}</strong>: ${escapeHtml(r.note)}</li>`).join("")}</ul>`
       : `<p>${C.repairsNone}</p>`}
 
-    ${reports.length ? `<h3>Reports from this tenant</h3>${reports.map(r => `<div class="card"><strong>${r.ref}</strong>, ${r.received}: ${escapeHtml(r.problems.join(", "))}<br>${escapeHtml(r.description)}</div>`).join("")}` : ""}
+    ${reports.length ? `<h3>Reports from this tenant</h3>${reports.map(r => `<div class="card"><strong>${r.ref}</strong>, ${r.received}: ${escapeHtml(r.problems.join(", "))}<br>${escapeHtml(r.description)}</div>`).join("")}
+      <p><button type="button" class="link" data-show-reports="${h.id}">${C.contactSeeReports}</button></p>` : ""}
 
     <h3>${C.caseTitle}</h3>
     <div class="form-row"><label for="status">${C.statusLabel}</label>
@@ -102,13 +299,34 @@ function openHome(id) {
       <textarea id="note" rows="3">${escapeHtml(state.notes[id] || "")}</textarea></div>
     <button type="button" class="primary" id="save-case">${C.saveButton}</button>
 
-    <h3>${C.bookTitle}</h3>
-    ${visits.map(v => `<p>Booked: ${escapeHtml(v.who)}, ${escapeHtml(v.when)}</p>`).join("")}
-    <div class="form-row"><label for="visit-who">${C.bookWho}</label>
-      <select id="visit-who">${team.map(t => `<option value="${escapeHtml(t.name)}">${escapeHtml(t.name)} (${escapeHtml(t.role)})</option>`).join("")}</select></div>
-    <div class="form-row"><label for="visit-when">${C.bookWhen}</label>
-      <select id="visit-when">${weekdaySlots().map(s => `<option>${s}</option>`).join("")}</select></div>
-    <button type="button" class="primary" id="book-visit">${C.bookButton}</button>`;
+    <h3>${C.visitsForHome}</h3>
+    ${booked ? confirmHtml(h, booked, prefers) : ""}
+    ${visitsHtml(id)}
+
+    <div id="book-form">
+      <h3 id="book-title">${C.bookTitle}</h3>
+      <div class="form-row">
+        <label for="visit-reason">${C.bookReason}</label>
+        <span class="hint" id="visit-reason-hint">${C.bookReasonHint}</span>
+        <span class="error" id="visit-reason-error" hidden></span>
+        <select id="visit-reason" aria-describedby="visit-reason-hint" data-hint="visit-reason-hint">
+          <option value="">${C.bookReasonChoose}</option>
+          ${h.risk.reasons.map(r => `<option>${escapeHtml(r.reason)}</option>`).join("")}
+          <option value="other">${C.bookReasonOther}</option>
+        </select>
+      </div>
+      <div class="form-row" id="other-row" hidden>
+        <label for="visit-other">${C.bookOtherLabel}</label>
+        <span class="error" id="visit-other-error" hidden></span>
+        <textarea id="visit-other" rows="2"></textarea>
+      </div>
+      <div class="form-row"><label for="visit-who">${C.bookWho}</label>
+        <select id="visit-who">${team.map(t => `<option value="${escapeHtml(t.name)}">${escapeHtml(t.name)} (${escapeHtml(t.role)})</option>`).join("")}</select></div>
+      <div class="form-row"><label for="visit-when">${C.bookWhen}</label>
+        <span class="error" id="visit-when-error" hidden></span>
+        <select id="visit-when">${weekdaySlots().map(s => `<option>${s}</option>`).join("")}</select></div>
+      <button type="button" class="primary" id="book-visit">${C.bookButton}</button>
+    </div>`;
 
   document.getElementById("close-detail").onclick = () => dialog.close();
   document.getElementById("save-case").onclick = () => {
@@ -116,12 +334,50 @@ function openHome(id) {
     state.notes[id] = document.getElementById("note").value;
     saveState(state); render(); dialog.close();
   };
+  document.getElementById("visit-reason").onchange = e => {
+    document.getElementById("other-row").hidden = e.target.value !== "other";
+  };
   document.getElementById("book-visit").onclick = () => {
-    state.visits.push({ homeId: id, address: h.address, who: document.getElementById("visit-who").value, when: document.getElementById("visit-when").value });
+    clearFieldErrors();
+    const reason = document.getElementById("visit-reason").value;
+    const reasonNote = document.getElementById("visit-other").value.trim();
+    const who = document.getElementById("visit-who").value;
+    const when = document.getElementById("visit-when").value;
+    if (!reason) showFieldError("visit-reason", C.errorReason);
+    if (reason === "other" && !reasonNote) showFieldError("visit-other", C.errorOther);
+    if (state.visits.some(v => v.who === who && v.when === when)) showFieldError("visit-when", fillIn(C.errorClash, { who }));
+    const firstError = document.querySelector("#book-form [aria-invalid]");
+    if (firstError) { firstError.focus(); return; }
+
+    const visit = { homeId: id, address: h.address, who, when, reason, reasonNote: reason === "other" ? reasonNote : "", booked: new Date().toISOString() };
+    state.visits.push(visit);
     state.status[id] = "Visit booked";
-    saveState(state); render(); openHome(id);
+    saveState(state); render(); openHome(id, visit);
   };
   if (!dialog.open) dialog.showModal();
+  if (booked) {
+    const confirm = document.getElementById("visit-confirm");
+    confirm.scrollIntoView({ block: "start" });
+    confirm.focus({ preventScroll: true });
+  }
+}
+
+function cancelVisit(index) {
+  const [visit] = state.visits.splice(index, 1);
+  const stillBooked = state.visits.some(v => v.homeId === visit.homeId);
+  if (!stillBooked && state.status[visit.homeId] === "Visit booked") delete state.status[visit.homeId];
+  saveState(state); render(); openHome(visit.homeId);
+}
+
+// From a home's card to its reports, on the Reports from tenants tab
+function showReportsFor(id) {
+  reportHomeFilter = id;
+  ["report-filter-band", "report-filter-status", "report-filter-type"].forEach(f => { document.getElementById(f).value = ""; });
+  if (dialog.open) dialog.close();
+  location.hash = "#reports";
+  showTab();
+  renderReports();
+  document.getElementById("reports-title").focus();
 }
 
 // ---- Reports and visits ----
@@ -140,11 +396,16 @@ function renderReports() {
     const risk = home && rated.find(h => h.id === home.id).risk;
     return { r, home, risk, status: state.status[r.ref] || r.status };
   }).filter(({ r, risk, status }) =>
+    (!reportHomeFilter || r.homeId === reportHomeFilter) &&
     (!band || (risk ? risk.band === band : band === "none")) &&
     (!statusFilter || status === statusFilter) &&
     (!type || r.problems.includes(type))
   );
-  const anyFilter = band || statusFilter || type;
+  const anyFilter = band || statusFilter || type || reportHomeFilter;
+  const filteredHome = reportHomeFilter && homes.find(h => h.id === reportHomeFilter);
+  const chip = document.getElementById("report-home-filter");
+  chip.hidden = !filteredHome;
+  if (filteredHome) chip.querySelector("span").textContent = fillIn(C.reportsShowingHome, { address: filteredHome.address });
   document.getElementById("reports-list").innerHTML = list.map(({ r, home, risk, status }) => {
     return `<div class="card">
       <div class="report-top">
@@ -168,7 +429,7 @@ function renderVisits() {
     const mine = state.visits.filter(v => v.who === t.name);
     if (!mine.length) return "";
     return `<div class="card"><h3>${escapeHtml(t.name)}, ${escapeHtml(t.role)}</h3>
-      <ul>${mine.map(v => `<li>${escapeHtml(v.when)}: <button type="button" class="link" data-home="${v.homeId}">${escapeHtml(v.address)}</button></li>`).join("")}</ul></div>`;
+      <ul>${mine.map(v => `<li>${escapeHtml(v.when)}: <button type="button" class="link" data-home="${v.homeId}">${escapeHtml(v.address)}</button><br><small>${C.visitReason}: ${escapeHtml(visitReasonText(v))}</small></li>`).join("")}</ul></div>`;
   }).join("") || `<p>${C.visitsEmpty}</p>`;
 }
 
@@ -198,7 +459,8 @@ showTab();
 
 window.addEventListener("hashchange", showTab);
 document.getElementById("search").addEventListener("input", render);
-document.getElementById("filter-band").addEventListener("change", render);
+["filter-band", "filter-reason", "filter-status"].forEach(id =>
+  document.getElementById(id).addEventListener("change", render));
 ["report-filter-band", "report-filter-status", "report-filter-type"].forEach(id =>
   document.getElementById(id).addEventListener("change", renderReports));
 document.getElementById("filter-area").addEventListener("change", e => { selectedArea = e.target.value; render(); });
@@ -213,4 +475,33 @@ document.addEventListener("click", e => {
   if (home) openHome(home.dataset.home);
   const report = e.target.closest("[data-close-report]");
   if (report) { state.status[report.dataset.closeReport] = "Picked up"; saveState(state); render(); }
+
+  // Sorting: choose a column once to sort by it, again to reverse
+  const sortButton = e.target.closest("[data-sort]");
+  if (sortButton) {
+    const key = sortButton.dataset.sort;
+    sort = sort.key === key ? { key, dir: sort.dir === "asc" ? "desc" : "asc" } : { key, dir: SORTS[key].first };
+    render();
+  }
+  if (e.target.closest("#clear-all")) clearAllFilters();
+
+  // Home details card
+  const showReports = e.target.closest("[data-show-reports]");
+  if (showReports) showReportsFor(showReports.dataset.showReports);
+  const phone = e.target.closest("[data-toggle-phone]");
+  if (phone) togglePhone(phone);
+  const cancel = e.target.closest("[data-cancel-visit]");
+  if (cancel) cancelVisit(Number(cancel.dataset.cancelVisit));
+  if (e.target.closest("[data-book-another]")) {
+    const reason = document.getElementById("visit-reason");
+    reason.scrollIntoView({ block: "center" });
+    reason.focus({ preventScroll: true });
+  }
+  if (e.target.closest("[data-close-detail]")) dialog.close();
+
+  // Reports from tenants: back to all reports
+  if (e.target.closest("#clear-report-home") || e.target.closest('[data-tab="reports"]')) {
+    reportHomeFilter = null;
+    renderReports();
+  }
 });
