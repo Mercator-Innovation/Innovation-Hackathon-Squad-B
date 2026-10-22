@@ -30,12 +30,23 @@
   }
   function seed() {
     const copy = JSON.parse(JSON.stringify(window.ROTA));
-    return { staff: copy.staff.map((s, i) => ({ id: `s${i}`, ...s })), settings: copy.settings, outcomes: {}, cases: seedCases() };
+    return { staff: copy.staff.map((s, i) => ({ id: `s${i}`, ...s })), settings: copy.settings, outcomes: {}, cases: seedCases(), seeded: true };
   }
   function load() {
     try {
       const saved = JSON.parse(localStorage.getItem(KEY));
-      if (saved && saved.staff) return { ...seed(), ...saved, cases: { ...seedCases(), ...(saved.cases || {}) } };
+      if (saved && saved.staff) {
+        const cases = { ...(saved.cases || {}) };
+        if (!saved.seeded) {
+          // Add the sample history to anything already saved, skipping entries that are already there.
+          Object.entries(seedCases()).forEach(([id, s]) => {
+            const c = cases[id] || { log: [], bookings: [] };
+            const have = new Set(c.log.map(l => l.text));
+            cases[id] = { ...c, log: [...s.log.filter(l => !have.has(l.text)), ...c.log] };
+          });
+        }
+        return { ...seed(), ...saved, cases, seeded: true };
+      }
     } catch {}
     return seed();
   }
@@ -655,6 +666,8 @@
     events: () => events,
     outcome: id => P.outcomes[id],
     caseOf, log, record, firstFree,
+    // Read a case without creating an empty one.
+    peekCase: id => P.cases[id] || { log: [], bookings: [] },
     book(id, booking) { const b = { id: Date.now().toString(36), ...booking }; caseOf(id).bookings.push(b); return b.id; },
     cancel(id, bookingId) { const c = caseOf(id); c.bookings = c.bookings.filter(b => b.id !== bookingId); },
     showWeekOf(date) { weekStart = monday(new Date(`${date}T12:00`)); },
