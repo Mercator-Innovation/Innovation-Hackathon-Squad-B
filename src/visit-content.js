@@ -7,6 +7,8 @@ window.VISIT_TEXT = {
   dayLabel: "Day",
   noVisits: "No visits for you on this day.",
   loading: "Getting your visits…",
+  cantLoad: "Visits can't load",
+  needsServer: "<strong>Your visits can't load when this page is opened straight from the file.</strong> Ask Claude to <strong>get the latest and make it run for me</strong>, then use the <code>http://localhost</code> address it gives you.",
   backToList: "← My visits",
   pickVisit: "Choose a visit to see the details.",
   travel: "min travel",

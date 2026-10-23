@@ -203,9 +203,19 @@
 
   // ---- Start when the plan is ready ----
   const engine = $("engine");
+  // Opened straight from the file (file://), the browser won't let this page read the plan,
+  // so say how to open it properly instead of showing empty dropdowns.
+  function cantLoad() {
+    $("list-status").innerHTML = V.needsServer;
+    $("who").innerHTML = `<option>${V.cantLoad}</option>`;
+    $("who").disabled = $("day").disabled = true;
+  }
+  let tries = 0;
   function start() {
-    W = engine.contentWindow;
-    if (!W || !W.PLANNER) return setTimeout(start, 100);
+    try {
+      W = engine.contentWindow;
+      if (!W || !W.PLANNER) { if (++tries > 100) return cantLoad(); return setTimeout(start, 100); }
+    } catch { return cantLoad(); }
     fillPickers();
     renderList();
     renderDetail();
