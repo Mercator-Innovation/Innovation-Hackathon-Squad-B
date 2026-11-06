@@ -22,6 +22,8 @@ specialist:
 helped_squad: []
 idea_where: []
 ai_use_week_after:
+# Three-week check-in
+idea_tried:
 ---
 
 # <Firstname Lastname>: learning log
@@ -52,5 +54,6 @@ ai_use_week_after:
 - **One idea to carry forward:** <in my words>, and where it could fit: <answers>
 - How much I expect to use AI tools from now on: <answer>
 
-## Three-week check-in (around 12 Nov)
-- Did I try, share or suggest my idea anywhere? What happened, or what got in the way?
+## Three-week check-in
+- Have I tried, shared or suggested my idea: <answer>
+- What happened, or what got in the way: <in my words>

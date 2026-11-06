@@ -43,6 +43,14 @@ Then, in their own words: **one thing we should change next time** ("nothing" is
 
 Then, in their own words: **the most useful thing you learned**, and **your one idea to carry forward** (plus, if `specialist` isn't `never`, what you needed that help for).
 
+## Three-week check-in (`/reflect`): one question, then one in words
+
+| Key | Question | Pick | Options → code |
+|---|---|---|---|
+| `idea_tried` | Since the hackathon, have you tried, shared or suggested your idea to carry forward (or anything else from the day) anywhere? | One | Yes, I've tried it → `tried` · Yes, I've shared or suggested it → `shared` · Not yet, but I plan to → `planned` · Not yet, something got in the way → `blocked` |
+
+Then, in their own words: **what happened, or what got in the way**.
+
 ## Coding Other
 
 If someone picks **Other** and types an answer, write `other` as the code (inside the list for the "one or more" questions) and keep their exact words in the log.
