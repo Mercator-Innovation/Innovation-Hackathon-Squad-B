@@ -23,9 +23,9 @@ There's no preparation slot, so draft the outline by **18:30 at the latest**, wh
 4. `/share` it.
 5. Tell the presenters: they join the Teams call from the link in the squad's Teams chat, and share their screen when it's their turn. Before then, tell Claude `get the latest and make it run for me`, so they show the squad's latest version.
 
-## The fuller showcase (Wed 11 Nov, 14:00 to 15:40, on Teams)
+## The fuller showcase (Wed 25 Nov, 14:00 to 15:40, on Teams)
 
-Check each person has done their reflection (`/reflect`). Then write `show-and-tell/showcase.md`, for a 10-minute slot: up to 9 minutes presenting, then 1 minute for any questions. Squads can present live or send a recording to Sheldon Gold (on Teams, or sheldon.gold@mercator.group) by Tuesday 10 Nov. It should cover:
+Check each person has done their reflection (`/reflect`). Then write `show-and-tell/showcase.md`, for a 10-minute slot: up to 9 minutes presenting, then 1 minute for any questions. Squads can present live or send a recording to Sheldon Gold (on Teams, or sheldon.gold@mercator.group) by Tuesday 24 Nov. It should cover:
 
 1. The challenge and what we built
 2. How the afternoon actually went: the git history from first version to hard stop, and what the look together found
