@@ -33,7 +33,7 @@ Gaps to fill before the day are marked **[ask]**. Most are things only the perso
   - 16:00 to 17:00: everyone grabbed a piece. Jim took tenant reports, Helen "Where to act first", Simon the visit planner and Cases, Okeli the tenant view, Petra the risk list.
   - 17:00 to 18:00: reviews and tests. AI reviewers found real problems; Helen's tests found real bugs.
   - 18:00 to 18:40: a new look, a logo, the Home visit app, the hotspot map and accessibility fixes, all in the last 40 minutes.
-- **The look together at 17:15:** **[ask Okeli]** We didn't write it down on the day. What did we find was working, confusing and missing?
+- **We skipped the 17:15 look together.** We were meant to stop and try the prototype as a housing officer would. Instead we kept building. With hindsight, ten minutes as the user might have saved some of the rework.
 
 ## 2:30 to 3:30: What didn't work, and why
 
@@ -62,6 +62,7 @@ Gaps to fill before the day are marked **[ask]**. Most are things only the perso
 - **Easy:** small, frequent shares. Petra's new colours reached Helen while she was building, so she matched them straight away. Simon added Helen's work to the outline before she asked.
 - **Easy:** a mixed squad. Everyone enjoyed or loved it, and everyone rated "working in a mixed squad" among what worked best.
 - **Hard:** everyone in the same files at once (see above). Next time we'd agree who owns which file before we start.
+- **Hard:** building was so quick that we never stopped to look together. That's easy to do when every change takes minutes.
 - **Honest views:**
   - Petra, at setup, on using AI: "Not great due to environmental impact but needing to keep up."
   - Simon, at setup: "Obsolete :D (partially joking)."
