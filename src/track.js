@@ -31,7 +31,7 @@ function progress(report) {
   const visit = state.visits.filter(v => v.homeId === report.homeId).pop();
 
   return [
-    { label: C.trackStepReceived, done: true, detail: report.received },
+    { label: C.trackStepReceived, done: true, detail: new Date(report.received + "T00:00").toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }) },
     { label: C.trackStepLooking, done: reportStatus !== "New" || reached >= 1 },
     { label: C.trackStepVisit, done: !!visit || reached >= 2, detail: visit && visit.when },
     { label: C.trackStepWork, done: reached >= 3 },

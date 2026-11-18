@@ -221,3 +221,10 @@ test.describe("The Home visit tab on the staff view", () => {
     expect(status).toBe("Work ordered");
   });
 });
+
+test("opened straight from the file, it explains how to open it instead of showing empty dropdowns", async ({ page }) => {
+  const path = require("path");
+  await page.goto("file://" + path.join(__dirname, "..", "src", "visit.html"));
+  await expect(page.locator("#list-status")).toContainText("make it run for me");
+  await expect(page.locator("#who")).toBeDisabled();
+});

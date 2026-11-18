@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="glance.css">
 </head>
 <body>
+  <a class="skip-link" href="#main">Skip to main content</a>
   <div class="banner" data-text="prototypeBanner"></div>
   <header class="site has-logo">
     <img class="logo" src="logo.svg" alt="">
@@ -29,7 +30,7 @@
     </div>
   </nav>
 
-  <main>
+  <main id="main" tabindex="-1">
     <div id="tab-overview">
       <section class="panel glance" id="sec-glance" aria-labelledby="glance-title">
         <h2 id="glance-title" data-text="glanceTitle"></h2>
@@ -96,6 +97,7 @@
         <label><span data-text="filterReportStatus"></span><select id="report-filter-status"></select></label>
         <label><span data-text="filterReportType"></span><select id="report-filter-type"></select></label>
       </div>
+      <p class="visually-hidden" id="reports-count" role="status"></p>
       <div id="reports-list"></div>
     </section>
 

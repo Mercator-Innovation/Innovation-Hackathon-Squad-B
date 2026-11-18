@@ -129,7 +129,7 @@ dialog::backdrop { background: rgba(24, 52, 81, 0.4); }
 fieldset { border: 0; padding: 0; margin: 0 0 16px; }
 legend { font-weight: 700; margin-bottom: 4px; }
 .checks label { display: flex; align-items: center; gap: 8px; font-weight: 400; margin: 6px 0; }
-.checks input { width: 22px; height: 22px; }
+.checks input { width: 24px; height: 24px; }
 .form-row label { font-weight: 700; }
 
 /* Suggested action and repair history in the home detail */
@@ -566,7 +566,7 @@ dialog::backdrop { background: rgba(24, 52, 81, 0.28); -webkit-backdrop-filter: 
 .tabs-extra-label { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-right: 4px; white-space: nowrap; }
 .tabs-extra a { box-shadow: inset 0 0 0 1px rgba(24, 52, 81, 0.14); }
 .tabs-extra a[aria-current="page"] { box-shadow: none; }
-@media (max-width: 600px) { .tabs-extra { margin-left: 8px; padding-left: 10px; } }
+@media (max-width: 600px) { .tabs-extra { margin-left: 0; padding-left: 0; border-left: 0; flex: 1 1 100%; flex-wrap: wrap; } }
 
 /* Tenant pages: the same content width as the staff view, in the same outlined panel.
    On wide screens the report form flows into two columns, in reading order. */
@@ -593,3 +593,9 @@ select {
 }
 select::-ms-expand { display: none; }
 @media (forced-colors: active) { select { appearance: auto; background-image: none; padding-right: 12px; } }
+
+/* Accessibility fixes */
+@media (max-width: 760px) { nav.tabs { flex-wrap: wrap; overflow-x: visible; } }
+.skip-link { position: absolute; left: 8px; top: -100px; z-index: 100; background: var(--surface); color: var(--text); padding: 10px 16px; border-radius: 8px; font-weight: 700; }
+.skip-link:focus { top: 8px; }
+input[type=checkbox], input[type=radio] { min-width: 24px; min-height: 24px; }

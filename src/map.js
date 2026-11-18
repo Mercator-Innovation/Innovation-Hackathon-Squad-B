@@ -3,6 +3,8 @@
 // Any page can draw it: MAP.layers(xy, pxPerKm, options) returns SVG for a map whose
 // projection xy({lat, lng}) -> [x, y] the page already uses.
 window.MAP = (function () {
+  let mapCount = 0; // each map on the page gets its own gradient ids
+  let uid = 0;
   // The south shore of the Clyde, east to west, then down the west coast. [lat, lng]
   const COAST = [
     [55.9420, -4.55], [55.9420, -4.600], [55.9418, -4.660], [55.9415, -4.690], [55.9440, -4.715],
@@ -30,11 +32,12 @@ window.MAP = (function () {
     return scored().filter(h => h.risk.band !== "Low" && window.LOCATIONS.homes[h.id]).map(h => {
       const [x, y] = xy(window.LOCATIONS.homes[h.id]);
       const size = r * (0.7 + Math.min(h.risk.points, 12) / 12);
-      return `<circle class="hot ${h.risk.band}" cx="${x}" cy="${y}" r="${Math.round(size)}" fill="url(#hot-${h.risk.band})"/>`;
+      return `<circle class="hot ${h.risk.band}" cx="${x}" cy="${y}" r="${Math.round(size)}" fill="url(#hot-${uid}-${h.risk.band})"/>`;
     }).join("");
   }
 
   function layers(xy, pxPerKm, { hot = true, towns = true } = {}) {
+    uid = ++mapCount;
     const homes = window.DATA.homes.filter(h => window.LOCATIONS.homes[h.id]);
     const byTown = {};
     homes.forEach(h => (byTown[h.area] = byTown[h.area] || []).push(xy(window.LOCATIONS.homes[h.id])));
@@ -45,8 +48,8 @@ window.MAP = (function () {
     const land = [...COAST, [55.70, -4.910], [55.70, -4.40], [55.9420, -4.40]];
     return `
       <defs>
-        <radialGradient id="hot-High"><stop offset="0" stop-color="#c0392b" stop-opacity="0.7"/><stop offset="1" stop-color="#c0392b" stop-opacity="0"/></radialGradient>
-        <radialGradient id="hot-Medium"><stop offset="0" stop-color="#e67e22" stop-opacity="0.5"/><stop offset="1" stop-color="#e67e22" stop-opacity="0"/></radialGradient>
+        <radialGradient id="hot-${uid}-High"><stop offset="0" stop-color="#c0392b" stop-opacity="0.7"/><stop offset="1" stop-color="#c0392b" stop-opacity="0"/></radialGradient>
+        <radialGradient id="hot-${uid}-Medium"><stop offset="0" stop-color="#e67e22" stop-opacity="0.5"/><stop offset="1" stop-color="#e67e22" stop-opacity="0"/></radialGradient>
       </defs>
       <rect class="water" x="-5000" y="-5000" width="10000" height="10000"/>
       <polygon class="land" points="${pts(land, xy)}"/>

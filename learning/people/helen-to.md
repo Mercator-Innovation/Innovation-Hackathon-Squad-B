@@ -9,10 +9,14 @@ ai_use_before: 1
 hopes: [build-fast]
 feeling: excited
 # At 19:00
-worked_on: []
-outside_usual_job:
-got_in_way: []
-ai_use_after:
+worked_on: [code, design, research]
+outside_usual_job: a-bit
+got_in_way: [time]
+ai_use_after: 1
+enjoyed: loved
+pace: right
+worked_best: [building, mixed-squad, screen-badges, setup]
+again: definitely
 # In the week after
 specialist:
 helped_squad: []
@@ -43,10 +47,21 @@ ai_use_week_after:
 - 18:20 squad: Simon had already added my visit app and tests to the show and tell outline from my shares, before I said anything. Small, frequent shares meant the presenter (Okeli) had my work without needing to ask.
 
 ## At 19:00
-- What I worked on: <answers>
-- How much of it was outside my usual job: <answer>
-- What got in the way: <answers>
-- How much I'd use AI tools in my work now: <answer>
+<!-- Answered the morning after, Fri 23 Oct -->
+- What I worked on: Code or features, The design or the look, Research or finding things out
+- How much of it was outside my usual job: A bit
+- What got in the way: Not enough time
+- How much I'd use AI tools in my work now: Never or hardly ever
+- How much I enjoyed the hackathon: Loved it
+- The pace of the afternoon: About right
+- What worked best for me: Building with Claude, Working in a mixed squad, The shared screen and badges, The setup before the day
+- Would I take part in another: Definitely
+- One thing to change next time: nothing
+- In my words: A big thank you to the facilitators and everyone behind the hackathon! 😊 You can really see the thought, effort and care that went into designing the whole experience. Everything was so well put together, and I absolutely loved the website!
+
+  Also, a big shout-out to Squad B! I really enjoyed the teamwork, collaboration and bouncing ideas off each other. It was great to see everyone bringing something different to the table and working together.
+
+  Really appreciate everyone who made this happen. It was such a well-designed experience, and I’ve genuinely enjoyed being part of it! 👏
 
 ## In the week after
 - Did I still need a human specialist: <answer>, for <what>

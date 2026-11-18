@@ -36,12 +36,20 @@ Then, in their own words: **one thing we should change next time** ("nothing" is
 
 | Key | Question | Pick | Options → code |
 |---|---|---|---|
-| `specialist` | Did you still need a human specialist for anything? | One | Often → `often` · Sometimes → `sometimes` · Rarely → `rarely` · Never → `never` |
+| `specialist` | When you did work outside your usual job, how often did you need help from someone who does that job (for example a developer, designer or tester)? | One | Often → `often` · Sometimes → `sometimes` · Rarely → `rarely` · Never → `never` |
 | `helped_squad` | What helped most when building as a squad? | One or more | The shared screen → `screen` · Claude explaining what it did → `explaining` · Small, frequent shares → `small-shares` · Talking it through first → `talking` |
 | `idea_where` | Where could your idea to carry forward fit? | One or more | Internal work → `internal` · A bid → `bid` · My team → `my-team` · Client work where the tools are permitted → `client` |
 | `ai_use_week_after` | How much do you expect to use AI tools in your work from now on? | One | Same options and codes as `ai_use_before` |
 
-Then, in their own words: **the most useful thing you learned**, and **your one idea to carry forward** (plus, if `specialist` isn't `never`, what you needed one for).
+Then, in their own words: **the most useful thing you learned**, and **your one idea to carry forward** (plus, if `specialist` isn't `never`, what you needed that help for).
+
+## Three-week check-in (`/reflect`): one question, then one in words
+
+| Key | Question | Pick | Options → code |
+|---|---|---|---|
+| `idea_tried` | Since the hackathon, have you tried, shared or suggested your idea to carry forward (or anything else from the day) anywhere? | One | Yes, I've tried it → `tried` · Yes, I've shared or suggested it → `shared` · Not yet, but I plan to → `planned` · Not yet, something got in the way → `blocked` |
+
+Then, in their own words: **what happened, or what got in the way**.
 
 ## Coding Other
 

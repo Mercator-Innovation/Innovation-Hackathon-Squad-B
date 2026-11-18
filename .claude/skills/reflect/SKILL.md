@@ -1,6 +1,6 @@
 ---
 name: reflect
-description: Capture learning for one person in their learning log, with clickable multiple-choice questions. During the day, notes a moment in one line. At 19:00, asks four quick end-of-day questions, four about their experience of the hackathon, and one thing to change next time. In the week after, walks through the short reflection. Use when someone says "note that", "log this" or "reflect", at the end of the day, or when Claude spots a moment worth keeping.
+description: Capture learning for one person in their learning log, with clickable multiple-choice questions. During the day, notes a moment in one line. At 19:00, asks four quick end-of-day questions, four about their experience of the hackathon, and one thing to change next time. In the week after, walks through the short reflection, then the three-week check-in. Saying "reflect" catches up on every part not done yet. Use when someone says "note that", "log this" or "reflect", at the end of the day, or when Claude spots a moment worth keeping.
 ---
 
 # Reflect
@@ -8,6 +8,16 @@ description: Capture learning for one person in their learning log, with clickab
 Each person's log is `learning/people/<firstname>-<lastname>.md`. If it doesn't exist, copy `_template.md` first. The exact questions, options and codes are in `learning/questions.md`: use them word for word.
 
 **Ask with clickable options** (the `AskUserQuestion` tool). People pick one or more answers, or choose **Other** and type. Write each answer twice: its code in the log's front matter (for counting), and in words in the matching section. If someone typed under Other, keep their exact words and use the code `other`.
+
+## When someone says "reflect": catch up on everything that's missing
+
+Read their log first, then run every part that's still blank, in this order, one straight after another:
+
+1. **At 19:00**, if `ai_use_after` is blank
+2. **In the week after**, if `ai_use_week_after` is blank
+3. **The three-week check-in**, if `idea_tried` is blank
+
+Say in one line what's left and that it takes about five minutes. Then `/share` once, at the end. If everything is already done, thank them and offer to note a moment instead.
 
 ## During the day: one moment, one line
 
@@ -33,3 +43,9 @@ Most logs were started before these questions were added, so they don't have the
 ## In the week after: the reflection
 
 Ask the **In the week after** set in one call, then the two questions in their own words, one at a time. Keep their words; don't polish them. Fill in the front matter and the section, then `/share`.
+
+## The three-week check-in
+
+Ask the **Three-week check-in** question from `learning/questions.md` in one call, then, in their own words: "What happened, or what got in the way?" Keep their words exactly. Fill in `idea_tried` and the **Three-week check-in** section, then `/share`.
+
+Older logs don't have `idea_tried` yet: add it at the end of the front matter, after `ai_use_week_after`, under a `# Three-week check-in` comment. Write the section as in `_template.md`, replacing the old one-line question if it's there.
