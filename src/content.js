@@ -13,7 +13,7 @@ window.CONTENT = {
   navCases: "Cases",
   navExtra: "Additional views",
   navTenant: "Tenant view",
-  navVisitApp: "Home visit",
+  navVisitApp: "Home visit app",
   visitAppTitle: "Home visit",
   visitAppHelp: "What the person visiting sees on their phone or tablet. Anything they record shows up here straight away.",
   visitAppOpen: "Open it on its own (new tab)",
