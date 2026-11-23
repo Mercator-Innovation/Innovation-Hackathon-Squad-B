@@ -12,13 +12,13 @@ feeling: excited
 worked_on: [code, design, research]
 outside_usual_job: a-bit
 got_in_way: [time]
-ai_use_after: 1
+ai_use_after: 2
 enjoyed: loved
 pace: right
 worked_best: [building, mixed-squad, screen-badges, setup]
 again: definitely
 # In the week after
-specialist: often
+specialist: sometimes
 helped_squad: [screen, explaining, small-shares, talking]
 idea_where: [internal, bid, my-team, client]
 ai_use_week_after: 2
@@ -53,7 +53,7 @@ idea_tried: blocked
 - What I worked on: Code or features, The design or the look, Research or finding things out
 - How much of it was outside my usual job: A bit
 - What got in the way: Not enough time
-- How much I'd use AI tools in my work now: Never or hardly ever
+- How much I'd use AI tools in my work now: Now and then
 - How much I enjoyed the hackathon: Loved it
 - The pace of the afternoon: About right
 - What worked best for me: Building with Claude, Working in a mixed squad, The shared screen and badges, The setup before the day
@@ -66,7 +66,7 @@ idea_tried: blocked
   Really appreciate everyone who made this happen. It was such a well-designed experience, and I’ve genuinely enjoyed being part of it! 👏
 
 ## In the week after
-- Did I still need a human specialist: Often, for whilst upskilling in an area i am unfamiliar with using ai tools really help my understanding and explaining for example syntax and what the code is showing or doing and why is best to write a cetain way.
+- Did I still need a human specialist: Sometimes, for Just to understand the process better on how they do things
 - What helped most when building as a squad: The shared screen, Claude explaining what it did, Small, frequent shares, Talking it through first
 - The most useful thing I learned: you don't need to be an expert to create, design a working app, AI tools are so powerful it can do it very efficiently, and where you don't understand, AI tools can explain to you how and why in a simple plain english language.
 - **One idea to carry forward:** i would like to take on the challenge that no squad tried and come up with a solution, and where it could fit: Internal work, A bid, My team, Client work where the tools are permitted
