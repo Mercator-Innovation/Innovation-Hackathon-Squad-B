@@ -18,10 +18,10 @@ pace: right
 worked_best: [building, mixed-squad, screen-badges, setup]
 again: probably
 # In the week after
-specialist:
-helped_squad: []
-idea_where: []
-ai_use_week_after:
+specialist: rarely
+helped_squad: [screen, small-shares]
+idea_where: [bid, client]
+ai_use_week_after: 2
 ---
 
 # Okeli Okonye: learning log
@@ -33,6 +33,7 @@ ai_use_week_after:
 
 ## During
 <!-- Claude adds one line per moment: prompts that worked (word for word), dead ends, surprises, things done outside my usual job, what made working as a squad easier or harder -->
+- 18:40 I presented our show and tell at short notice: picked at random, with the outline still being updated at 18:36
 
 ## At 19:00
 - What I worked on: The design or the look; the words people see
@@ -46,11 +47,11 @@ ai_use_week_after:
 - One thing to change next time: "the second grab and build session was slightly long, maybe reduce to half an hour / 45 mins"
 
 ## In the week after
-- Did I still need a human specialist: <answer>, for <what>
-- What helped most when building as a squad: <answers>
-- The most useful thing I learned: <in my words>
-- **One idea to carry forward:** <in my words>, and where it could fit: <answers>
-- How much I expect to use AI tools from now on: <answer>
+- Did I still need a human specialist: Rarely, for "It was good to have someone who has experience with service design - helped with the look and design of the website"
+- What helped most when building as a squad: The shared screen; small, frequent shares
+- The most useful thing I learned: "how intuitive claude is - from an initial upload of a brain storming diagram we had the basis of a website that we could iterate upon"
+- **One idea to carry forward:** "can use claude to help reimagine someone's experience to win a bid", and where it could fit: A bid; client work where the tools are permitted
+- How much I expect to use AI tools from now on: Now and then
 
 ## Three-week check-in (around 12 Nov)
 - Did I try, share or suggest my idea anywhere? What happened, or what got in the way?
