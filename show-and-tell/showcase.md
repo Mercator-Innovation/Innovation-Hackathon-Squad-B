@@ -3,7 +3,7 @@
 **When:** Wed 25 November, 14:00 to 15:40, on Teams. We're on seventh. (Moved from 11 Nov.)
 **Slot:** up to 9 minutes presenting, then 1 minute for questions.
 **Presenting:** _(squad to choose: live, or a recording to Sheldon Gold by Tue 24 Nov)_
-**Draft:** 13 Nov, from the learning logs and git history. About 1,100 spoken words.
+**Draft:** 13 Nov, updated 23 Nov with everyone's reflections except Okeli's. About 1,200 spoken words.
 
 Gaps to fill before the day are marked **[ask]**. Most are things only the person can say.
 
@@ -28,6 +28,7 @@ Gaps to fill before the day are marked **[ask]**. Most are things only the perso
   - 29 commits in the last 30 minutes, the most of any squad. Our busiest ten minutes: 14 commits from 18:00.
   - 9 fixes and 10 test commits, both the most of any squad.
   - All **26 badges**. Only three squads got the full set.
+  - A fair warning from Petra: next time, "not base the rewards on number commits". Lots of commits isn't the same as lots of value.
 - **The shape of it:**
   - 15:11 name, 15:34 challenge, 15:55 Petra's first version.
   - 16:00 to 17:00: everyone grabbed a piece. Jim took tenant reports, Helen "Where to act first", Simon the visit planner and Cases, Okeli the tenant view, Petra the risk list.
@@ -51,31 +52,35 @@ Gaps to fill before the day are marked **[ask]**. Most are things only the perso
 
 ## 4:45 to 6:30: Who did what outside their usual job
 
-- **Helen (QA engineer):** designed and built "Where to act first", then the whole Home visit app: *"we want an app for the workers visiting the home"*. Then she tested it and picked its name. "I did product, design, build and testing, normally four different jobs."
-- **Jim (content designer):** redesigned the tenant report cards, added filters and sample data, and did accessibility fixes at the hard stop. "It went well, by describing each change in plain words and checking it in the browser." **[ask Jim]** What surprised you?
-- **Petra (service designer, merge captain):** built the first version and the most changes of anyone after Simon (55). She also built the new terracotta look, the risk map and the expert review. **[ask Petra]** What was it like doing a developer's job?
-- **Simon (software developer):** the visit planner, Cases, the map with driving times, and the logo. He also kept the show and tell going, which is more a delivery manager's job. **[ask Simon]** What was it like as the one developer?
+- **Helen (QA engineer):** designed and built "Where to act first", then the whole Home visit app: *"we want an app for the workers visiting the home"*. Then she tested it and picked its name. "I did product, design, build and testing, normally four different jobs." What she learned: "you don't need to be an expert to create, design a working app ... where you don't understand, AI tools can explain to you how and why in a simple plain english language."
+- **Jim (content designer):** redesigned the tenant report cards, added filters and sample data, and did accessibility fixes at the hard stop. "It went well, by describing each change in plain words and checking it in the browser." He never needed a developer's help. What stayed with him: "the speed at which you can create a working prototype was certainly eye-opening."
+- **Petra (service designer, merge captain):** built the first version and the most changes of anyone after Simon (55). She also built the new terracotta look, the risk map and the expert review. Her help from people was "mainly about the set up and github stuff". What she learned: "i didnt realise how powerful Claude can be in building".
+- **Simon (software developer):** the visit planner, Cases, the map with driving times, and the logo. He also kept the show and tell going, which is more a delivery manager's job. What he needed from others: "Visuals, logos, initial planning was very well organised by Petra". His biggest lesson wasn't about AI: "Team work, version control as a team".
 - **Okeli (business analyst, product owner):** chaired the squad, recorded our decisions, and built the tenant view and "Track your report". That's design and words, not analysis. **[ask Okeli]** One moment that stood out?
 
 ## 6:30 to 7:30: What made working as a squad with AI easy or hard
 
 - **Easy:** small, frequent shares. Petra's new colours reached Helen while she was building, so she matched them straight away. Simon added Helen's work to the outline before she asked.
-- **Easy:** a mixed squad. Everyone enjoyed or loved it, and everyone rated "working in a mixed squad" among what worked best.
-- **Hard:** everyone in the same files at once (see above). Next time we'd agree who owns which file before we start.
+- **Easy:** a mixed squad. Everyone enjoyed or loved it, and four of the five named "working in a mixed squad" among what worked best.
+- **Easy:** talking it through first, and the shared screen. Everyone who answered picked both.
+- **Hard:** everyone in the same files at once (see above). Next time we'd agree who owns which file before we start. Simon wanted "something visual to keep track of features, tasks and progress".
 - **Hard:** building was so quick that we never stopped to look together. That's easy to do when every change takes minutes.
 - **Honest views:**
   - Petra, at setup, on using AI: "Not great due to environmental impact but needing to keep up."
   - Simon, at setup: "Obsolete :D (partially joking)."
-  - Helen loved the day and would definitely do it again. But she still expects to use AI tools "never or hardly ever" at work. **[ask Helen]** Why? What would need to change?
+  - Petra would come back "because of the community", but "because I'm trying not to use AI as much, I probably wouldn't".
+  - Simon felt the challenges were narrow: "a lot of it being a website over some mock data".
+  - Helen went from using AI "never or hardly ever" to expecting to use it now and then.
   - Okeli felt the second build session was "slightly long, maybe reduce to half an hour / 45 mins".
 
 ## 7:30 to 8:15: Ideas to carry forward, and where they went
 
-- **[ask everyone]** The week-after reflection isn't done yet for anyone. Each person: one idea to carry forward, and whether you've tried or suggested it anywhere. (Say `reflect` to Claude.)
-- Candidates from the day, if they fit:
-  - AI-written tests as a first pass for QA, checked by a person.
-  - An "expert panel" review before a show and tell or a release.
-  - Keeping a running outline from commits, so updates write themselves.
+- **Jim:** use Claude to brainstorm journey maps, where clients allow it. He's already used what he learned to build a working prototype for his team project on an SDN course.
+- **Helen:** take on the challenge no squad tried, and build a solution. Not yet: she joined a new project team.
+- **Simon:** "More projects that allow AI use". His client project doesn't allow AI, so "Hackathon learnings also don't really apply to it".
+- **Petra:** no idea to carry forward: she's leaving Mercator soon.
+- **Okeli:** **[ask Okeli]** One idea, and has it gone anywhere?
+- **The honest pattern:** the ideas are there. Client rules, new projects and moving on are what's stopped them, not the tools.
 
 ## 8:15 to 9:00: What Mercator should take from this
 
@@ -83,6 +88,7 @@ Gaps to fill before the day are marked **[ask]**. Most are things only the perso
 - **AI made trying things cheap,** so we tried more, and rolled back without fuss.
 - **Testing and review still matter more, not less.** The bugs we found came from tests and reviews, not from the building.
 - **Teams need a little structure to build together:** who owns which file, and a shared plan. Building is now faster than coordinating.
+- **Learning sticks only where people can use it.** Some of us can't use these tools on client work, so the skills risk fading. Internal work and bids could keep them going.
 
 **Close:** "Thanks for listening. Any questions?"
 
@@ -90,7 +96,7 @@ Gaps to fill before the day are marked **[ask]**. Most are things only the perso
 
 ## Before the day
 
-- Fill the **[ask]** gaps: each person can say `reflect` to Claude, or tell the presenter.
+- Fill the two **[ask Okeli]** gaps: Okeli can say `reflect` to Claude, or tell the presenter.
 - Choose who presents, and whether it's live or recorded (recording to Sheldon by Tue 24 Nov).
 - Practise the click-through once. Tell Claude `get the latest and make it run for me` first.
 - Time it out loud. If it runs long, cut from "How the afternoon went" first.
