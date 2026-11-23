@@ -18,10 +18,12 @@ pace: right
 worked_best: [building, mixed-squad, screen-badges, setup]
 again: definitely
 # In the week after
-specialist:
-helped_squad: []
-idea_where: []
-ai_use_week_after:
+specialist: often
+helped_squad: [screen, explaining, small-shares, talking]
+idea_where: [internal, bid, my-team, client]
+ai_use_week_after: 2
+# Three-week check-in
+idea_tried: blocked
 ---
 
 # Helen To: learning log
@@ -64,11 +66,12 @@ ai_use_week_after:
   Really appreciate everyone who made this happen. It was such a well-designed experience, and I’ve genuinely enjoyed being part of it! 👏
 
 ## In the week after
-- Did I still need a human specialist: <answer>, for <what>
-- What helped most when building as a squad: <answers>
-- The most useful thing I learned: <in my words>
-- **One idea to carry forward:** <in my words>, and where it could fit: <answers>
-- How much I expect to use AI tools from now on: <answer>
+- Did I still need a human specialist: Often, for whilst upskilling in an area i am unfamiliar with using ai tools really help my understanding and explaining for example syntax and what the code is showing or doing and why is best to write a cetain way.
+- What helped most when building as a squad: The shared screen, Claude explaining what it did, Small, frequent shares, Talking it through first
+- The most useful thing I learned: you don't need to be an expert to create, design a working app, AI tools are so powerful it can do it very efficiently, and where you don't understand, AI tools can explain to you how and why in a simple plain english language.
+- **One idea to carry forward:** i would like to take on the challenge that no squad tried and come up with a solution, and where it could fit: Internal work, A bid, My team, Client work where the tools are permitted
+- How much I expect to use AI tools from now on: Now and then
 
-## Three-week check-in (around 12 Nov)
-- Did I try, share or suggest my idea anywhere? What happened, or what got in the way?
+## Three-week check-in
+- Have I tried, shared or suggested my idea: Not yet, something got in the way
+- What happened, or what got in the way: joined a new project team so not been able to explore ai tools
