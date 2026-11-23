@@ -3,7 +3,7 @@
 **When:** Wed 25 November, 14:00 to 15:40, on Teams. We're on seventh. (Moved from 11 Nov.)
 **Slot:** up to 9 minutes presenting, then 1 minute for questions.
 **Presenting:** all of us, live. Four sections of about 2 minutes 15 each (about 300 spoken words each).
-**Draft:** 13 Nov, reshaped 23 Nov into four sections with everyone's reflections except Okeli's.
+**Draft:** 13 Nov, reshaped 23 Nov into four sections with everyone's reflections.
 
 | Time | Section | Who |
 |---|---|---|
@@ -37,7 +37,7 @@ Gaps to fill before the day are marked **[ask]**.
   - Jim (content designer) redesigned the report cards and never needed a developer's help.
   - Petra (service designer) built the first version and ran the merges.
   - Simon (developer) kept the show and tell going, more a delivery manager's job.
-  - Okeli (business analyst) chaired the squad and designed screens and words. **[ask Okeli]** One moment that stood out?
+  - Okeli (business analyst) chaired the squad and designed screens and words. "I was picked at random to present our show and tell, and the outline was still changing six minutes before the hard stop. Because we shared small and often, everything was already there for me."
 - **Small, frequent shares:** 84 commits and 55 merges. Petra's new colours reached Helen while she was building, so she matched them straight away.
 - **The hard parts:**
   - Five people changed the same files at once, so we kept clashing. Claude merged both sides, but it slowed us down.
@@ -68,7 +68,8 @@ Gaps to fill before the day are marked **[ask]**.
   - "Jim used what he learned to build a working prototype for his SDN course. He'd like to use Claude for journey mapping, where clients allow it."
   - "I'd like to take on the challenge no squad tried and build a solution. I haven't yet, because I joined a new project team."
   - "Simon wants more projects that allow AI. His client project doesn't, so the skills don't carry over."
-  - "Petra is leaving Mercator soon." **[ask Okeli]** Okeli's idea, and has it gone anywhere?
+  - "Petra is leaving Mercator soon."
+  - "Okeli thinks Claude could help us reimagine someone's experience to win a bid, the way a brainstorming diagram became a working website within an hour. It hasn't gone anywhere yet."
   - "So the ideas are there. What's stopped them is client rules and changes of project, not the tools."
 - **What Mercator should take from this:**
   - Job titles didn't limit anyone. "I'm a QA engineer, and I designed, built and tested an app."
@@ -82,6 +83,6 @@ Gaps to fill before the day are marked **[ask]**.
 
 ## Before the day
 
-- Fill the **[ask]** gaps: the demo home (Jim), and Okeli's moment and idea.
+- Fill the **[ask]** gap: the demo home (Jim).
 - Whoever demos: tell Claude `get the latest and make it run for me` first. Have screenshots ready in case screen sharing fails.
 - Rehearse once together, with a timer. If a section runs long, cut its lists first.
