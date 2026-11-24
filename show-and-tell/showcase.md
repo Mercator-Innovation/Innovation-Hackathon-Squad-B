@@ -80,7 +80,7 @@ What made it possible: when I didn't understand something, Claude explained the 
 
 So what's next? For me, I'd like to use what I learned beyond testing, and take on one of the other hackathon challenges. I haven't had the chance yet, because I've joined a new project team.
 
-For the rest of the squad: Jim has already used Claude to build a prototype on his training course. Simon's client work doesn't allow AI, so he'd like more projects that do. And Petra has since left Mercator. **[ask Okeli]** One line on what's next for Okeli.
+For the rest of the squad: Jim has already used Claude to build a prototype on his training course. Simon's client work doesn't allow AI, so he'd like more projects that do. Petra has since left Mercator. She saw how powerful Claude is, and will use it in her line of work. And Okeli wants to explore what it can do for business analysis, and use it to support bids.
 
 **What Mercator should take from this (about 35 seconds)**
 
