@@ -68,33 +68,29 @@ Slide: [Okeli's Our approach slide](https://claude.ai/artifact/T493RBP8oF6MTK8op
 
 Helen's script, about 300 words. Slides: [Helen's What's next slides](https://claude.ai/artifact/RHfTMbhB3gWBRf8YQwiR4f).
 
-**My story (about 45 seconds)**
+**Slide 1: Where we go from here**
 
 "Thanks, Simon. I'm Helen, a QA engineer.
 
-Before the hackathon, I'd only used AI for a proof of concept in testing, my own field. On the day I went much further.
+Earlier this year, before the hackathon, I completed a proof of concept using Claude Code as a testing tool. The hackathon let me go much further: design, build and create a working app. Together as a squad, we built the Home visit app. All of those skills were beyond my usual job.
 
-I asked Claude: 'we want an app for the workers visiting the home'. Together we built the Home visit app. I designed it, tested it with Playwright (16 tests, all passing first time) and even picked its name. That's four jobs I don't normally do.
+What's amazing about Claude is that whenever I didn't understand something, whether it was the challenge or something I wanted to do but didn't know how, Claude could explain it, or better still, do it for me.
 
-What made it possible: when I didn't understand something, Claude explained the how and the why in plain English.
+So what's next? I'd like to use it more on my projects, to understand things quicker and make processes more efficient, and to really learn how to use Claude at a higher level.
 
-**What's next (about 45 seconds)**
+For the others: Jim has been using Claude to build a prototype on his training course. Simon would like a project that allows him to use AI. Petra saw how powerful the tool can be, and will explore it in her field. And Okeli would like to explore what it can do for BA work and bids.
 
-So what's next? For me, I'd like to use what I learned beyond testing, and take on one of the other hackathon challenges. I haven't had the chance yet, because I've joined a new project team.
+We all have ideas, but client rules and restrictions hold us back, not the possibilities of the AI tools. So how do we keep it going?
 
-For the rest of the squad: Jim has already used Claude to build a prototype on his training course. Simon's client work doesn't allow AI, so he'd like more projects that do. Petra has since left Mercator. She saw how powerful Claude is, and will use it in her line of work. And Okeli wants to explore what it can do for business analysis, and use it to support bids.
-
-**What Mercator should take from this (about 35 seconds)**
+**Slide 2: Keeping it going**
 
 Three things.
 
-Job titles didn't limit anyone. A tester built an app, a content designer built features, and a service designer ran the merges.
+First, don't let job titles limit us. As a tester, I designed and built a working prototype. The world's your oyster.
 
-Testing matters more, not less. Our bugs were found by tests and reviews, not by building faster.
+Second, testing matters even more, not less. We found our bugs by testing, not by building. So rules, skills and guardrails help us build better tools. The process matters.
 
-And skills fade if you can't use them. Internal work and bids could keep them going.
-
-**Close (about 10 seconds)**
+And third, we need to keep building those skills, or they fade. Internal work and bids could keep them going.
 
 You don't need to be an expert to build something that works. Thank you. Any questions?"
 
