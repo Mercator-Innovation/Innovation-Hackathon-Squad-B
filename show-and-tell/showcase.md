@@ -64,20 +64,37 @@ Gaps to fill before the day are marked **[ask]**.
 
 ## 4. What's next (Helen, 6:45 to 9:00)
 
-- **Our ideas, and where they went:**
-  - "Jim used what he learned to build a working prototype for his SDN course. He'd like to use Claude for journey mapping, where clients allow it."
-  - "I'd like to take on the challenge no squad tried and build a solution. I haven't yet, because I joined a new project team."
-  - "Simon wants more projects that allow AI. His client project doesn't, so the skills don't carry over."
-  - "Petra is leaving Mercator soon."
-  - "Okeli thinks Claude could help us reimagine someone's experience to win a bid, the way a brainstorming diagram became a working website within an hour. It hasn't gone anywhere yet."
-  - "So the ideas are there. What's stopped them is client rules and changes of project, not the tools."
-- **What Mercator should take from this:**
-  - Job titles didn't limit anyone. "I'm a QA engineer, and I designed, built and tested an app."
-  - AI made trying things cheap, so we tried more and rolled back without fuss.
-  - Testing matters more, not less. Our bugs were found by tests and reviews.
-  - Teams need a little structure: who owns which file, and a visual plan, as Simon suggested.
-  - Skills fade if you can't use them. Internal work and bids could keep them going.
-- **Close:** "What I learned most: you don't need to be an expert to build something that works, because Claude explains the how and why in plain English. Thanks. Any questions?"
+Helen's script, about 300 words.
+
+**My story (about 45 seconds)**
+
+"Thanks, Simon. I'm Helen, a QA engineer.
+
+Before the hackathon, I'd only used AI for a proof of concept in testing, my own field. On the day I went much further.
+
+I asked Claude: 'we want an app for the workers visiting the home'. Together we built the Home visit app. I designed it, tested it with Playwright (16 tests, all passing first time) and even picked its name. That's four jobs I don't normally do.
+
+What made it possible: when I didn't understand something, Claude explained the how and the why in plain English.
+
+**What's next (about 45 seconds)**
+
+So what's next? For me, I'd like to use what I learned beyond testing, and take on one of the other hackathon challenges. I haven't had the chance yet, because I've joined a new project team.
+
+For the rest of the squad: Jim has already used Claude to build a prototype on his training course. Simon's client work doesn't allow AI, so he'd like more projects that do. And Petra has since left Mercator. **[ask Okeli]** One line on what's next for Okeli.
+
+**What Mercator should take from this (about 35 seconds)**
+
+Three things.
+
+Job titles didn't limit anyone. A tester built an app, a content designer built features, and a service designer ran the merges.
+
+Testing matters more, not less. Our bugs were found by tests and reviews, not by building faster.
+
+And skills fade if you can't use them. Internal work and bids could keep them going.
+
+**Close (about 10 seconds)**
+
+You don't need to be an expert to build something that works. Thank you. Any questions?"
 
 ---
 
