@@ -30,6 +30,8 @@ Gaps to fill before the day are marked **[ask]**.
 
 ## 2. Our approach, and what it was like (Okeli, 2:15 to 4:30)
 
+Slide: [Okeli's Our approach slide](https://claude.ai/artifact/T493RBP8oF6MTK8opwnE5k) (the five steps: map it first, everyone grabbed a piece, describe it in plain words, share small and often, review and test as you go).
+
 - **How we started:** 15:11 name, 15:34 challenge, and Petra's first version on the shared screen at **15:55**, second only to Squad H.
 - **Everyone grabbed a piece:** Jim took tenant reports, Helen "Where to act first", Simon the visit planner and Cases, Petra the risk list, and Okeli the tenant view.
 - **Everyone worked outside their usual job:**
