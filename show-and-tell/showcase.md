@@ -64,7 +64,7 @@ Gaps to fill before the day are marked **[ask]**.
 
 ## 4. What's next (Helen, 6:45 to 9:00)
 
-Helen's script, about 300 words.
+Helen's script, about 300 words. Slides: [Helen's What's next slides](https://claude.ai/artifact/RHfTMbhB3gWBRf8YQwiR4f).
 
 **My story (about 45 seconds)**
 
