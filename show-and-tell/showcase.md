@@ -49,7 +49,7 @@ Slide: [Okeli's Our approach slide](https://claude.ai/artifact/T493RBP8oF6MTK8op
 
 ## 3. What we learned (Simon, 4:30 to 6:45)
 
-Simon's script: [simon-script.md](simon-script.md), about 313 words. Slides: three slides in [Helen's What's next slides](https://claude.ai/artifact/RHfTMbhB3gWBRf8YQwiR4f), straight after Jim's What we built (merge conflicts came from the code; Claude works better in roles; building got fast, working together got harder).
+Simon's script: [simon-script.md](simon-script.md), about 313 words. Slides: three slides in [Squad B showcase deck](https://claude.ai/artifact/RHfTMbhB3gWBRf8YQwiR4f), straight after Jim's What we built (merge conflicts came from the code; Claude works better in roles; building got fast, working together got harder).
 
 - **Where Claude surprised us:**
   - **Tests that caught real bugs.** Helen asked: *"add some test to the core functionality"*, then *"use playwright for the testing of the UI"*. That gave 113 tests by the end. They found a person who was both an older person and a young child, and two visits booked at overlapping times.
@@ -68,7 +68,7 @@ Simon's script: [simon-script.md](simon-script.md), about 313 words. Slides: thr
 
 ## 4. What's next (Helen, 6:45 to 9:00)
 
-Helen's script, about 300 words. Slides: [Helen's What's next slides](https://claude.ai/artifact/RHfTMbhB3gWBRf8YQwiR4f).
+Helen's script, about 300 words. Slides: [Squad B showcase deck](https://claude.ai/artifact/RHfTMbhB3gWBRf8YQwiR4f).
 
 **Slide 1: Where we go from here**
 
