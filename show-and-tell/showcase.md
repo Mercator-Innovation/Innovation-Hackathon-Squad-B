@@ -49,6 +49,8 @@ Slide: [Okeli's Our approach slide](https://claude.ai/artifact/T493RBP8oF6MTK8op
 
 ## 3. What we learned (Simon, 4:30 to 6:45)
 
+Simon's script: [simon-script.md](simon-script.md), about 313 words. Slides: three slides in [Helen's What's next slides](https://claude.ai/artifact/RHfTMbhB3gWBRf8YQwiR4f), straight after Jim's What we built (merge conflicts came from the code; Claude works better in roles; building got fast, working together got harder).
+
 - **Where Claude surprised us:**
   - **Tests that caught real bugs.** Helen asked: *"add some test to the core functionality"*, then *"use playwright for the testing of the UI"*. That gave 113 tests by the end. They found a person who was both an older person and a young child, and two visits booked at overlapping times.
   - **An expert panel on demand.** Petra asked Claude to *"imagine youre the best service, product, interaction and content designer, but youre also an amazing developer, BA etc. I want you to improve everything"*. It found 50 issues, and the biggest got fixed.
