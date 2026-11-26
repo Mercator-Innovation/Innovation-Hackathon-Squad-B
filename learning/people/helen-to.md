@@ -75,3 +75,8 @@ idea_tried: blocked
 ## Three-week check-in
 - Have I tried, shared or suggested my idea: Not yet, something got in the way
 - What happened, or what got in the way: joined a new project team so not been able to explore ai tools
+
+## After the showcase (26 November)
+- Presented "What's next" at the showcase on 25 November, with Jim, Okeli and Simon.
+- The final showcase page (innovation-hackathon.vercel.app/final-showcase) picked my quote for Squad B: "The test was right, so we fixed the data, not the test."
+- Squad B against the other seven: 2nd fastest first version (15:55), 3rd for changes shared (84), joint 2nd for badges (26), near the bottom for "note that" moments (18).
