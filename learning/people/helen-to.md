@@ -79,4 +79,5 @@ idea_tried: blocked
 ## After the showcase (26 November)
 - Presented "What's next" at the showcase on 25 November, with Jim, Okeli and Simon.
 - The final showcase page (innovation-hackathon.vercel.app/final-showcase) picked my quote for Squad B: "The test was right, so we fixed the data, not the test."
+- Links: prototype https://innovation-hackathon.vercel.app/proto/B/main/ · code on GitHub https://github.com/Mercator-Innovation/Innovation-Hackathon-Squad-B · showcase page https://innovation-hackathon.vercel.app/final-showcase#squad-b
 - Squad B against the other seven: 2nd fastest first version (15:55), 3rd for changes shared (84), joint 2nd for badges (26), near the bottom for "note that" moments (18).
